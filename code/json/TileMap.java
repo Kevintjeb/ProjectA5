@@ -8,7 +8,6 @@ import javax.imageio.ImageIO;
 
 public class TileMap {
 
-	// ArrayList<BufferedImage> tiles = new ArrayList<BufferedImage>();
 	BufferedImage[] tiles;
 	private int tilewidth;
 	private int tileheight;
@@ -41,11 +40,9 @@ public class TileMap {
 		for (int y = 0; y < mapheight / 32; y++) {
 			for (int x = 0; x < mapwidth / 32; x++) {
 				tiles[i] = tilemap.getSubimage(x * tilewidth, y * tileheight, tilewidth, tileheight);
-				//System.out.println(" tile ; " + tiles[i]);
 				i++;
 			}
 		}
-		
 
 	}
 
