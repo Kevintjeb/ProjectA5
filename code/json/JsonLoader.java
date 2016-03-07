@@ -2,6 +2,12 @@ package json;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,13 +21,18 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-public class JsonLoader {
 
-	public static void main(String[] args) {
+
+public class JsonLoader 
+{
+
+	public static void main(String[] args) 
+	{
 		new JsonLoader();
 	}
 
-	public JsonLoader() {
+	public JsonLoader() 
+	{
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(new ContentPane());
@@ -31,22 +42,33 @@ public class JsonLoader {
 
 }
 
-class ContentPane extends JPanel {
+class ContentPane extends JPanel 
+{
 	/**
 	 * 
 	 */
-
+	
+	int x = 0;
+	int y = 0;
+	
+	float scale = 1;
+	
+	AffineTransform transform = new AffineTransform();
+	
 	private ArrayList<TileLayer> layerslist = new ArrayList<>();
 	private TileMap map;
 	private int height;
 	private int width;
 	private static final long serialVersionUID = -6211040993419149907L;
 
-	public ContentPane() {
+	public ContentPane() 
+	{
 		// filepath to jsonfile
-		crunchJson("C:\\Users\\kevin\\Desktop\\tilemap.json", "C:\\Users\\kevin\\Downloads\\tileset\\ground_tiles.png");
+		crunchJson("C:\\Users\\Rick\\Desktop\\test.json", "C:\\Users\\Rick\\Downloads\\ground_tiles.png");//"C:\\Users\\kevin\\Desktop\\tilemap.json", "C:\\Users\\kevin\\Downloads\\tileset\\ground_tiles.png");
 		//setSize(new Dimension(1000, 2000));
 		//setMinimumSize(new Dimension(500, 500));
+		addMouseMotionListener(new dragMap());
+		addMouseWheelListener(new zoomMap());
 		
 		try {
 			ImageIO.write(layerslist.get(0).getLayerImage(), "png", new File("tmp.png"));
@@ -57,7 +79,8 @@ class ContentPane extends JPanel {
 		
 	}
 
-	public void crunchJson(String filepath, String tilemappath) {
+	public void crunchJson(String filepath, String tilemappath) 
+	{
 		JSONParser parser = new JSONParser();
 
 		String mappath = tilemappath;
@@ -99,12 +122,59 @@ class ContentPane extends JPanel {
 	public int getHeight() {
 		return height;
 	}
-
+	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
+		//g2d.drawImage(layerslist.get(0).getLayerImage(), 0, 0, this);
 		g2d.setClip(null);
-		g2d.drawImage(layerslist.get(0).getLayerImage(), 0, 0, this);
+		transform.translate(x, y);
+		transform.scale(scale, scale);
+		g2d.setTransform(transform);
+		g2d.drawImage(layerslist.get(0).getLayerImage(), transform, this);
+	}
+	
+	class dragMap extends MouseMotionAdapter
+	{
+		int oldX = 0;
+		int oldY = 0;
+		
+		public void mouseDragged(MouseEvent e) 
+		{
+		  System.out.println("translate x " + x + " y " + y);
+		  x = oldX - e.getX();
+		  y = oldY - e.getY();
+		  oldX = e.getX();
+		  oldY = e.getY();
+		  System.out.println("te transleren x " + x + " y " + y);
+		  repaint();
+		  System.out.println("done");
+		}
+	}
+	
+	class zoomMap implements MouseWheelListener
+	{
+		float maxScale = 1.20f;
+		float minScale = 0.90f;
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent e)
+		{
+			System.out.println("zoom");
+			
+			double delta = -(0.05f * e.getPreciseWheelRotation());
+			
+			scale += delta; 
+			if(scale <= minScale)
+			{
+				scale = minScale;
+			}
+			else if(scale >= maxScale)
+			{
+				scale = maxScale;
+			}
+			System.out.println(scale);
+			repaint();
+		}
 	}
 
 }
