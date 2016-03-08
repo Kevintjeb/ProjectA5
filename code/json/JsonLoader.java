@@ -59,7 +59,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	public ContentPane() {
 
 		// filepath to jsonfile
-		crunchJson("C:\\Users\\kevin\\Desktop\\tilemap.json", "C:\\Users\\kevin\\Downloads\\tileset\\ground_tiles.png");
+		crunchJson("C:\\Users\\Rick\\Desktop\\test.json","C:\\Users\\Rick\\Downloads\\ground_tiles.png");//"C:\\Users\\kevin\\Desktop\\tilemap.json", "C:\\Users\\kevin\\Downloads\\tileset\\ground_tiles.png");
 		// setSize(new Dimension(1000, 2000));
 		// setMinimumSize(new Dimension(500, 500));
 		addMouseMotionListener(this);
@@ -128,8 +128,8 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	public void mouseDragged(MouseEvent e) {
 		
 		System.out.println("translate x " + x + " y " + y);
-		x += -1 * (oldX - e.getX())/scale;
-		y += -1 * (oldY - e.getY())/scale;
+		x += -0.5 * ((oldX - e.getX())/scale);
+		y += -0.5 * ((oldY - e.getY())/scale);
 		oldX = e.getX();
 		oldY = e.getY();
 		System.out.println("te transleren x " + x + " y " + y);
