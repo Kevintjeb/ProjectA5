@@ -59,7 +59,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	public ContentPane() {
 
 		// filepath to jsonfile
-		crunchJson("C:\\Users\\Rick\\Desktop\\test.json","C:\\Users\\Rick\\Downloads\\ground_tiles.png");//"C:\\Users\\kevin\\Desktop\\tilemap.json", "C:\\Users\\kevin\\Downloads\\tileset\\ground_tiles.png");
+		crunchJson("C:\\Users\\Rick\\Desktop\\test2.json","C:\\Users\\Rick\\Downloads\\ground_tiles.png");//"C:\\Users\\kevin\\Desktop\\tilemap.json", "C:\\Users\\kevin\\Downloads\\tileset\\ground_tiles.png");
 		// setSize(new Dimension(1000, 2000));
 		// setMinimumSize(new Dimension(500, 500));
 		addMouseMotionListener(this);
