@@ -45,17 +45,7 @@ class ContentPane extends JPanel {
 	public ContentPane() {
 		// filepath to jsonfile
 		crunchJson("C:\\Users\\kevin\\Desktop\\tilemap.json", "C:\\Users\\kevin\\Downloads\\tileset\\ground_tiles.png");
-		//setSize(new Dimension(1000, 2000));
-		//setMinimumSize(new Dimension(500, 500));
-		
-		try {
-			ImageIO.write(layerslist.get(0).getLayerImage(), "png", new File("tmp.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		
-	}
 
 	public void crunchJson(String filepath, String tilemappath) {
 		JSONParser parser = new JSONParser();
@@ -81,10 +71,6 @@ class ContentPane extends JPanel {
 				layerslist.add(e);
 			}
 			// tileheight en width bepalen door uit de json te halen.
-
-			
-			// System.out.println("tileheight : " + tileheight + " tilewidth : "
-			// + tilewidth);
 
 		} catch (Exception e) {
 			e.printStackTrace();
