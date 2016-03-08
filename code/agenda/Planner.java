@@ -59,10 +59,12 @@ public class Planner extends JFrame {
 		JMenuItem load = new JMenuItem("load");
 		JMenuItem edit = new JMenuItem("Edit");
 		JMenuItem credit = new JMenuItem("Credits");
+		JMenuItem linker = new JMenuItem("Stage linking");
 
 		file.add(save);
 		file.add(load);
 		file.add(edit);
+		file.add(linker);
 		credits.add(credit);
 
 		save.addActionListener(new ActionListener() {
@@ -158,6 +160,15 @@ public class Planner extends JFrame {
 			}
 		});
 		
+		linker.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				new StageLinker();
+			}
+		});
+		
 		credit.addActionListener(new ActionListener() 
 		{
 
@@ -180,8 +191,7 @@ public class Planner extends JFrame {
 		JScrollPane pane = new JScrollPane(tl);
 		tabbedPane.addTab("2D", pane);
 		
-		JComponent placeholder = new JPanel();
-		tabbedPane.addTab("Simulatie", placeholder);
+		tabbedPane.addTab("Simulatie", newSimulatieGUI(this));
 		contentPane.add(tabbedPane);
 		
 		setContentPane(contentPane);
