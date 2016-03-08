@@ -5,3 +5,5 @@
 /Agent.class
 /Drawable.class
 /World.class
+/Building.class
+/World$PathInfo.class
