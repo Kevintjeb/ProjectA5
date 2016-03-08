@@ -3,7 +3,8 @@ package json;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -27,16 +28,18 @@ public class JsonLoader {
 	}
 
 	public JsonLoader() {
+
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setContentPane(new ContentPane());
-		frame.setVisible(true);
+		JPanel pane = new ContentPane();
+		frame.setContentPane(pane);
 		frame.setSize(1000, 1000);
+		frame.setVisible(true);
 	}
 
 }
 
-class ContentPane extends JPanel {
+class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	/**
 	 * 
 	 */
@@ -52,22 +55,16 @@ class ContentPane extends JPanel {
 	private TileMap map;
 	private int height;
 	private int width;
-	private static final long serialVersionUID = -6211040993419149907L;
 
 	public ContentPane() {
+
 		// filepath to jsonfile
 		crunchJson("C:\\Users\\kevin\\Desktop\\tilemap.json", "C:\\Users\\kevin\\Downloads\\tileset\\ground_tiles.png");
 		// setSize(new Dimension(1000, 2000));
 		// setMinimumSize(new Dimension(500, 500));
-		addMouseMotionListener(new dragMap());
+		addMouseMotionListener(this);
+		addMouseListener(this);
 		addMouseWheelListener(new zoomMap());
-
-		try {
-			ImageIO.write(layerslist.get(0).getLayerImage(), "png", new File("tmp.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public void crunchJson(String filepath, String tilemappath) {
@@ -101,39 +98,43 @@ class ContentPane extends JPanel {
 		}
 	}
 
-	public int getWidth() {
+	public int getMapWidth() {
 		return width;
 	}
 
-	public int getHeight() {
+	public int getMapHeight() {
 		return height;
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
+		AffineTransform oldtransform = g2d.getTransform();
 		// g2d.drawImage(layerslist.get(0).getLayerImage(), 0, 0, this);
-		g2d.setClip(null);
-		transform.translate(x, y);
+		// g2d.setClip(null);
+		transform = new AffineTransform();
 		transform.scale(scale, scale);
+		transform.translate(x, y);
+		// transform.translate(-getWidth()/2, -getHeight()/2);
+		
 		g2d.setTransform(transform);
 		g2d.drawImage(layerslist.get(0).getLayerImage(), transform, this);
+		g2d.setTransform(oldtransform);
 	}
 
-	class dragMap extends MouseMotionAdapter {
-		int oldX = 0;
-		int oldY = 0;
+	int oldX = -1;
+	int oldY = -1;
 
-		public void mouseDragged(MouseEvent e) {
-			System.out.println("translate x " + x + " y " + y);
-			x = oldX - e.getX();
-			y = oldY - e.getY();
-			oldX = e.getX();
-			oldY = e.getY();
-			System.out.println("te transleren x " + x + " y " + y);
-			repaint();
-			System.out.println("done");
-		}
+	public void mouseDragged(MouseEvent e) {
+		
+		System.out.println("translate x " + x + " y " + y);
+		x += -1 * (oldX - e.getX())/scale;
+		y += -1 * (oldY - e.getY())/scale;
+		oldX = e.getX();
+		oldY = e.getY();
+		System.out.println("te transleren x " + x + " y " + y);
+		repaint();
+		System.out.println("done");
 	}
 
 	class zoomMap implements MouseWheelListener {
@@ -155,6 +156,42 @@ class ContentPane extends JPanel {
 			System.out.println(scale);
 			repaint();
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		oldX = e.getX();
+		oldY = e.getY();
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
