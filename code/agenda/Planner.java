@@ -165,7 +165,7 @@ public class Planner extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				new StageLinker();
+				new StageLinker(_this);
 			}
 		});
 		
@@ -191,7 +191,7 @@ public class Planner extends JFrame {
 		JScrollPane pane = new JScrollPane(tl);
 		tabbedPane.addTab("2D", pane);
 		
-		tabbedPane.addTab("Simulatie", newSimulatieGUI(this));
+		//tabbedPane.addTab("Simulatie", newSimulatieGUI(this));
 		contentPane.add(tabbedPane);
 		
 		setContentPane(contentPane);

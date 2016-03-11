@@ -37,6 +37,7 @@ public class Stage implements Serializable
 	private static final long serialVersionUID = -1359262160412641958L;
 	private String name;
 	private Agenda agenda;
+	protected static int IDCode;
 	
 	public Stage(String name, Agenda agenda) throws Exception
 	{
