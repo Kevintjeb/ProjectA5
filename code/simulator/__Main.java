@@ -1,9 +1,42 @@
 package simulator;
 
+// just for testing
 public class __Main {
 	public static void main(String[] args)
 	{
-		Tile t = new Tile(10, 23);
-		System.out.println(t);
+		World w = new World();
+		
+		class Foo implements Updateable
+		{
+
+			public Foo()
+			{
+				World.instance.regesterUpdateable(this);
+			}
+			
+			@Override
+			public void update() {
+				System.out.println(World.instance.getDeltaTime());
+				System.out.println(World.instance.getWorldTime());
+			}
+			
+		}
+		
+		
+		new Foo();
+		
+		while (true)
+		{
+			w.update();
+			
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (Exception e)
+			{
+				
+			}
+		}
 	}
 }

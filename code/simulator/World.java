@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Stack;
 
 public class World {
+	private final int UNINITIALIZED = -1;
 	
 	private Tile[][] tiles;
 	private Building[] buildings;
@@ -23,7 +24,7 @@ public class World {
 					//and the ceiling of the product is taken is will give the time in simulation time in seconds
 	private int worldTime; // the current time in the simulation world
 	private int deltaTime; // the delta between the second to last update() and the latest update()
-	private long lastRealTime = -1;
+	private long lastRealTime = UNINITIALIZED; // the last time update was called is used to calculate deltaTime
 	
 	public final agenda.Agenda agenda;
 	
@@ -31,19 +32,30 @@ public class World {
 	
 	protected static World instance;
 	
+	public World()
+	{
+		this.agenda = new agenda.Agenda();
+		updateables = new LinkedList<>();
+		drawables = new LinkedList<>();
+		instance = this;
+		realTimeToSimTime = 10;
+	}
+	
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath)
 	{
 		this.agenda = agenda;
 	}
 	
+	// this method has been checked and it works correctly 14/3/2016
 	public void update()
 	{
 		{// update everything related to time
 			long realTime = System.currentTimeMillis();
-			if (lastRealTime == -1)
+			if (lastRealTime == UNINITIALIZED)
 				lastRealTime = realTime;
 			deltaTime = (int)((realTime-lastRealTime)*realTimeToSimTime);
 			worldTime += deltaTime;
+			lastRealTime = realTime;
 		}
 		
 		{// update all updatables
