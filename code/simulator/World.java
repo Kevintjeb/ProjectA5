@@ -3,9 +3,13 @@ package simulator;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Stack;
 
 public class World {
 	
@@ -26,6 +30,11 @@ public class World {
 	private Image map;
 	
 	protected static World instance;
+	
+	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath)
+	{
+		this.agenda = agenda;
+	}
 	
 	public void update()
 	{
