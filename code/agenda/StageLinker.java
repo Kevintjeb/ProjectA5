@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -17,7 +18,6 @@ class StageLinker extends JFrame
 	JButton saveButton = new JButton("Set link");
 	JButton closeButton = new JButton("Close");
 	private Agenda agenda;
-	private Object selectedObject;
 	
 	
 	public StageLinker(Planner planner)
@@ -43,11 +43,12 @@ class StageLinker extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//Now sets everything directly to stage without using the selected item. Need to amend this.
-				selectedObject  = comboBox.getSelectedItem();
+				//Fixed the stage specific set problem. Now for the json link
 				int num = Integer.parseInt(idField.getText());
-				Stage.IDCode = num;
-				System.out.println(Stage.IDCode);
+				Stage tempStage = (Stage) comboBox.getSelectedItem();
+				tempStage.setID(num);
+				System.out.println(tempStage.getID());
+				JOptionPane.showMessageDialog(linker, "Link set");
 			}
 		});
 		
@@ -56,6 +57,7 @@ class StageLinker extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				JOptionPane.showMessageDialog(linker, "Closed linking gui");
 				dispose();
 			}
 		});
