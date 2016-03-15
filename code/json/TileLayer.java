@@ -41,7 +41,6 @@ public class TileLayer {
 			}
 
 		}
-		System.out.println("drawn on image");
 
 	}
 

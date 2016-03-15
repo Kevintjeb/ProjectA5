@@ -8,6 +8,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.FileReader;
 import java.util.ArrayList;
 
@@ -45,7 +46,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	int y = 0;
 
 	float scale = 1;
-
+	private BufferedImage mapimage;
 	AffineTransform transform = new AffineTransform();
 
 	private ArrayList<TileLayer> layerslist = new ArrayList<>();
@@ -86,7 +87,9 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 				layerslist.add(e);
 			}
 			// tileheight en width bepalen door uit de json te halen.
-
+			mapimage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
+					BufferedImage.TYPE_INT_ARGB);
+			drawMapImage();
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -105,31 +108,42 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		AffineTransform oldtransform = g2d.getTransform();
-		// g2d.drawImage(layerslist.get(0).getLayerImage(), 0, 0, this);
-		// g2d.setClip(null);
+		
 		transform = new AffineTransform();
 		transform.scale(scale, scale);
 		transform.translate(x, y);
-		// transform.translate(-getWidth()/2, -getHeight()/2);
 		
 		g2d.setTransform(transform);
-		g2d.drawImage(layerslist.get(0).getLayerImage(), transform, this);
+		//tekent alle layers.
+	//	drawLayers(g2d, transform);
+		g2d.drawImage(mapimage, transform, null);
 		g2d.setTransform(oldtransform);
 	}
 
 	int oldX = -1;
 	int oldY = -1;
 
+	public BufferedImage drawMapImage()
+	{
+		Graphics2D g = (Graphics2D) mapimage.getGraphics();
+		
+		for(TileLayer layer : layerslist)
+		{
+			g.drawImage(layer.getLayerImage(), 0, 0, null);
+		}
+		
+		return mapimage;
+	}
 	public void mouseDragged(MouseEvent e) {
 		
-		System.out.println("translate x " + x + " y " + y);
+		//System.out.println("translate x " + x + " y " + y);
 		x += -0.5 * ((oldX - e.getX())/scale);
 		y += -0.5 * ((oldY - e.getY())/scale);
 		oldX = e.getX();
 		oldY = e.getY();
-		System.out.println("te transleren x " + x + " y " + y);
+		//getInsets().System.out.println("te transleren x " + x + " y " + y);
 		repaint();
-		System.out.println("done");
+		//System.out.println("done");
 	}
 
 	class zoomMap implements MouseWheelListener {
@@ -138,7 +152,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
-			System.out.println("zoom");
+			//System.out.println("zoom");
 
 			double delta = -(0.05f * e.getPreciseWheelRotation());
 
@@ -148,7 +162,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 			} else if (scale >= maxScale) {
 				scale = maxScale;
 			}
-			System.out.println(scale);
+			//System.out.println(scale);
 			repaint();
 		}
 	}
