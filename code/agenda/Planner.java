@@ -191,11 +191,8 @@ public class Planner extends JFrame {
 		JScrollPane pane = new JScrollPane(tl);
 		tabbedPane.addTab("2D", pane);
 		
-<<<<<<< HEAD
+
 		tabbedPane.addTab("Simulatie", new SimulatieGUI(this));
-=======
-		tabbedPane.addTab("Simulatie", newSimulatieGUI(this));
->>>>>>> 86bcbb481cc98c652019a69f234beaa95628ab0e
 		contentPane.add(tabbedPane);
 		
 		setContentPane(contentPane);
