@@ -2,7 +2,10 @@ package agenda;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -13,6 +16,9 @@ import javax.swing.SpringLayout;
 public class SimulatieGUI extends JPanel
 {
 	Planner planner;
+	ArrayList<File> maps = new ArrayList<File>();
+	ArrayList<ImageIcon> images = new ArrayList<ImageIcon>();
+	SimulatieGUI _this = this;
 	
 	public SimulatieGUI(Planner planner)
 	{
@@ -21,11 +27,9 @@ public class SimulatieGUI extends JPanel
 		
 		JPanel LabelPanel = new LabelPanel(planner);
 		JPanel ChooseMapPanel = new ChooseMapPanel(planner);
-		JPanel ButtonPanel = new ButtonPanel(planner);
 		
 		add(LabelPanel, BorderLayout.NORTH);
 		add(ChooseMapPanel, BorderLayout.CENTER);
-		add(ButtonPanel, BorderLayout.SOUTH);
 	}
 	class LabelPanel extends JPanel
 	{
@@ -51,17 +55,7 @@ public class SimulatieGUI extends JPanel
 	{
 		Planner planner;
 		
-		ImageIcon image1 = new ImageIcon("");//TODO image
-		ImageIcon image2 = new ImageIcon("");//TODO image
-		ImageIcon image3 = new ImageIcon("");//TODO image
-		ImageIcon image4 = new ImageIcon("");//TODO image
-		ImageIcon image5 = new ImageIcon("");//TODO image
-		JButton map1= new JButton(image1);
-		JButton map2= new JButton(image2);
-		JButton map3= new JButton(image3);
-		JButton map4= new JButton(image4);
-		JButton map5= new JButton(image5);
-		
+		int aantal = 0;
 		
 		public ChooseMapPanel(Planner planner)
 		{
@@ -71,47 +65,97 @@ public class SimulatieGUI extends JPanel
 			SpringLayout layout = new SpringLayout();
 			setLayout(layout);
 			
-			add(map1);
-			add(map2);
-			add(map3);
-			add(map4);
-			add(map5);
+			File mapmap = new File("maps");
+			fillArrayList(mapmap);
+			fillImages(mapmap);
 			
-			layout.putConstraint(SpringLayout.WEST, map1, 450, SpringLayout.WEST, this);
-			layout.putConstraint(SpringLayout.NORTH, map1, 175, SpringLayout.NORTH, this);
 			
-			layout.putConstraint(SpringLayout.WEST, map2, 50, SpringLayout.WEST, map1);
-			layout.putConstraint(SpringLayout.NORTH, map2, 175, SpringLayout.NORTH, this);
 			
-			layout.putConstraint(SpringLayout.WEST, map3, 50, SpringLayout.WEST, map2);
-			layout.putConstraint(SpringLayout.NORTH, map3, 175, SpringLayout.NORTH, this);
-			
-			layout.putConstraint(SpringLayout.WEST, map4, 50, SpringLayout.WEST, map3);
-			layout.putConstraint(SpringLayout.NORTH, map4, 175, SpringLayout.NORTH, this);
-			
-			layout.putConstraint(SpringLayout.WEST, map5, 50, SpringLayout.WEST, map4);
-			layout.putConstraint(SpringLayout.NORTH, map5, 175, SpringLayout.NORTH, this);
+			for(File file : maps)
+			{
+				JButton b = new JButton(images.get(aantal));
+				b.addActionListener(new ButtonListener(aantal));
+				
+				add(b);
+				
+				layout.putConstraint(SpringLayout.WEST, b, 300 + (aantal*150), SpringLayout.WEST, this);
+				layout.putConstraint(SpringLayout.NORTH, b, 150, SpringLayout.NORTH, this);
+				
+				aantal++;
+			}
 		}
+		
+		public void fillImages(File file)
+		{
+			int teller = 1;
+			if(file.exists())
+			{
+				if (file.isDirectory()) 
+			    {
+			      File[] files = file.listFiles(); // All files and subdirectories
+			      for (int i = 0; files != null && i < files.length; i++) 
+			      {
+			    	  if(getFileExtension(files[i]).equals("jpg"))
+			    	  {
+			    		ImageIcon image = new ImageIcon("maps" + "\\" + teller + ".jpg");
+			    		images.add(image);
+			    		teller++;
+			    	  }
+			      }
+			    }
+			}
+			else
+			{
+				System.out.println("Map bestaat niet");
+			}
+		}
+		
+		public void fillArrayList(File file)
+		{
+			if(file.exists())
+			{
+				if (file.isDirectory()) 
+			    {
+			      File[] files = file.listFiles(); // All files and subdirectories
+			      for (int i = 0; files != null && i < files.length; i++) 
+			      {
+			    	  if(getFileExtension(files[i]).equals("json"))
+			    	  {
+			    		maps.add(files[i]);  
+			    	  }
+			      }
+			    }
+			}
+			else
+			{
+				System.out.println("Map bestaat niet");
+			}
+		}
+		
+		public String getFileExtension(File file) 
+		{
+	        String fileName = file.getName();
+	        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+	        return fileName.substring(fileName.lastIndexOf(".")+1);
+	        else return "";
+	    }
 	}
 	
-	class ButtonPanel extends JPanel
+	class ButtonListener implements ActionListener
 	{
-		Planner planner;
-		JButton okButton = new JButton("OK");
-		
-		public ButtonPanel(Planner planner)
+		int number;
+		public ButtonListener(int number)
 		{
-			super(null);
-			this.planner = planner;
-			setPreferredSize(new Dimension(1200,150));
-			SpringLayout layout = new SpringLayout();
-			setLayout(layout);
-			
-			add(okButton);
-			
-			layout.putConstraint(SpringLayout.WEST, okButton, 550, SpringLayout.WEST, this);
-			layout.putConstraint(SpringLayout.NORTH, okButton, 75, SpringLayout.NORTH, this);
+			this.number = number;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0)
+		{
+			planner.tabbedPane.removeTabAt(2);
+			planner.tabbedPane.addTab("Simulatie", new Simulator(maps.get(number), planner));
+			planner.repaint();
+	        planner.revalidate();
 		}
 	}
-
 }
