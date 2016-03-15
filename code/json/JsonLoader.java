@@ -115,7 +115,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 		
 		g2d.setTransform(transform);
 		//tekent alle layers.
-	//	drawLayers(g2d, transform);
+	
 		g2d.drawImage(mapimage, transform, null);
 		g2d.setTransform(oldtransform);
 	}
@@ -136,14 +136,11 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	}
 	public void mouseDragged(MouseEvent e) {
 		
-		//System.out.println("translate x " + x + " y " + y);
 		x += -0.5 * ((oldX - e.getX())/scale);
 		y += -0.5 * ((oldY - e.getY())/scale);
 		oldX = e.getX();
 		oldY = e.getY();
-		//getInsets().System.out.println("te transleren x " + x + " y " + y);
 		repaint();
-		//System.out.println("done");
 	}
 
 	class zoomMap implements MouseWheelListener {
@@ -152,8 +149,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
-			//System.out.println("zoom");
-
+			
 			double delta = -(0.05f * e.getPreciseWheelRotation());
 
 			scale += delta;
@@ -162,7 +158,6 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 			} else if (scale >= maxScale) {
 				scale = maxScale;
 			}
-			//System.out.println(scale);
 			repaint();
 		}
 	}
