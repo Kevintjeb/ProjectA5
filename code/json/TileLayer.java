@@ -37,11 +37,8 @@ public class TileLayer {
 				g2d.drawImage(map.getTiles()[(getTileInteger(i))], (x * map.getTileWidth()), (y * map.getTileHeight()),
 						null);
 				i++;
-
 			}
-
 		}
-		System.out.println("drawn on image");
 
 	}
 
