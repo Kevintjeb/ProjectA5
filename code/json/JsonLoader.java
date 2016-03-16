@@ -54,7 +54,6 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	AffineTransform transform = new AffineTransform();
 
 	private ArrayList<TileLayer> layerslist = new ArrayList<>();
-	private ArrayList<TileLayer> objectlist = new ArrayList<>();
 	private TileMap map;
 	private int height;
 	private int width;
@@ -108,7 +107,6 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 					}
 					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, b);
 					layerslist.add(e);
-
 				}
 
 			}
@@ -116,6 +114,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 			mapimage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
 					BufferedImage.TYPE_INT_ARGB);
 			drawMapImage();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -160,7 +159,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 		for (TileLayer layer : layerslist) {
 			g.drawImage(layer.getLayerImage(), 0, 0, null);
 		}
-
+		layerslist.clear();
 		return mapimage;
 	}
 
