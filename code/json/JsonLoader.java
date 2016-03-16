@@ -54,6 +54,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	AffineTransform transform = new AffineTransform();
 
 	private ArrayList<TileLayer> layerslist = new ArrayList<>();
+	private ArrayList<TileLayer> objectlist = new ArrayList<>();
 	private TileMap map;
 	private int height;
 	private int width;
@@ -100,8 +101,11 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 			// tilelayer arraylist.
 			for (int i = 0; i < layers.size(); i++) {
 				JSONObject currentlayer = (JSONObject) layers.get(i);
-				TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width);
-				layerslist.add(e);
+				if (currentlayer.get("type").equals("tilelayer")) {
+					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width);
+					layerslist.add(e);
+				}
+
 			}
 			// tileheight en width bepalen door uit de json te halen.
 			mapimage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
@@ -124,16 +128,16 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		
+
 		AffineTransform oldtransform = g2d.getTransform();
 		transform = new AffineTransform();
 		transform.scale(scale, scale);
 		transform.translate(x, y);
 
 		g2d.setTransform(transform);
-		
+
 		g2d.drawImage(mapimage, new AffineTransform(), this);
-		
+
 		for (Sprite b : sprites) {
 
 			b.draw(g2d);
@@ -157,8 +161,8 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 
 	public void mouseDragged(MouseEvent e) {
 
-		x += -1 * ((oldX - e.getX()) / scale);
-		y += -1 * ((oldY - e.getY()) / scale);
+		x += (-1 * ((oldX - e.getX())) / scale);
+		y += (-1 * ((oldY - e.getY())) / scale);
 		oldX = e.getX();
 		oldY = e.getY();
 		repaint();
@@ -166,7 +170,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 
 	class zoomMap implements MouseWheelListener {
 		float maxScale = 1.20f;
-		float minScale = 0.90f;
+		float minScale = 0.50f;
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
