@@ -102,8 +102,13 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 			for (int i = 0; i < layers.size(); i++) {
 				JSONObject currentlayer = (JSONObject) layers.get(i);
 				if (currentlayer.get("type").equals("tilelayer")) {
-					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width);
+					boolean b = false;
+					if (currentlayer.get("visible").equals(true)) {
+						b = true;
+					}
+					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, b);
 					layerslist.add(e);
+
 				}
 
 			}

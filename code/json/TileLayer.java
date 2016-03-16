@@ -12,14 +12,16 @@ public class TileLayer {
 	private int loaderheight;
 	private int loaderwidth;
 	private BufferedImage tilelayer;
+	private boolean visible;
 
-	public TileLayer(JSONArray jsonArray, TileMap m, int jlh, int jlw) {
+	public TileLayer(JSONArray jsonArray, TileMap m, int jlh, int jlw, boolean b) {
 		data = jsonArray;
 		map = m;
 		loaderheight = jlh;
 		loaderwidth = jlw;
 		tilelayer = new BufferedImage(loaderheight * map.getTileWidth(), loaderwidth * map.getTileHeight(),
 				BufferedImage.TYPE_INT_ARGB);
+		visible = b;
 		draw();
 	}
 
@@ -28,18 +30,19 @@ public class TileLayer {
 	}
 
 	public void draw() {
-		Graphics2D g2d = (Graphics2D) tilelayer.getGraphics();
+		if (visible) {
+			Graphics2D g2d = (Graphics2D) tilelayer.getGraphics();
 
-		int i = 0;
+			int i = 0;
 
-		for (int y = 0; y < loaderheight; y++) {
-			for (int x = 0; x < loaderwidth; x++) {
-				g2d.drawImage(map.getTiles()[(getTileInteger(i))], (x * map.getTileWidth()), (y * map.getTileHeight()),
-						null);
-				i++;
+			for (int y = 0; y < loaderheight; y++) {
+				for (int x = 0; x < loaderwidth; x++) {
+					g2d.drawImage(map.getTiles()[(getTileInteger(i))], (x * map.getTileWidth()),
+							(y * map.getTileHeight()), null);
+					i++;
+				}
 			}
 		}
-
 	}
 
 	public BufferedImage getLayerImage() {
