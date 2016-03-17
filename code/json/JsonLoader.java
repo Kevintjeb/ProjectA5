@@ -101,13 +101,21 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 			// tilelayer arraylist.
 			for (int i = 0; i < layers.size(); i++) {
 				JSONObject currentlayer = (JSONObject) layers.get(i);
-				TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width);
-				layerslist.add(e);
+				if (currentlayer.get("type").equals("tilelayer")) {
+					boolean b = false;
+					if (currentlayer.get("visible").equals(true)) {
+						b = true;
+					}
+					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, b);
+					layerslist.add(e);
+				}
+
 			}
 			// tileheight en width bepalen door uit de json te halen.
 			mapimage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
 					BufferedImage.TYPE_INT_ARGB);
 			drawMapImage();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -152,14 +160,14 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 		for (TileLayer layer : layerslist) {
 			g.drawImage(layer.getLayerImage(), 0, 0, null);
 		}
-
+		layerslist.clear();
 		return mapimage;
 	}
 
 	public void mouseDragged(MouseEvent e) {
 
-		x += -1 * ((oldX - e.getX()) / scale);
-		y += -1 * ((oldY - e.getY()) / scale);
+		x += (-1 * ((oldX - e.getX())) / scale);
+		y += (-1 * ((oldY - e.getY())) / scale);
 		oldX = e.getX();
 		oldY = e.getY();
 		repaint();
@@ -167,7 +175,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 
 	class zoomMap implements MouseWheelListener {
 		float maxScale = 1.20f;
-		float minScale = 0.90f;
+		float minScale = 0.50f;
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
