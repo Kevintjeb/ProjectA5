@@ -63,6 +63,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 			Point2D positie = new Point2D.Double(Math.random() * 400, Math.random() * 200);
 			sprites.add(new Sprite(positie));
 		}
+
 		new Timer(1, new ActionListener() {
 
 			@Override
@@ -124,16 +125,16 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		
+
 		AffineTransform oldtransform = g2d.getTransform();
 		transform = new AffineTransform();
 		transform.scale(scale, scale);
 		transform.translate(x, y);
 
 		g2d.setTransform(transform);
-		
+
 		g2d.drawImage(mapimage, new AffineTransform(), this);
-		
+
 		for (Sprite b : sprites) {
 
 			b.draw(g2d);
