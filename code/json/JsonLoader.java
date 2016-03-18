@@ -45,6 +45,10 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 2440757899334006246L;
+	/**
+	 * 
+	 */
 	ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	int x = 0;
 	int y = 0;
@@ -114,7 +118,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 			mapimage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
 					BufferedImage.TYPE_INT_ARGB);
 			drawMapImage();
-			
+			System.gc();
 		} catch (Exception e) {
 			e.printStackTrace();
 
