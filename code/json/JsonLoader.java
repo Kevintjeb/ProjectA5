@@ -67,6 +67,7 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 			Point2D positie = new Point2D.Double(Math.random() * 400, Math.random() * 200);
 			sprites.add(new Sprite(positie));
 		}
+
 		new Timer(1, new ActionListener() {
 
 			@Override
