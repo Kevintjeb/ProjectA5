@@ -32,8 +32,22 @@ public abstract class Building {
 		this.agents = new ArrayList<>(maxAgents);
 	}
 	
-	abstract int visit(Agent agent);
-	abstract void leave(Agent agent);
+	int visit(Agent agent)
+	{
+		if (agent == null)
+			return NO_ENTRANCE;
+		if (agents.size() >= maxAgents)
+			return NO_PLACE;
+		if (agents.contains(agent) == true)
+			return NO_ENTRANCE;
+		agents.add(agent);
+		return 0;
+	}
+	
+	void leave(Agent agent)
+	{
+		agents.remove(agent);
+	}
 	
 	public String toString()
 	{
