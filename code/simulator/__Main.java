@@ -17,7 +17,7 @@ public class __Main {
 			@Override
 			public void update() {
 				System.out.println(World.instance.getDeltaTime());
-				System.out.println(World.instance.getWorldTime());
+				System.out.println(World.instance.getWorldTime()+"\n");
 			}
 			
 		}
@@ -31,7 +31,7 @@ public class __Main {
 			
 			try
 			{
-				Thread.sleep(1000);
+				Thread.sleep(1000/60);
 			}
 			catch (Exception e)
 			{

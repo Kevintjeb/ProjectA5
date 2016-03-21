@@ -25,6 +25,7 @@ public class World {
 	private int worldTime; // the current time in the simulation world
 	private int deltaTime; // the delta between the second to last update() and the latest update()
 	private long lastRealTime = UNINITIALIZED; // the last time update was called is used to calculate deltaTime
+	private float timeRemainder = 0;
 	
 	public final agenda.Agenda agenda;
 	
@@ -38,7 +39,7 @@ public class World {
 		updateables = new LinkedList<>();
 		drawables = new LinkedList<>();
 		instance = this;
-		realTimeToSimTime = 10;
+		realTimeToSimTime = 0.1f;
 	}
 	
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath)
@@ -51,9 +52,16 @@ public class World {
 	{
 		{// update everything related to time
 			long realTime = System.currentTimeMillis();
+			System.out.println(timeRemainder);
 			if (lastRealTime == UNINITIALIZED)
 				lastRealTime = realTime;
-			deltaTime = (int)((realTime-lastRealTime)*realTimeToSimTime);
+			float deltaTimeFloat = realTime-lastRealTime+timeRemainder;
+			//System.out.println(deltaTimeFloat);
+			deltaTime = (int)(deltaTimeFloat*realTimeToSimTime);
+			//System.out.println(deltaTime);
+			timeRemainder = (deltaTimeFloat*realTimeToSimTime-deltaTime)/realTimeToSimTime;
+			//System.out.println(timeRemainder);
+			
 			worldTime += deltaTime;
 			lastRealTime = realTime;
 		}
