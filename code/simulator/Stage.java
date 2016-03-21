@@ -41,7 +41,10 @@ public class Stage extends Building implements Updateable{
 		
 		for (int i = 0; i < performances.size(); i++)
 		{
+			agenda.Time start = performances.get(i).getStartTime(), end = performances.get(i).getEndTime();
 			
+			if (agenda.Time.contains(start, end, ne) == true)
+				currentPerformance = i;
 		}
 	}
 
