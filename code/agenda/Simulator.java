@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.TexturePaint;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -19,6 +22,8 @@ import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+
+import com.sun.javafx.font.Disposer;
 
 public class Simulator extends JPanel
 {
@@ -44,10 +49,13 @@ public class Simulator extends JPanel
 		ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
 		ArrayList<Area> plaatjes = new ArrayList<Area>();
 		ArrayList<Rectangle2D> rechthoek = new ArrayList<Rectangle2D>();
-		JLabel speed1 = new JLabel("Speed ");
+		JLabel speed1 = new JLabel("Speed: ");
 		JLabel speed2 = new JLabel(" min/sec");
-		JLabel time = new JLabel("Time 00:00");
+		JLabel time = new JLabel("Time: 00:00");
 		JTextField speedInvoer = new JTextField(2);
+		JLabel visitors = new JLabel("Bezoekers:");
+		JTextField visitorsField = new JTextField(2);
+		JLabel visitors2 = new JLabel(" aantal/min");
 		
 		public ButtonPanel(Planner planner)
 		{
@@ -62,14 +70,26 @@ public class Simulator extends JPanel
 			add(speedInvoer);
 			add(speed2);
 			add(time);
+			add(visitors);
+			add(visitorsField);
+			add(visitors2);
 			
-			layout.putConstraint(SpringLayout.WEST, speed1, 200, SpringLayout.WEST, this);
+			layout.putConstraint(SpringLayout.WEST, visitors, 100, SpringLayout.WEST, this);
+			layout.putConstraint(SpringLayout.NORTH, visitors, 25, SpringLayout.NORTH, this);
+			
+			layout.putConstraint(SpringLayout.WEST, visitorsField, 70, SpringLayout.WEST, visitors);
+			layout.putConstraint(SpringLayout.NORTH, visitorsField, 25, SpringLayout.NORTH, this);
+			
+			layout.putConstraint(SpringLayout.WEST, visitors2, 25, SpringLayout.WEST, visitorsField);
+			layout.putConstraint(SpringLayout.NORTH, visitors2, 25, SpringLayout.NORTH, this);
+			
+			layout.putConstraint(SpringLayout.WEST, speed1, 75, SpringLayout.WEST, visitors2);
 			layout.putConstraint(SpringLayout.NORTH, speed1, 25, SpringLayout.NORTH, this);
 			
-			layout.putConstraint(SpringLayout.WEST, speedInvoer, 40, SpringLayout.WEST, speed1);
+			layout.putConstraint(SpringLayout.WEST, speedInvoer, 45, SpringLayout.WEST, speed1);
 			layout.putConstraint(SpringLayout.NORTH, speedInvoer, 25, SpringLayout.NORTH, this);
 			
-			layout.putConstraint(SpringLayout.WEST, speed2, 30, SpringLayout.WEST, speedInvoer);
+			layout.putConstraint(SpringLayout.WEST, speed2, 25, SpringLayout.WEST, speedInvoer);
 			layout.putConstraint(SpringLayout.NORTH, speed2, 25, SpringLayout.NORTH, this);
 			
 			layout.putConstraint(SpringLayout.WEST, time, 900, SpringLayout.WEST, this);
@@ -78,6 +98,7 @@ public class Simulator extends JPanel
 			File mapmap = new File("maps");
 			fillArrayList(mapmap);
 			fillPlaatjes();
+			clicked();
 			
 			
 		}
@@ -152,6 +173,46 @@ public class Simulator extends JPanel
 			plaatjes.add(pause);
 			plaatjes.add(forward);
 			plaatjes.add(power);
+			
+		}
+		
+		public void clicked()
+		{
+			addMouseListener(new MouseAdapter()
+			{
+				public void mouseClicked(MouseEvent e) 
+				{
+					for(int i = 0; i < plaatjes.size(); i++)
+					{
+						if(plaatjes.get(i).contains(e.getPoint()))
+						{
+							switch (i)
+							{
+							case 0:
+								System.out.println("refresh");
+								break;
+							case 1:
+								System.out.println("back");
+								break;
+							case 2:
+								System.out.println("play");
+								break;
+							case 3:
+								System.out.println("pause");
+								break;
+							case 4:
+								System.out.println("forward");
+								break;
+							case 5:
+								System.exit(0);
+								break;
+							default:
+								break;
+							}
+						}
+					}
+				}
+			});
 		}
 		
 		public void paintComponent(Graphics g)
