@@ -165,7 +165,7 @@ public class Planner extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				new StageLinker();
+				new StageLinker(agenda);
 			}
 		});
 		

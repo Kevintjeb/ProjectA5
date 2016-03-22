@@ -34,7 +34,6 @@ public class JsonLoader {
 		frame.setSize(1000, 1000);
 		frame.setVisible(true);
 	}
-
 }
 
 class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
@@ -197,5 +196,4 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
