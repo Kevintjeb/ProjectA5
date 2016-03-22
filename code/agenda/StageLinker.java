@@ -1,54 +1,74 @@
 package agenda;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 class StageLinker extends JFrame
 {
-	JPanel linker;
-	JButton saveButton = new JButton("Set link");
-	JButton closeButton = new JButton("Close");
+	private JPanel linker;
+	private JButton linkButton = new JButton("Save link");
+	private JButton closeButton = new JButton("Close");
 	private Agenda agenda;
+	private Stage stage;
+	protected HashMap map = new HashMap();
+	/*private Color blockColor = new Color(255, 255, 255, 128);
+	private Color textColor = new Color(0, 0, 0);
+	private Color lineColor = new Color(0, 0, 0);
+	private Color backgroundColor = new Color(255, 0, 0, 255);
+*/
 	
-	
-	public StageLinker(Planner planner)
+	public StageLinker(Agenda agendaInput)
 	{
 		super("Stage Linking");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.agenda = agendaInput;
 		
 		linker = new JPanel(new BorderLayout());
+		
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new FlowLayout());
 		
-		this.agenda = planner.agenda;
+		//JPanel stagePainter = new JPanel();
 		
-		JComboBox<Object> comboBox = new JComboBox<>();
+		repaint();
+		
+		JPanel agendaStages = new JPanel();
+		JComboBox<Stage> selectStage = new JComboBox<Stage>();
 		for (Stage stage : agenda.getStages())
-			comboBox.addItem(stage);
+			selectStage.addItem(stage);
+		agendaStages.add(selectStage);
 		
-		JTextField idField = new JTextField();
+		JPanel jsonStages = new JPanel();
+		JComboBox<Integer> selectLayers = new JComboBox<Integer>();
+		for(int i = 6; i <= 27; i = i+3)
+			selectLayers.addItem(i);
+		jsonStages.add(selectLayers);
 		
-		//Basic framework, it's done for now.
-		saveButton.addActionListener(new ActionListener()
+		
+		linkButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//Fixed the stage specific set problem. Now for the json link
-				int num = Integer.parseInt(idField.getText());
-				Stage tempStage = (Stage) comboBox.getSelectedItem();
-				tempStage.setID(num);
-				System.out.println(tempStage.getID());
-				JOptionPane.showMessageDialog(linker, "Link set");
+				int key = (int)(selectLayers.getSelectedItem());
+				Stage value = (Stage)(selectStage.getSelectedItem());
+				map.put(key, value);
+				System.out.println(map.entrySet());
+				selectStage.removeItem(selectStage.getSelectedItem());
+				selectLayers.removeItem(selectLayers.getSelectedItem());
 			}
 		});
 		
@@ -57,21 +77,35 @@ class StageLinker extends JFrame
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				JOptionPane.showMessageDialog(linker, "Closed linking gui");
 				dispose();
 			}
 		});
 		
-		buttons.add(saveButton);
+		buttons.add(linkButton);
 		buttons.add(closeButton);
 		linker.add(buttons, BorderLayout.SOUTH);
-		linker.add(comboBox, BorderLayout.NORTH);
-		linker.add(idField, BorderLayout.CENTER);
+		//linker.add(stagePainter, BorderLayout.WEST);
+		linker.add(agendaStages, BorderLayout.WEST);
+		linker.add(jsonStages, BorderLayout.EAST);
 		
 		setContentPane(linker);
 		setVisible(true);
 		setResizable(false);
 		setSize(400, 550);
 		setLocationRelativeTo(null);
+	}
+	
+	/*public void paintComponent(Graphics g){
+		super.paintComponents(g);
+		Graphics2D g2d = (Graphics2D)g;
+		for(int i = 0; i < agenda.stages.size(); i++){
+			g2d.setColor(lineColor);
+			g2d.drawRect(20, 10 + i*10, 50, 20);
+			g2d.setColor(blockColor);
+			g2d.fillRect(20, 10 + i*10, 50, 20);		
+		}
+	}*/
+	protected Map getLinkMap(){
+		return map;
 	}
 }

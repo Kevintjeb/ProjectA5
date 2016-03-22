@@ -2,17 +2,22 @@ package json;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.io.FileReader;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -40,12 +45,16 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	/**
 	 * 
 	 */
-
+	private static final long serialVersionUID = 2440757899334006246L;
+	/**
+	 * 
+	 */
+	ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	int x = 0;
 	int y = 0;
 
 	float scale = 1;
-
+	private BufferedImage mapimage;
 	AffineTransform transform = new AffineTransform();
 
 	private ArrayList<TileLayer> layerslist = new ArrayList<>();
@@ -54,11 +63,23 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	private int width;
 
 	public ContentPane() {
+		for (int i = 0; i < 25; i++) {
+			Point2D positie = new Point2D.Double(Math.random() * 400, Math.random() * 200);
+			sprites.add(new Sprite(positie));
+		}
 
+		new Timer(1, new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (Sprite b : sprites) {
+					b.update(sprites);
+				}
+				repaint();
+			}
+		}).start();
 		// filepath to jsonfile
-		crunchJson("C:\\Users\\Rick\\Desktop\\test2.json","C:\\Users\\Rick\\Downloads\\ground_tiles.png");//"C:\\Users\\kevin\\Desktop\\tilemap.json", "C:\\Users\\kevin\\Downloads\\tileset\\ground_tiles.png");
-		// setSize(new Dimension(1000, 2000));
-		// setMinimumSize(new Dimension(500, 500));
+		crunchJson("EndMap.json", "Tiled2.png");
 		addMouseMotionListener(this);
 		addMouseListener(this);
 		addMouseWheelListener(new zoomMap());
@@ -84,11 +105,21 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 			// tilelayer arraylist.
 			for (int i = 0; i < layers.size(); i++) {
 				JSONObject currentlayer = (JSONObject) layers.get(i);
-				TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width);
-				layerslist.add(e);
+				if (currentlayer.get("type").equals("tilelayer")) {
+					boolean b = false;
+					if (currentlayer.get("visible").equals(true)) {
+						b = true;
+					}
+					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, b);
+					layerslist.add(e);
+				}
+
 			}
 			// tileheight en width bepalen door uit de json te halen.
-
+			mapimage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
+					BufferedImage.TYPE_INT_ARGB);
+			drawMapImage();
+			System.gc();
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -106,41 +137,52 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
+
 		AffineTransform oldtransform = g2d.getTransform();
-		// g2d.drawImage(layerslist.get(0).getLayerImage(), 0, 0, this);
-		// g2d.setClip(null);
 		transform = new AffineTransform();
 		transform.scale(scale, scale);
 		transform.translate(x, y);
-		// transform.translate(-getWidth()/2, -getHeight()/2);
-		
+
 		g2d.setTransform(transform);
-		g2d.drawImage(layerslist.get(0).getLayerImage(), transform, this);
+
+		g2d.drawImage(mapimage, new AffineTransform(), this);
+
+		for (Sprite b : sprites) {
+
+			b.draw(g2d);
+		}
+
 		g2d.setTransform(oldtransform);
 	}
 
 	int oldX = -1;
 	int oldY = -1;
 
+	public BufferedImage drawMapImage() {
+		Graphics2D g = (Graphics2D) mapimage.getGraphics();
+
+		for (TileLayer layer : layerslist) {
+			g.drawImage(layer.getLayerImage(), 0, 0, null);
+		}
+		layerslist.clear();
+		return mapimage;
+	}
+
 	public void mouseDragged(MouseEvent e) {
-		
-		System.out.println("translate x " + x + " y " + y);
-		x += -0.5 * ((oldX - e.getX())/scale);
-		y += -0.5 * ((oldY - e.getY())/scale);
+
+		x += (-1 * ((oldX - e.getX())) / scale);
+		y += (-1 * ((oldY - e.getY())) / scale);
 		oldX = e.getX();
 		oldY = e.getY();
-		System.out.println("te transleren x " + x + " y " + y);
 		repaint();
-		System.out.println("done");
 	}
 
 	class zoomMap implements MouseWheelListener {
 		float maxScale = 1.20f;
-		float minScale = 0.90f;
+		float minScale = 0.50f;
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
-			System.out.println("zoom");
 
 			double delta = -(0.05f * e.getPreciseWheelRotation());
 
@@ -150,7 +192,6 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 			} else if (scale >= maxScale) {
 				scale = maxScale;
 			}
-			System.out.println(scale);
 			repaint();
 		}
 	}
@@ -158,19 +199,19 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -182,13 +223,13 @@ class ContentPane extends JPanel implements MouseMotionListener, MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

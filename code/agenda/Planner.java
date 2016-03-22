@@ -31,6 +31,7 @@ public class Planner extends JFrame {
 	JMenuBar menuBar;
 	Agenda agenda = new Agenda();
 	Planner _this = this;
+	JTabbedPane tabbedPane = new JTabbedPane();
 
 	public static void main(String[] args) {
 		new Planner();
@@ -183,7 +184,7 @@ public class Planner extends JFrame {
 
 		// Kevin --
 
-		JTabbedPane tabbedPane = new JTabbedPane();
+		
 		
 		tabbedPane.addTab("Simple", new SimpleAgenda(this));
 
@@ -191,7 +192,12 @@ public class Planner extends JFrame {
 		JScrollPane pane = new JScrollPane(tl);
 		tabbedPane.addTab("2D", pane);
 		
+<<<<<<< HEAD
 		//tabbedPane.addTab("Simulatie", newSimulatieGUI(this));
+=======
+		tabbedPane.addTab("Simulatie", new SimulatieGUI(this));
+		
+>>>>>>> refs/remotes/origin/master
 		contentPane.add(tabbedPane);
 		
 		setContentPane(contentPane);
