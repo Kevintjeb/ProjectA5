@@ -76,6 +76,10 @@ public class World {
 				width = ((Long) json.get("width")).intValue();
 				
 				colisionInfo = new boolean[width][height];
+				tiles = new Tile[width][height];
+				for (int x = 0; x < width; x++)
+					for (int y = 0; y < height; y++)
+						tiles[x][y] = new Tile(x, y);
 
 				// jsonfile uitlezen op layers en toevoegen als tilelayer in
 				// tilelayer arraylist.
@@ -311,6 +315,11 @@ public class World {
 				
 			}
 		}
+	}
+	
+	public void setSpeed(double msToS)
+	{
+		realTimeToSimTime = msToS;
 	}
 	
 	public void inclusiveUpdate(Graphics2D g2)
