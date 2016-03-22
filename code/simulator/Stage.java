@@ -17,7 +17,8 @@ class Stage extends Building implements Updateable{
 		
 		this.stage = stage;
 		this.danceFloor = danceFloor;
-		World.instance.regesterUpdateable(this);
+		System.out.println(World.instance + " instance");
+		System.out.println(this + "this");
 		performances = World.instance.agenda.getStagesPerformances(stage);
 	}
 	

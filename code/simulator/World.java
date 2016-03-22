@@ -43,11 +43,12 @@ public class World {
 
 	public final agenda.Agenda agenda;
 
-	private Image mapImage;
+	private BufferedImage mapImage;
 
 	protected static World instance;
 
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath, String tileMapPath) {
+		instance = this;
 		this.agenda = agenda;
 
 		boolean[][] collisionInfo = null;
@@ -62,17 +63,16 @@ public class World {
 			final int collidableTrue = 90;
 			final int collidableFalse = 86;
 			final int danceFloorTrue = 63;
-
+			
 			JSONParser parser = new JSONParser();
 			int height;
 			int width;
 			buildings = new ArrayList<Building>();
 			ArrayList<TileLayer> layerslist = new ArrayList<>();
-
+			
 			try {
 				// tilemap maken door een tilemap object aan te maken.
 				map = new TileMap(tileMapPath, 32, 32);
-
 				// jsonfile parsen
 				Object file = parser.parse(new FileReader(jsonPath));
 				JSONObject json = (JSONObject) file;
@@ -82,7 +82,12 @@ public class World {
 				width = ((Long) json.get("width")).intValue();
 
 				collisionInfo = new boolean[width][height];
-
+				mapImage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
+						BufferedImage.TYPE_INT_ARGB);
+				tiles = new  Tile[width][height];
+				for(int x = 0; x < width; x++)
+					for(int y = 0; y < height; y++)
+						tiles[x][y] = new Tile(x, y);
 				// jsonfile uitlezen op layers en toevoegen als tilelayer in
 				// tilelayer arraylist.
 				// als de layer een visible : true heeft dan wordt hij
@@ -93,7 +98,7 @@ public class World {
 				// JSON.
 
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
-
+					
 					agenda.Stage stage = entry.getKey();
 					int stageIndex = entry.getValue();
 					ArrayList<Tile> entrance = new ArrayList<>();
@@ -103,16 +108,17 @@ public class World {
 
 					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
 					layerslist.add(e);
-
-					if (currentlayer.containsKey("properties")) {
-
+					if (currentlayer.get("properties") != null) {
+						
 						JSONObject properties = (JSONObject) currentlayer.get("properties");
 						int maxAgents = Integer.parseInt((String) properties.get("maxAgents"));
-						JSONArray drawProperties = (JSONArray) properties.get("drawwith");
-
-						for (int j = 0; j < drawProperties.size(); j++) {
-
-							JSONObject layer = (JSONObject) layers.get((int) drawProperties.get(j));
+						
+						String drawProperties = (String) properties.get("drawwith");
+						String[] bundel = drawProperties.split(",");
+						
+						for (int j = 0; j < bundel.length; j++) {
+							
+							JSONObject layer = (JSONObject) layers.get(Integer.parseInt(bundel[j]));
 
 							if (layer.get("visible").equals(true)) {
 								TileLayer temp = new TileLayer((JSONArray) layer.get("data"), map, height, width, true);
@@ -122,7 +128,6 @@ public class World {
 								JSONArray data = (JSONArray) layer.get("data");
 								for (int i = 0; i < data.size(); i++) {
 									int tileType = ((Long) data.get(i)).intValue();
-
 									switch (tileType) {
 									case entranceExit:
 										entrance.add(tiles[i % width][i / width]);
@@ -130,10 +135,7 @@ public class World {
 									case collidableTrue:
 										collisionInfo[i % width][i / width] = true;
 										break;
-									// case mainEntrance:
-									// entrance.add(tiles[i % width][i /
-									// width]);
-									// break;
+									
 									case danceFloorTrue:
 										danceFloor.add(tiles[i % width][i / width]);
 										break;
@@ -155,8 +157,7 @@ public class World {
 				// van
 				// de map en tilewidth is puur de tilewidth (32 bij ons..)
 
-				mapImage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
-						BufferedImage.TYPE_INT_ARGB);
+				
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -338,6 +339,13 @@ public class World {
 			}
 		}
 
+	}
+	
+	protected Tile getTileAt(int x, int y)
+	{
+		if (x < 0 || y < 0 || x > tiles.length || y > tiles[0].length)
+			return null;
+		return tiles[x][y];
 	}
 
 	private class Node {
