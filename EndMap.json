@@ -66,7 +66,8 @@
          "opacity":1,
          "properties":
             {
-             "drawwith":"6,7"
+             "drawwith":"6,7",
+             "maxAgents":"93"
             },
          "type":"tilelayer",
          "visible":true,
@@ -103,7 +104,8 @@
          "opacity":1,
          "properties":
             {
-             "drawwith":"9,10"
+             "drawwith":"9,10",
+             "maxAgents":"130"
             },
          "type":"tilelayer",
          "visible":true,
@@ -140,7 +142,8 @@
          "opacity":1,
          "properties":
             {
-             "drawwith":"12,13"
+             "drawwith":"12,13",
+             "maxAgents":"40"
             },
          "type":"tilelayer",
          "visible":true,
@@ -177,7 +180,8 @@
          "opacity":1,
          "properties":
             {
-             "drawwith":"15,16"
+             "drawwith":"15,16",
+             "maxAgents":"136"
             },
          "type":"tilelayer",
          "visible":true,
@@ -214,7 +218,8 @@
          "opacity":1,
          "properties":
             {
-             "drawwith":"18,19"
+             "drawwith":"18,19",
+             "maxAgents":"54"
             },
          "type":"tilelayer",
          "visible":true,
@@ -251,7 +256,8 @@
          "opacity":1,
          "properties":
             {
-             "drawwith":"21,22"
+             "drawwith":"21,22",
+             "maxAgents":"63"
             },
          "type":"tilelayer",
          "visible":true,
@@ -288,7 +294,8 @@
          "opacity":1,
          "properties":
             {
-             "drawwith":"24,25"
+             "drawwith":"24,25",
+             "maxAgents":"32"
             },
          "type":"tilelayer",
          "visible":true,
@@ -325,7 +332,8 @@
          "opacity":1,
          "properties":
             {
-             "drawwith":"27,28"
+             "drawwith":"27,28",
+             "maxAgents":"36"
             },
          "type":"tilelayer",
          "visible":true,
