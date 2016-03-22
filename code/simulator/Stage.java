@@ -5,23 +5,31 @@ package simulator;
 
 import java.util.ArrayList;
 
-/**
- * @author flori
- *
- */
-public class Stage extends Building implements Updateable{
+class Stage extends Building implements Updateable{
 	private agenda.Stage stage;
 	private Tile[][] danceFloor;
 	private ArrayList<agenda.Performance> performances;
+	private agenda.Performance currentPerformance = null;
 	
-	Stage(String name, String description, Tile[] entrances,
+	Stage(String description, Tile[] entrances,
 			Tile[] exits, int maxAgents, agenda.Stage stage, Tile[][] danceFloor) {
-		super(generateNewTypeID(), name, description, entrances, exits, maxAgents);
+		super(generateNewTypeID(), stage.getName(), description, entrances, exits, maxAgents);
 		
 		this.stage = stage;
 		this.danceFloor = danceFloor;
 		World.instance.regesterUpdateable(this);
 		performances = World.instance.agenda.getStagesPerformances(stage);
+	}
+	
+
+	@Override
+	public void close() {
+		World.instance.unregesterUpdatable(this);
+	}
+	
+	agenda.Performance getCurrentPerformance()
+	{
+		return currentPerformance;
 	}
 
 	@Override
@@ -37,14 +45,41 @@ public class Stage extends Building implements Updateable{
 		final int NO_PERFORMANCE = -1;
 		int lastPerformance = NO_PERFORMANCE, currentPerformance = NO_PERFORMANCE;
 		
-		int currentTime = World.instance.getWorldTime(), previusTime = currentTime - World.instance.getDeltaTime();
+		agenda.Time currentTime = new agenda.Time(World.instance.getWorldTime());
+		agenda.Time preciusTime = new agenda.Time(World.instance.getWorldTime() - World.instance.getDeltaTime());
 		
 		for (int i = 0; i < performances.size(); i++)
 		{
 			agenda.Time start = performances.get(i).getStartTime(), end = performances.get(i).getEndTime();
 			
-			if (agenda.Time.contains(start, end, ne) == true)
+			if (agenda.Time.contains(start, end, currentTime) == true)
 				currentPerformance = i;
+			if (agenda.Time.contains(start, end, preciusTime) == true)
+				lastPerformance = i;
+		}
+		
+		if (currentPerformance == NO_PERFORMANCE)
+			this.currentPerformance = null;
+		else
+			this.currentPerformance = performances.get(currentPerformance);
+		
+		// TODO remove in final version?
+		if (lastPerformance != currentPerformance)
+		{
+			String message = "";
+			
+			if (lastPerformance != NO_PERFORMANCE)
+			{
+				message += "the performance \"" + performances.get(lastPerformance) + "\" on stage \"" +
+						stage + "\" ended";
+			}
+			if (currentPerformance == NO_PERFORMANCE)
+			{
+				message = "the performance \"" + performances.get(currentPerformance).toString() + 
+						"\" started at stage \"" + stage.toString() + "\"";
+			}
+			
+			System.out.println(message);
 		}
 	}
 

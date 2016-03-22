@@ -87,6 +87,7 @@ abstract class Agent implements Updateable, Drawable {
 		}
 	}
 	
+	@Override
 	public void draw(Graphics2D graphics)
 	{
 		// TODO implement the rotation

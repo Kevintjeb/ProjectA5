@@ -19,6 +19,11 @@ public class __Main {
 				System.out.println(World.instance.getDeltaTime());
 				System.out.println(World.instance.getWorldTime()+"\n");
 			}
+
+			@Override
+			public void close() {
+				World.instance.unregesterUpdatable(this);
+			}
 			
 		}
 		
