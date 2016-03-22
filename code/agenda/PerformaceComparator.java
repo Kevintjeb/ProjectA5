@@ -2,7 +2,6 @@ package agenda;
 
 import java.util.Comparator;
 
-
 public class PerformaceComparator implements Comparator<Performance>
 {
 	public enum SortTypes
