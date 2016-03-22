@@ -2,9 +2,12 @@ package agenda;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.TexturePaint;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -22,6 +25,7 @@ import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.Timer;
 
 import com.sun.javafx.font.Disposer;
 
@@ -29,6 +33,8 @@ public class Simulator extends JPanel
 {
 	File json;
 	Planner planner;
+	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
+	Font timeFont = new Font("SANS_SERIF", Font.BOLD, 36);
 	public Simulator(File json, Planner planner)
 	{
 		super(new BorderLayout());
@@ -49,13 +55,17 @@ public class Simulator extends JPanel
 		ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
 		ArrayList<Area> plaatjes = new ArrayList<Area>();
 		ArrayList<Rectangle2D> rechthoek = new ArrayList<Rectangle2D>();
+		
 		JLabel speed1 = new JLabel("Speed: ");
 		JLabel speed2 = new JLabel(" min/sec");
-		JLabel time = new JLabel("Time: 00:00");
-		JTextField speedInvoer = new JTextField(2);
+		JLabel time = new JLabel("09:00");
+		JTextField speedInvoer = new JTextField("0.0", 2);
 		JLabel visitors = new JLabel("Bezoekers:");
-		JTextField visitorsField = new JTextField(2);
+		JTextField visitorsField = new JTextField("0", 2);
 		JLabel visitors2 = new JLabel(" aantal/min");
+		
+		double oldSpeed = 0.0;
+		int oldVisitors = 0;
 		
 		public ButtonPanel(Planner planner)
 		{
@@ -74,16 +84,22 @@ public class Simulator extends JPanel
 			add(visitorsField);
 			add(visitors2);
 			
-			layout.putConstraint(SpringLayout.WEST, visitors, 100, SpringLayout.WEST, this);
+			speed1.setFont(font);
+			speed2.setFont(font);
+			time.setFont(timeFont);
+			visitors.setFont(font);
+			visitors2.setFont(font);
+			
+			layout.putConstraint(SpringLayout.WEST, visitors, 90, SpringLayout.WEST, this);
 			layout.putConstraint(SpringLayout.NORTH, visitors, 25, SpringLayout.NORTH, this);
 			
-			layout.putConstraint(SpringLayout.WEST, visitorsField, 70, SpringLayout.WEST, visitors);
+			layout.putConstraint(SpringLayout.WEST, visitorsField, 75, SpringLayout.WEST, visitors);
 			layout.putConstraint(SpringLayout.NORTH, visitorsField, 25, SpringLayout.NORTH, this);
 			
-			layout.putConstraint(SpringLayout.WEST, visitors2, 25, SpringLayout.WEST, visitorsField);
+			layout.putConstraint(SpringLayout.WEST, visitors2, 23, SpringLayout.WEST, visitorsField);
 			layout.putConstraint(SpringLayout.NORTH, visitors2, 25, SpringLayout.NORTH, this);
 			
-			layout.putConstraint(SpringLayout.WEST, speed1, 75, SpringLayout.WEST, visitors2);
+			layout.putConstraint(SpringLayout.WEST, speed1, 80, SpringLayout.WEST, visitors2);
 			layout.putConstraint(SpringLayout.NORTH, speed1, 25, SpringLayout.NORTH, this);
 			
 			layout.putConstraint(SpringLayout.WEST, speedInvoer, 45, SpringLayout.WEST, speed1);
@@ -93,7 +109,7 @@ public class Simulator extends JPanel
 			layout.putConstraint(SpringLayout.NORTH, speed2, 25, SpringLayout.NORTH, this);
 			
 			layout.putConstraint(SpringLayout.WEST, time, 900, SpringLayout.WEST, this);
-			layout.putConstraint(SpringLayout.NORTH, time, 25, SpringLayout.NORTH, this);
+			layout.putConstraint(SpringLayout.NORTH, time, 15, SpringLayout.NORTH, this);
 			
 			File mapmap = new File("maps");
 			fillArrayList(mapmap);
@@ -189,19 +205,19 @@ public class Simulator extends JPanel
 							switch (i)
 							{
 							case 0:
-								System.out.println("refresh");
+								refreshSim();
 								break;
 							case 1:
-								System.out.println("back");
+								backSim();
 								break;
 							case 2:
-								System.out.println("play");
+								playSim();
 								break;
 							case 3:
-								System.out.println("pause");
+								pauseSim();
 								break;
 							case 4:
-								System.out.println("forward");
+								forwardSim();
 								break;
 							case 5:
 								System.exit(0);
@@ -213,6 +229,65 @@ public class Simulator extends JPanel
 					}
 				}
 			});
+			
+			ActionListener update = new ActionListener()
+			{
+				int newVisitors = 0;
+				double speed = 0.0;
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					if(!speedInvoer.getText().equals(""))
+					{
+						speed = Double.parseDouble(speedInvoer.getText());
+					}
+					
+					if(!visitorsField.getText().equals(""))
+					{
+						newVisitors = Integer.parseInt(visitorsField.getText());
+					}
+					
+					if(speed != oldSpeed)
+					{
+						System.out.println("wijzig snelheid");
+					}
+					if(newVisitors != oldVisitors)
+					{
+						System.out.println("wijzig bezoekers");
+					}
+					
+					oldSpeed = speed;
+					oldVisitors = newVisitors;
+				}
+			};
+			
+			Timer updateTime = new Timer(50, update);
+			updateTime.start();
+		}
+		
+		public void refreshSim()
+		{
+			
+		}
+		
+		public void backSim()
+		{
+			
+		}
+		
+		public void playSim()
+		{
+			
+		}
+		
+		public void pauseSim()
+		{
+			
+		}
+		
+		public void forwardSim()
+		{
+			
 		}
 		
 		public void paintComponent(Graphics g)
@@ -254,6 +329,8 @@ public class Simulator extends JPanel
 		Planner planner;
 		JSlider timeSlider;
 		
+		int oldTime;
+		
 		public TimePanel(Planner planner)
 		{
 			super(null);
@@ -273,6 +350,27 @@ public class Simulator extends JPanel
 		    slider.setPreferredSize(new Dimension(1100,50));
 
 		    add(slider);
+		    
+		    slider.setFont(font);
+		    
+		    ActionListener update = new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					if(slider.getValue() != oldTime)
+					{
+						
+					}
+					
+					oldTime = slider.getValue();
+				}
+				
+			};
+			
+			Timer updateTime = new Timer(50, update);
+			updateTime.start();
 		    
 		    layout.putConstraint(SpringLayout.WEST, slider, 25, SpringLayout.WEST, this);
 			layout.putConstraint(SpringLayout.NORTH, slider, 25, SpringLayout.NORTH, this);

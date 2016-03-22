@@ -2,6 +2,7 @@ package agenda;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -19,6 +20,8 @@ public class SimulatieGUI extends JPanel
 	ArrayList<File> maps = new ArrayList<File>();
 	ArrayList<ImageIcon> images = new ArrayList<ImageIcon>();
 	SimulatieGUI _this = this;
+	
+	Font font = new Font("SANS_SERIF", Font.BOLD, 22);
 	
 	public SimulatieGUI(Planner planner)
 	{
@@ -45,6 +48,8 @@ public class SimulatieGUI extends JPanel
 			setLayout(layout);
 			
 			add(chooseMap);
+			
+			chooseMap.setFont(font);
 			
 			layout.putConstraint(SpringLayout.WEST, chooseMap, 490, SpringLayout.WEST, this);
 			layout.putConstraint(SpringLayout.NORTH, chooseMap, 75, SpringLayout.NORTH, this);
