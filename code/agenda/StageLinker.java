@@ -8,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,10 +21,18 @@ import json.TileLayer;
 class StageLinker extends JFrame
 {
 	private JPanel linker;
+<<<<<<< HEAD
 	private JButton linkButton = new JButton("Save links");
 	private JButton closeButton = new JButton("Close");
 	private Agenda agenda;
 	private Stage stage;
+=======
+	private JButton linkButton = new JButton("Save link");
+	private JButton closeButton = new JButton("Close");
+	private Agenda agenda;
+	private Stage stage;
+	protected HashMap map = new HashMap();
+>>>>>>> StageLinker
 	/*private Color blockColor = new Color(255, 255, 255, 128);
 	private Color textColor = new Color(0, 0, 0);
 	private Color lineColor = new Color(0, 0, 0);
@@ -45,6 +55,7 @@ class StageLinker extends JFrame
 		repaint();
 		
 		JPanel agendaStages = new JPanel();
+<<<<<<< HEAD
 		JComboBox<Stage> selectAgendaStage = new JComboBox<Stage>();
 		for (Stage stage : agenda.getStages())
 			selectAgendaStage.addItem(stage);
@@ -61,16 +72,39 @@ class StageLinker extends JFrame
 			selectLayers.addItem(s);
 		jsonStages.add(selectLayers);
 		
+=======
+		JComboBox<Stage> selectStage = new JComboBox<Stage>();
+		for (Stage stage : agenda.getStages())
+			selectStage.addItem(stage);
+		agendaStages.add(selectStage);
+		
+		JPanel jsonStages = new JPanel();
+		JComboBox<Integer> selectLayers = new JComboBox<Integer>();
+		for(int i = 6; i <= 27; i = i+3)
+			selectLayers.addItem(i);
+		jsonStages.add(selectLayers);
+		
+		
+>>>>>>> StageLinker
 		linkButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+<<<<<<< HEAD
 				stage = (Stage)selectAgendaStage.getSelectedItem();
 				System.out.println(stage);
 				stage.setID((int)(Math.random()*100));
 				System.out.println(stage.getID());
 				//dispose();
+=======
+				int key = (int)(selectLayers.getSelectedItem());
+				Stage value = (Stage)(selectStage.getSelectedItem());
+				map.put(key, value);
+				System.out.println(map.entrySet());
+				selectStage.removeItem(selectStage.getSelectedItem());
+				selectLayers.removeItem(selectLayers.getSelectedItem());
+>>>>>>> StageLinker
 			}
 		});
 		
@@ -107,4 +141,10 @@ class StageLinker extends JFrame
 			g2d.fillRect(20, 10 + i*10, 50, 20);		
 		}
 	}*/
+<<<<<<< HEAD
+=======
+	protected Map getLinkMap(){
+		return map;
+	}
+>>>>>>> StageLinker
 }

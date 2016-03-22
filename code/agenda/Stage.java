@@ -87,11 +87,20 @@ public class Stage implements Serializable
 		return "name \"" + name + "\"";
 	}
 	
+<<<<<<< HEAD
 	protected void setID(int ID){
 		StageID = ID;
 	}
 	
 	protected int getID(){
 		return StageID;
+=======
+	protected void setID(int IDCode){
+		this.IDCode = IDCode;
+	}
+	
+	protected int getID(){
+		return IDCode;
+>>>>>>> StageLinker
 	}
 }
