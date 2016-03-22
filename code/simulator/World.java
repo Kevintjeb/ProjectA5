@@ -88,6 +88,81 @@ public class World {
 		toRemove.clear();
 	}
 	
+	public void initJson(String filepathjson, String filepathtilemap) {
+		// ATRIBUTEN, moeten worden aangemaakt boven constructor ofcourse..
+		TileMap map;
+		JSONParser parser = new JSONParser();
+		String mappath = filepathtilemap;
+		int height;
+		int width;
+		ArrayList<TileLayer> layerslist = new ArrayList<>();
+
+		try {
+			// tilemap maken door een tilemap object aan te maken.
+			map = new TileMap(mappath, 32, 32);
+
+			// jsonfile parsen
+			Object file = parser.parse(new FileReader(filepathjson));
+			JSONObject json = (JSONObject) file;
+			JSONArray layers = (JSONArray) json.get("layers");
+			// hoogte + breedte van de hele map.
+			height = ((Long) json.get("height")).intValue();
+			width = ((Long) json.get("width")).intValue();
+
+			// jsonfile uitlezen op layers en toevoegen als tilelayer in
+			// tilelayer arraylist.
+			// als de layer een visible : true heeft dan wordt hij toegevoegd
+			// met de parameter true zodat de tekenmethode weet dat de layer
+			// moet worden getekend.
+			// dit is voor de collision layers : die hebben false in de JSON.
+			
+			//TODO nog editten naar wat binnenkomt kwa wat er gebruikt moet worden.
+			for (int i = 0; i < layers.size(); i++) {
+				JSONObject currentlayer = (JSONObject) layers.get(i);
+				if (currentlayer.get("type").equals("tilelayer")) {
+					boolean b = false;
+					if (currentlayer.get("visible").equals(true)) {
+						b = true;
+					}
+					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, b);
+					layerslist.add(e);
+				}
+			}
+			// tileheight en width bepalen door uit de json te halen.
+			// width en tilewidth zijn verschillende waarde. width = groote van
+			// de map en tilewidth is puur de tilewidth (32 bij ons..)
+			mapimage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
+					BufferedImage.TYPE_INT_ARGB);
+
+			
+			//Collision toevoegen in een arraylist van booleans?
+			// 2 tiles : tileID 90 en 86.
+			//op basis van collision later > tiled eigenschap!
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+
+		// tekenen op de map, dit gebeurt maar 1x en zorgt ervoor dat de map dus
+		// niet meer veranderd maar wel gebruikt kan worden zonder veel
+		// geheugen.
+		try {
+			Graphics2D g = (Graphics2D) mapimage.getGraphics();
+
+			for (TileLayer layer : layerslist) {
+				g.drawImage(layer.getLayerImage(), 0, 0, null);
+			}
+			layerslist.clear();
+			// Garbage collecter notification voor java, om die tering rommel op
+			// te ruimen >> 1500MB.
+			//TODO FIX JAVA.
+			System.gc();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void draw(Graphics2D graphics)
 	{
 		graphics.drawImage(map, new AffineTransform(), null);
