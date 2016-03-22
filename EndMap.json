@@ -54,7 +54,7 @@
          "name":"Collision(Path)",
          "opacity":0,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":100,
          "x":0,
          "y":0
@@ -130,7 +130,7 @@
          "name":"Collision(Stage2)",
          "opacity":0,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":100,
          "x":0,
          "y":0
@@ -168,7 +168,7 @@
          "name":"Collision(Stage3)",
          "opacity":0,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":100,
          "x":0,
          "y":0
@@ -206,7 +206,7 @@
          "name":"Collision(Stage4)",
          "opacity":0,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":100,
          "x":0,
          "y":0
@@ -244,7 +244,7 @@
          "name":"Collision(Stage5)",
          "opacity":0,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":100,
          "x":0,
          "y":0
@@ -282,7 +282,7 @@
          "name":"Collision(Stage6)",
          "opacity":0,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":100,
          "x":0,
          "y":0
@@ -320,7 +320,7 @@
          "name":"Collision(Stage7)",
          "opacity":0,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":100,
          "x":0,
          "y":0
@@ -358,7 +358,7 @@
          "name":"Collision(Stage8)",
          "opacity":0,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":100,
          "x":0,
          "y":0
@@ -384,7 +384,7 @@
          "name":"Collision(Shops)",
          "opacity":0,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":100,
          "x":0,
          "y":0
@@ -401,7 +401,7 @@
         {
          "columns":23,
          "firstgid":1,
-         "image":"School\/Tiled\/Tilesets\/Avalon\/Tiled2.png",
+         "image":"Tiled2.png",
          "imageheight":1922,
          "imagewidth":736,
          "margin":0,

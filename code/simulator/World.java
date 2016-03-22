@@ -1,9 +1,9 @@
 package simulator;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,9 +14,12 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
 
+import javax.imageio.ImageIO;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
 
 public class World {
 	private final int UNINITIALIZED = -1;
@@ -100,7 +103,14 @@ public class World {
 				// moet worden getekend.
 				// dit is voor de collision layers : die hebben false in de
 				// JSON.
-
+				//eerste 4 layers tekenen  -> standaard layers.
+				
+				for(int i = 0; i < 4;i++)
+				{
+					JSONObject currentlayer = (JSONObject) layers.get(i);
+					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
+					layerslist.add(e);
+				}
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
 					
 					agenda.Stage stage = entry.getKey();
@@ -121,7 +131,6 @@ public class World {
 						String[] bundel = drawProperties.split(",");
 						
 						for (int j = 0; j < bundel.length; j++) {
-							
 							JSONObject layer = (JSONObject) layers.get(Integer.parseInt(bundel[j]));
 
 							if (layer.get("visible").equals(true)) {
@@ -139,7 +148,7 @@ public class World {
 									case collidableTrue:
 										collisionInfo[i % width][i / width] = true;
 										break;
-									
+						
 									case danceFloorTrue:
 										danceFloor.add(tiles[i % width][i / width]);
 										break;
@@ -179,6 +188,9 @@ public class World {
 					g.drawImage(layer.getLayerImage(), 0, 0, null);
 				}
 				layerslist.clear();
+				//saved de file naar het systeem.
+				File outputfile = new File("resultaat.png");
+				ImageIO.write(mapImage, "png", outputfile);
 				// Garbage collecter notification voor java, om die tering
 				// rommel op
 				// te ruimen >> 1500MB.
