@@ -50,9 +50,13 @@ public class World {
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath, String tileMapPath) {
 		instance = this;
 		this.agenda = agenda;
+		buildings = new ArrayList<>();
+		updateables = new LinkedList<>();
+		drawables = new LinkedList<>();
+		toRemove = new LinkedList<>();
+		worldTime = 60*60*16;
 
 		boolean[][] collisionInfo = null;
-
 		{
 			// ATRIBUTEN, moeten worden aangemaakt boven constructor ofcourse..
 			TileMap map;
@@ -67,7 +71,7 @@ public class World {
 			JSONParser parser = new JSONParser();
 			int height;
 			int width;
-			buildings = new ArrayList<Building>();
+			
 			ArrayList<TileLayer> layerslist = new ArrayList<>();
 			
 			try {
@@ -146,7 +150,7 @@ public class World {
 							}
 
 						}
-						buildings.add(new Stage(null, entrance, entrance, maxAgents, stage, danceFloor));
+						buildings.add(new Stage("", entrance, entrance, maxAgents, stage, danceFloor));
 
 					}
 
@@ -416,7 +420,6 @@ public class World {
 	public void update() {
 		{// update everything related to time
 			long realTime = System.currentTimeMillis();
-			System.out.println(timeRemainder);
 			if (lastRealTime == UNINITIALIZED)
 				lastRealTime = realTime;
 			double deltaTimeDouble = realTime - lastRealTime + timeRemainder;

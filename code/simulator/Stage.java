@@ -17,8 +17,7 @@ class Stage extends Building implements Updateable{
 		
 		this.stage = stage;
 		this.danceFloor = danceFloor;
-		System.out.println(World.instance + " instance");
-		System.out.println(this + "this");
+		World.instance.regesterUpdateable(this);
 		performances = World.instance.agenda.getStagesPerformances(stage);
 	}
 	
@@ -46,9 +45,10 @@ class Stage extends Building implements Updateable{
 		final int NO_PERFORMANCE = -1;
 		int lastPerformance = NO_PERFORMANCE, currentPerformance = NO_PERFORMANCE;
 		
-		agenda.Time currentTime = new agenda.Time(World.instance.getWorldTime());
-		agenda.Time preciusTime = new agenda.Time(World.instance.getWorldTime() - World.instance.getDeltaTime());
+		agenda.Time currentTime = new agenda.Time(World.instance.getWorldTime()/60);
+		agenda.Time preciusTime = new agenda.Time((World.instance.getWorldTime() - World.instance.getDeltaTime())/60);
 		
+		System.out.println("Current : " + currentTime + "precious " + preciusTime);
 		for (int i = 0; i < performances.size(); i++)
 		{
 			agenda.Time start = performances.get(i).getStartTime(), end = performances.get(i).getEndTime();

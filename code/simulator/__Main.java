@@ -32,7 +32,7 @@ public class __Main {
 
 			@Override
 			public void update() {
-				System.out.println(World.instance.getWorldTime());
+				System.out.println("Agent " + World.instance.getWorldTime());
 				
 			}
 
