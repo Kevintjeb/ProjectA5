@@ -6,8 +6,8 @@ public abstract class Building {
 	final int typeID;
 	String name;
 	String description;
-	final Tile[] entrances;
-	final Tile[] exits;
+	final ArrayList<Tile> entrances;
+	final ArrayList<Tile> exits;
 	final int maxAgents;
 	ArrayList<Agent> agents;
 	
@@ -21,7 +21,7 @@ public abstract class Building {
 		return currentTypeID++;
 	}
 	
-	Building(int  typeID, String name, String description, Tile[] entrances, Tile[] exits, int maxAgents)
+	Building(int  typeID, String name, String description, ArrayList<Tile> entrances, ArrayList<Tile> exits, int maxAgents)
 	{
 		this.typeID = typeID;
 		this.name = name;

@@ -58,11 +58,18 @@ public class World {
 
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath, String tileMapPath) {
 		this.agenda = agenda;
-		
+
 		boolean[][] colisionInfo = null;
 		{
 			// ATRIBUTEN, moeten worden aangemaakt boven constructor ofcourse..
 			TileMap map;
+			final int entranceExit = 116;
+			final int windowshop = 153;
+			final int mainEntrance = 224;
+			final int collidableTrue = 90;
+			final int collidableFalse = 89;
+			final int danceFloorTrue = 62;
+
 			JSONParser parser = new JSONParser();
 			int height;
 			int width;
@@ -95,35 +102,57 @@ public class World {
 
 				Iterator itr = stageMap.entrySet().iterator();
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
-					
+
 					agenda.Stage stage = entry.getKey();
 					int stageID = entry.getValue();
+					ArrayList<Tile> entrance = new ArrayList<>();
+					ArrayList<Tile> danceFloor = new ArrayList<>();
 
 					JSONObject currentlayer = (JSONObject) layers.get(stageID);
-					
+
 					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
 					layerslist.add(e);
-					
-					
-					
+
 					if (currentlayer.containsKey("properties")) {
-						
+
 						JSONArray drawproperties = (JSONArray) currentlayer.get("properties");
-						
+
 						for (int j = 0; j < drawproperties.size(); j++) {
-							
+
 							JSONObject layer = (JSONObject) layers.get((int) drawproperties.get(j));
-							
+
 							if (layer.get("visible").equals(true)) {
 								TileLayer temp = new TileLayer((JSONArray) layer.get("data"), map, height, width, true);
 								layerslist.add(temp);
+							} else {
+								JSONArray data = (JSONArray) layer.get("data");
+								for (int i = 0; i < data.size(); i++) {
+									int tileType = ((Long) data.get(i)).intValue();
+									
+									switch (tileType)
+									{
+									case entranceExit:
+										entrance.add(tiles[i % width][i / width]);
+										break;
+									case collidableTrue:
+										entrance.add(tiles[i % width][i / width]);
+										break;
+									case collidableFalse:
+										entrance.add(tiles[i % width][i / width]);
+										break;
+									case mainEntrance:
+										entrance.add(tiles[i % width][i / width]);
+										break;
+									case danceFloorTrue:
+										danceFloor.add(tiles[i % width][i / width]);
+										break;
+
+									}
+
+								}
+								buildings.add(new Stage(null, entrance, entrance, maxAgents, stage, danceFloor));
 							}
-							else
-							{
-								TileLayer coll = new TileLayer((JSONArray) layer.get("data"), map, height, width, false);
-								collisionlist.add(coll);
-							}
-							
+
 						}
 
 					}
@@ -169,7 +198,7 @@ public class World {
 				// width en tilewidth zijn verschillende waarde. width = groote
 				// van
 				// de map en tilewidth is puur de tilewidth (32 bij ons..)
-				
+
 				mapImage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
 						BufferedImage.TYPE_INT_ARGB);
 
