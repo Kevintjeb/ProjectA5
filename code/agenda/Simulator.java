@@ -11,6 +11,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -22,12 +26,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.Timer;
-
-import com.sun.javafx.font.Disposer;
 
 public class Simulator extends JPanel
 {
@@ -310,9 +311,16 @@ public class Simulator extends JPanel
 		}
 	}
 	
-	class SimulatiePanel extends JPanel
+	class SimulatiePanel extends JPanel implements MouseMotionListener, MouseListener
 	{
 		Planner planner;
+		
+		int x = 0;
+		int y = 0;
+		
+		float scale = 1;
+		private BufferedImage mapimage;
+		AffineTransform transform = new AffineTransform();
 		
 		public SimulatiePanel(Planner planner)
 		{
@@ -320,7 +328,93 @@ public class Simulator extends JPanel
 			setPreferredSize(new Dimension(1200, 500));
 			this.planner = planner;
 			
+			addMouseMotionListener(this);
+			addMouseListener(this);
+			addMouseWheelListener(new zoomMap());
 			//TODO simulatie 
+		}
+		
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2d = (Graphics2D) g;
+
+			AffineTransform oldtransform = g2d.getTransform();
+			transform = new AffineTransform();
+			transform.scale(scale, scale);
+			transform.translate(x, y);
+
+			g2d.setTransform(transform);
+
+			g2d.drawImage(mapimage, new AffineTransform(), this);
+
+			g2d.setTransform(oldtransform);
+		}
+
+		int oldX = -1;
+		int oldY = -1;
+
+		public void mouseDragged(MouseEvent e) {
+
+			x += (-1 * ((oldX - e.getX())) / scale);
+			y += (-1 * ((oldY - e.getY())) / scale);
+			oldX = e.getX();
+			oldY = e.getY();
+			repaint();
+		}
+
+		class zoomMap implements MouseWheelListener {
+			float maxScale = 1.20f;
+			float minScale = 0.50f;
+
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+
+				double delta = -(0.05f * e.getPreciseWheelRotation());
+
+				scale += delta;
+				if (scale <= minScale) {
+					scale = minScale;
+				} else if (scale >= maxScale) {
+					scale = maxScale;
+				}
+				repaint();
+			}
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			oldX = e.getX();
+			oldY = e.getY();
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			// TODO Auto-generated method stub
+
 		}
 	}
 	
