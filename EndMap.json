@@ -5,6 +5,10 @@
          "height":100,
          "name":"Terrain",
          "opacity":1,
+         "properties":
+            {
+             "drawwith":"1,2,3,4"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -49,6 +53,10 @@
          "height":100,
          "name":"Collision(Path)",
          "opacity":0,
+         "properties":
+            {
+             "collision":"true"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -60,6 +68,10 @@
          "height":100,
          "name":"Stage1(Red_Grass)",
          "opacity":1,
+         "properties":
+            {
+             "drawwith":"6,7"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -82,6 +94,10 @@
          "height":100,
          "name":"Collision(Stage1)",
          "opacity":0,
+         "properties":
+            {
+             "collision":"true"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -93,6 +109,10 @@
          "height":100,
          "name":"Stage2(Green_Grass)",
          "opacity":1,
+         "properties":
+            {
+             "drawwith":"9,10"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -115,6 +135,10 @@
          "height":100,
          "name":"Collision(Stage2)",
          "opacity":0,
+         "properties":
+            {
+             "collision":"true"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -126,6 +150,10 @@
          "height":100,
          "name":"Stage3(Orange_Grass)",
          "opacity":1,
+         "properties":
+            {
+             "drawwith":"12,13"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -148,6 +176,10 @@
          "height":100,
          "name":"Collision(Stage3)",
          "opacity":0,
+         "properties":
+            {
+             "collision":"true"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -159,6 +191,10 @@
          "height":100,
          "name":"Stage4(Green_Beach)",
          "opacity":1,
+         "properties":
+            {
+             "drawwith":"15,16"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -181,6 +217,10 @@
          "height":100,
          "name":"Collision(Stage4)",
          "opacity":0,
+         "properties":
+            {
+             "collision":"true"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -192,6 +232,10 @@
          "height":100,
          "name":"Stage5(Wood_Grass)",
          "opacity":1,
+         "properties":
+            {
+             "drawwith":"18,19"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -214,6 +258,10 @@
          "height":100,
          "name":"Collision(Stage5)",
          "opacity":0,
+         "properties":
+            {
+             "collision":"true"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -225,6 +273,10 @@
          "height":100,
          "name":"Stage6(Rock_Grass)",
          "opacity":1,
+         "properties":
+            {
+             "drawwith":"21,22"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -247,6 +299,10 @@
          "height":100,
          "name":"Collision(Stage6)",
          "opacity":0,
+         "properties":
+            {
+             "collision":"true"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -258,6 +314,10 @@
          "height":100,
          "name":"Stage7(Red_Sand)",
          "opacity":1,
+         "properties":
+            {
+             "drawwith":"24,25"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -280,6 +340,10 @@
          "height":100,
          "name":"Collision(Stage7)",
          "opacity":0,
+         "properties":
+            {
+             "collision":"true"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -291,6 +355,10 @@
          "height":100,
          "name":"Stage8(Orange_Sand)",
          "opacity":1,
+         "properties":
+            {
+             "drawwith":"27,28"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -313,6 +381,10 @@
          "height":100,
          "name":"Collision(Stage8)",
          "opacity":0,
+         "properties":
+            {
+             "collision":"true"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -324,6 +396,10 @@
          "height":100,
          "name":"Shops",
          "opacity":1,
+         "properties":
+            {
+             "drawwith":"30"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
@@ -335,6 +411,10 @@
          "height":100,
          "name":"Collision(Shops)",
          "opacity":0,
+         "properties":
+            {
+             "collision":"true"
+            },
          "type":"tilelayer",
          "visible":true,
          "width":100,
