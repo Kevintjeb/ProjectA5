@@ -16,8 +16,9 @@ public class __Main {
 				new agenda.Time(16, 00), new agenda.Time(19, 00), 123, agenda));
 
 		HashMap<agenda.Stage, Integer> map = new HashMap<>();
-
-		World w = new World(null, map, "Endmap.json", "filemap.png");
+		map.put(agenda.getStages().get(0), 6);
+		
+		World w = new World(agenda, map, "Endmap.json", "Tiled2.png");
 
 	}
 }
