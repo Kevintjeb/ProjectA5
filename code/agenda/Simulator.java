@@ -33,6 +33,8 @@ public class Simulator extends JPanel
 {
 	File json;
 	Planner planner;
+	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
+	Font timeFont = new Font("SANS_SERIF", Font.BOLD, 36);
 	public Simulator(File json, Planner planner)
 	{
 		super(new BorderLayout());
@@ -54,11 +56,9 @@ public class Simulator extends JPanel
 		ArrayList<Area> plaatjes = new ArrayList<Area>();
 		ArrayList<Rectangle2D> rechthoek = new ArrayList<Rectangle2D>();
 		
-		Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
-		
 		JLabel speed1 = new JLabel("Speed: ");
 		JLabel speed2 = new JLabel(" min/sec");
-		JLabel time = new JLabel("Time: 00:00");
+		JLabel time = new JLabel("09:00");
 		JTextField speedInvoer = new JTextField("0.0", 2);
 		JLabel visitors = new JLabel("Bezoekers:");
 		JTextField visitorsField = new JTextField("0", 2);
@@ -86,7 +86,7 @@ public class Simulator extends JPanel
 			
 			speed1.setFont(font);
 			speed2.setFont(font);
-			time.setFont(font);
+			time.setFont(timeFont);
 			visitors.setFont(font);
 			visitors2.setFont(font);
 			
@@ -109,7 +109,7 @@ public class Simulator extends JPanel
 			layout.putConstraint(SpringLayout.NORTH, speed2, 25, SpringLayout.NORTH, this);
 			
 			layout.putConstraint(SpringLayout.WEST, time, 900, SpringLayout.WEST, this);
-			layout.putConstraint(SpringLayout.NORTH, time, 25, SpringLayout.NORTH, this);
+			layout.putConstraint(SpringLayout.NORTH, time, 15, SpringLayout.NORTH, this);
 			
 			File mapmap = new File("maps");
 			fillArrayList(mapmap);
@@ -350,6 +350,8 @@ public class Simulator extends JPanel
 		    slider.setPreferredSize(new Dimension(1100,50));
 
 		    add(slider);
+		    
+		    slider.setFont(font);
 		    
 		    ActionListener update = new ActionListener()
 			{
