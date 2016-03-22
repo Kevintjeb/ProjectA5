@@ -17,7 +17,8 @@ public class __Main {
 			@Override
 			public void update() {
 				System.out.println(World.instance.getDeltaTime());
-				System.out.println(World.instance.getWorldTime()+"\n");
+				System.out.println(World.instance.getWorldTime());
+				System.out.println(new agenda.Time(World.instance.getWorldTime()/60)+"\n");
 			}
 
 			@Override

@@ -41,7 +41,7 @@ public class World {
 		drawables = new LinkedList<>();
 		toRemove = new LinkedList<Closable>();
 		instance = this;
-		realTimeToSimTime = 0.1f;
+		realTimeToSimTime = 0.1;
 	}
 	
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath)
