@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 class Stage extends Building implements Updateable{
 	private agenda.Stage stage;
-	private ArrayList<Tile> danceFloor;
+	private Tile[][] danceFloor;
 	private ArrayList<agenda.Performance> performances;
 	private agenda.Performance currentPerformance = null;
 	
-	Stage(String description, ArrayList<Tile> entrances,
-			ArrayList<Tile> exits, int maxAgents, agenda.Stage stage, ArrayList<Tile> danceFloor) {
+	Stage(String description, Tile[] entrances,
+			Tile[] exits, int maxAgents, agenda.Stage stage, Tile[][] danceFloor) {
 		super(generateNewTypeID(), stage.getName(), description, entrances, exits, maxAgents);
 		
 		this.stage = stage;
