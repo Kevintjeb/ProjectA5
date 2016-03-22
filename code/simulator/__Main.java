@@ -1,48 +1,23 @@
 package simulator;
 
+import java.util.HashMap;
+
+import agenda.Artist;
+import agenda.Performance;
+import agenda.Stage;
+
 // just for testing
 public class __Main {
-	public static void main(String[] args)
-	{
-		//World w = new World();
-		
-		class Foo implements Updateable
-		{
+	public static void main(String[] args) throws Exception {
+		agenda.Agenda agenda = new agenda.Agenda();
+		agenda.getArtist().add(new Artist("PAULTIE", null, "SLAGER", "ZEHR GUT", agenda));
+		agenda.getStages().add(new Stage("MAIN STAGE", agenda));
+		agenda.getPerformances().add(new Performance(agenda.getStages().get(0), agenda.getArtist().get(0),
+				new agenda.Time(16, 00), new agenda.Time(19, 00), 123, agenda));
 
-			public Foo()
-			{
-				World.instance.regesterUpdateable(this);
-			}
-			
-			@Override
-			public void update() {
-				System.out.println(World.instance.getDeltaTime());
-				System.out.println(World.instance.getWorldTime());
-				System.out.println(new agenda.Time(World.instance.getWorldTime()/60)+"\n");
-			}
+		HashMap<agenda.Stage, Integer> map = new HashMap<>();
 
-			@Override
-			public void close() {
-				World.instance.unregesterUpdatable(this);
-			}
-			
-		}
-		
-		
-		new Foo();
-		
-		while (true)
-		{
-			//w.update();
-			
-			try
-			{
-				Thread.sleep(1000/60);
-			}
-			catch (Exception e)
-			{
-				
-			}
-		}
+		World w = new World(null, map, "Endmap.json", "filemap.png");
+
 	}
 }
