@@ -37,6 +37,7 @@ public class Stage implements Serializable
 	private static final long serialVersionUID = -1359262160412641958L;
 	private String name;
 	private Agenda agenda;
+	protected int StageID = 0;
 	
 	public Stage(String name, Agenda agenda) throws Exception
 	{
@@ -84,5 +85,13 @@ public class Stage implements Serializable
 		
 		// it return the data
 		return "name \"" + name + "\"";
+	}
+	
+	protected void setID(int ID){
+		StageID = ID;
+	}
+	
+	protected int getID(){
+		return StageID;
 	}
 }
