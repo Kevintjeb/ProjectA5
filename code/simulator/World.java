@@ -8,7 +8,6 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
@@ -59,23 +58,23 @@ public class World {
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath, String tileMapPath) {
 		this.agenda = agenda;
 
-		boolean[][] colisionInfo = null;
+		boolean[][] collisionInfo = null;
 		{
 			// ATRIBUTEN, moeten worden aangemaakt boven constructor ofcourse..
 			TileMap map;
-			final int entranceExit = 116;
-			final int windowshop = 153;
-			final int mainEntrance = 224;
+			// ints moeten +1 omdat de eerste GID wordt opgeteld..
+			final int entranceExit = 117;
+			final int windowshop = 178;
+			final int mainEntrance = 268;
 			final int collidableTrue = 90;
-			final int collidableFalse = 89;
-			final int danceFloorTrue = 62;
+			final int collidableFalse = 86;
+			final int danceFloorTrue = 63;
 
 			JSONParser parser = new JSONParser();
 			int height;
 			int width;
 			buildings = new ArrayList<Building>();
 			ArrayList<TileLayer> layerslist = new ArrayList<>();
-			ArrayList<TileLayer> collisionlist = new ArrayList<>();
 
 			try {
 				// tilemap maken door een tilemap object aan te maken.
@@ -88,8 +87,8 @@ public class World {
 				// hoogte + breedte van de hele map.`
 				height = ((Long) json.get("height")).intValue();
 				width = ((Long) json.get("width")).intValue();
-
-				colisionInfo = new boolean[width][height];
+				
+				collisionInfo = new boolean[width][height];
 
 				// jsonfile uitlezen op layers en toevoegen als tilelayer in
 				// tilelayer arraylist.
@@ -100,49 +99,49 @@ public class World {
 				// dit is voor de collision layers : die hebben false in de
 				// JSON.
 
-				Iterator itr = stageMap.entrySet().iterator();
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
 
 					agenda.Stage stage = entry.getKey();
-					int stageID = entry.getValue();
+					int stageIndex = entry.getValue();
 					ArrayList<Tile> entrance = new ArrayList<>();
 					ArrayList<Tile> danceFloor = new ArrayList<>();
 
-					JSONObject currentlayer = (JSONObject) layers.get(stageID);
+					JSONObject currentlayer = (JSONObject) layers.get(stageIndex);
 
 					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
 					layerslist.add(e);
+					
+					
 
 					if (currentlayer.containsKey("properties")) {
+						
+						JSONObject properties = (JSONObject) currentlayer.get("properties");
+						int maxAgents = Integer.parseInt((String) properties.get("maxAgents"));
+						JSONArray drawProperties = (JSONArray) properties.get("drawwith");
+						
+						for (int j = 0; j < drawProperties.size(); j++) {
 
-						JSONArray drawproperties = (JSONArray) currentlayer.get("properties");
-
-						for (int j = 0; j < drawproperties.size(); j++) {
-
-							JSONObject layer = (JSONObject) layers.get((int) drawproperties.get(j));
+							JSONObject layer = (JSONObject) layers.get((int) drawProperties.get(j));
 
 							if (layer.get("visible").equals(true)) {
 								TileLayer temp = new TileLayer((JSONArray) layer.get("data"), map, height, width, true);
 								layerslist.add(temp);
+
 							} else {
 								JSONArray data = (JSONArray) layer.get("data");
 								for (int i = 0; i < data.size(); i++) {
 									int tileType = ((Long) data.get(i)).intValue();
-									
-									switch (tileType)
-									{
+
+									switch (tileType) {
 									case entranceExit:
 										entrance.add(tiles[i % width][i / width]);
 										break;
 									case collidableTrue:
-										entrance.add(tiles[i % width][i / width]);
+										collisionInfo[i % width][i / width] = true;
 										break;
-									case collidableFalse:
-										entrance.add(tiles[i % width][i / width]);
-										break;
-									case mainEntrance:
-										entrance.add(tiles[i % width][i / width]);
-										break;
+//									case mainEntrance:
+//										entrance.add(tiles[i % width][i / width]);
+//										break;
 									case danceFloorTrue:
 										danceFloor.add(tiles[i % width][i / width]);
 										break;
@@ -150,49 +149,14 @@ public class World {
 									}
 
 								}
-								buildings.add(new Stage(null, entrance, entrance, maxAgents, stage, danceFloor));
 							}
 
 						}
+						buildings.add(new Stage(null, entrance, entrance, maxAgents, stage, danceFloor));
 
 					}
 
 				}
-
-				// for (int i = 0; i < layers.size(); i++) {
-				// //pak de layer
-				// JSONObject currentlayer = (JSONObject) layers.get(i);
-				// //kijk of er properties in zitten
-				//
-				// if(currentlayer.containsKey("properties"))
-				// {
-				//
-				// //pak de properties als een array
-				// JSONArray drawproperties = (JSONArray)
-				// currentlayer.get("properties");
-				// //ga door de array heen om die layers toe te voegen
-				// for(int j = 0; j < drawproperties.size(); i++)
-				// {
-				// boolean visible = true;
-				// JSONObject currentlayer = (JSONObject) layers.get(i);
-				//
-				// TileLayer e = new TileLayer((JSONArray)
-				// currentlayer.get("data"), map, height, width, visible);
-				// layerslist.add(e);
-				// }
-				//
-				// }
-
-				// if (currentlayer.get("type").equals("tilelayer")) {
-				// boolean b = false;
-				// if (currentlayer.get("visible").equals(true)) {
-				// b = true;
-				// }
-				// TileLayer e = new TileLayer((JSONArray)
-				// currentlayer.get("data"), map, height, width, b);
-				// layerslist.add(e);
-				// }
-				// }
 
 				// tileheight en width bepalen door uit de json te halen.
 				// width en tilewidth zijn verschillende waarde. width = groote
@@ -201,10 +165,6 @@ public class World {
 
 				mapImage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
 						BufferedImage.TYPE_INT_ARGB);
-
-				// Collision toevoegen in een arraylist van booleans?
-				// 2 tiles : tileID 90 en 86.
-				// op basis van collision later > tiled eigenschap!
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -234,10 +194,10 @@ public class World {
 
 		{
 			{ // check info
-				if (colisionInfo == null)
+				if (collisionInfo == null)
 					return; // TODO exception
-				int lastLenght = colisionInfo[0].length;
-				for (boolean[] boolArray : colisionInfo)
+				int lastLenght = collisionInfo[0].length;
+				for (boolean[] boolArray : collisionInfo)
 					if (boolArray.length != lastLenght)
 						return; // TODO exception?
 			}
@@ -284,7 +244,7 @@ public class World {
 			ArrayList<Node> graph;
 			{ ///////////// Generating the graph ///////////
 				int nodeCount = 0;
-				for (boolean[] boolArray : colisionInfo)
+				for (boolean[] boolArray : collisionInfo)
 					for (boolean bool : boolArray)
 						if (bool)
 							nodeCount++;
@@ -319,9 +279,9 @@ public class World {
 
 				HashMap<Position, Node> positionToNodeMap = new HashMap<>(nodeCount);
 
-				for (int y = 0; y < colisionInfo.length; y++)
-					for (int x = 0; x < colisionInfo[0].length; x++)
-						if (colisionInfo[y][x] == true) {
+				for (int y = 0; y < collisionInfo.length; y++)
+					for (int x = 0; x < collisionInfo[0].length; x++)
+						if (collisionInfo[y][x] == true) {
 							Node n = new Node(x, y);
 							graph.add(n);
 							positionToNodeMap.put(new Position(x, y), n);
