@@ -1,5 +1,6 @@
 package simulator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Service extends Building {
@@ -14,8 +15,8 @@ public class Service extends Building {
 	private final float visitCost;
 	
 	public Service(String name, String description,
-			Tile[] entrances, Tile[] exits, int maxAgents, float visitCost) {
-		super(getTypeID(name), name, description, entrances, exits, maxAgents);
+			ArrayList<Tile> entrances, int maxAgents, float visitCost) {
+		super(getTypeID(name), name, description, entrances, null, maxAgents);
 		
 		this.visitCost = visitCost;
 	}

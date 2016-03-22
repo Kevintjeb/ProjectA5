@@ -4,7 +4,7 @@ package simulator;
 public class __Main {
 	public static void main(String[] args)
 	{
-		World w = new World();
+		//World w = new World();
 		
 		class Foo implements Updateable
 		{
@@ -33,7 +33,7 @@ public class __Main {
 		
 		while (true)
 		{
-			w.update();
+			//w.update();
 			
 			try
 			{
