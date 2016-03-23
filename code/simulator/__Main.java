@@ -14,11 +14,22 @@ public class __Main {
 		agenda.Agenda agenda = new agenda.Agenda();
 		agenda.getArtist().add(new Artist("PAULTIE", null, "SLAGER", "ZEHR GUT", agenda));
 		agenda.getStages().add(new Stage("MAIN STAGE", agenda));
+		agenda.getStages().add(new Stage("Dixie STAGE", agenda));
+		agenda.getStages().add(new Stage("Trixie STAGE", agenda));
+		agenda.getStages().add(new Stage("lol STAGE", agenda));
+		agenda.getStages().add(new Stage("Kevin STAGE", agenda));
+		
 		agenda.getPerformances().add(new Performance(agenda.getStages().get(0), agenda.getArtist().get(0),
 				new agenda.Time(16, 00), new agenda.Time(19, 00), 123, agenda));
 
 		HashMap<agenda.Stage, Integer> map = new HashMap<>();
+		//test voor meer stages tekenen.
 		map.put(agenda.getStages().get(0), 5);
+		map.put(agenda.getStages().get(1), 8);
+		map.put(agenda.getStages().get(2), 11);
+		map.put(agenda.getStages().get(3), 14);
+		map.put(agenda.getStages().get(4), 17);
+		
 		
 		World w = new World(agenda, map, "Endmap.json", "Tiled2.png");
 		System.out.println("world was constructed");
