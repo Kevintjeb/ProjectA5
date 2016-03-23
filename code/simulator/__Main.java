@@ -8,7 +8,7 @@ import agenda.Artist;
 import agenda.Performance;
 import agenda.Stage;
 
-// just for testing
+// just for Otesting
 public class __Main {
 	public static void main(String[] args) throws Exception {
 		agenda.Agenda agenda = new agenda.Agenda();
@@ -18,6 +18,9 @@ public class __Main {
 		agenda.getStages().add(new Stage("Trixie STAGE", agenda));
 		agenda.getStages().add(new Stage("lol STAGE", agenda));
 		agenda.getStages().add(new Stage("Kevin STAGE", agenda));
+		agenda.getStages().add(new Stage("bixie STAGE", agenda));
+		agenda.getStages().add(new Stage("mixie STAGE", agenda));
+		agenda.getStages().add(new Stage("dixie STAGE", agenda));
 		
 		agenda.getPerformances().add(new Performance(agenda.getStages().get(0), agenda.getArtist().get(0),
 				new agenda.Time(16, 00), new agenda.Time(19, 00), 123, agenda));
@@ -29,6 +32,9 @@ public class __Main {
 		map.put(agenda.getStages().get(2), 11);
 		map.put(agenda.getStages().get(3), 14);
 		map.put(agenda.getStages().get(4), 17);
+		map.put(agenda.getStages().get(5), 20);
+		map.put(agenda.getStages().get(6), 23);
+		map.put(agenda.getStages().get(7), 26);
 		
 		
 		World w = new World(agenda, map, "Endmap.json", "Tiled2.png");
@@ -43,7 +49,7 @@ public class __Main {
 
 			@Override
 			public void update() {
-				System.out.println("Agent " + World.instance.getWorldTime());
+				System.out.println("Agent updated");
 				
 			}
 

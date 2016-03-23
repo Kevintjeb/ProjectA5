@@ -111,6 +111,7 @@ public class World {
 					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
 					layerslist.add(e);
 				}
+			
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
 					
 					agenda.Stage stage = entry.getKey();

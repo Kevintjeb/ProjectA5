@@ -48,7 +48,6 @@ class Stage extends Building implements Updateable{
 		agenda.Time currentTime = new agenda.Time(World.instance.getWorldTime()/60);
 		agenda.Time preciusTime = new agenda.Time((World.instance.getWorldTime() - World.instance.getDeltaTime())/60);
 		
-		System.out.println("Current : " + currentTime + "precious " + preciusTime);
 		for (int i = 0; i < performances.size(); i++)
 		{
 			agenda.Time start = performances.get(i).getStartTime(), end = performances.get(i).getEndTime();
