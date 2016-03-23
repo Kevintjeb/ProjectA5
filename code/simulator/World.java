@@ -160,7 +160,7 @@ public class World {
 
 						}
 						buildings.add(new Stage("", entrance, entrance, maxAgents, stage, danceFloor));
-
+						
 					}
 
 				}
@@ -198,6 +198,17 @@ public class World {
 				System.gc();
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+		}
+		
+		{
+			HashSet<Integer> typeContructed = new HashSet<>();
+			for (Building b : buildings)
+			{
+				if (typeContructed.contains(b.typeID))
+					continue;
+				typeContructed.add(b.typeID);
+				buildingMap.put(b.name, b.typeID);
 			}
 		}
 
@@ -481,14 +492,10 @@ public class World {
 		drawables.remove(d);
 	}
 
-	protected enum PathInfo {
-		ENTRANCE, EXIT
-	}
-
-	protected int getPathID(String building, PathInfo info) {
+	protected int getPathID(String building) {
 		if (buildingMap.containsKey(building) == false)
 			return -1;
-		return buildingMap.get(building) << 1 | ((info == PathInfo.ENTRANCE) ? 0 : 1);
+		return buildingMap.get(building);
 	}
 
 	protected int getWorldTime() {
