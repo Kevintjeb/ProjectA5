@@ -45,9 +45,12 @@ class Stage extends Building implements Updateable{
 		final int NO_PERFORMANCE = -1;
 		int lastPerformance = NO_PERFORMANCE, currentPerformance = NO_PERFORMANCE;
 		
+		System.out.println(new agenda.Time(World.instance.getWorldTime()/60));
+		
 		agenda.Time currentTime = new agenda.Time(World.instance.getWorldTime()/60);
 		agenda.Time preciusTime = new agenda.Time((World.instance.getWorldTime() - World.instance.getDeltaTime())/60);
 		
+		//System.out.println("Current : " + currentTime + "precious " + preciusTime);
 		for (int i = 0; i < performances.size(); i++)
 		{
 			agenda.Time start = performances.get(i).getStartTime(), end = performances.get(i).getEndTime();
@@ -73,13 +76,14 @@ class Stage extends Building implements Updateable{
 				message += "the performance \"" + performances.get(lastPerformance) + "\" on stage \"" +
 						stage + "\" ended";
 			}
-			if (currentPerformance == NO_PERFORMANCE)
+			if (currentPerformance != NO_PERFORMANCE)
 			{
 				message = "the performance \"" + performances.get(currentPerformance).toString() + 
 						"\" started at stage \"" + stage.toString() + "\"";
 			}
 			
 			System.out.println(message);
+			int a = 0;
 		}
 	}
 
