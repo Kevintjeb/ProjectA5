@@ -136,22 +136,19 @@ public class World {
 				// JSON.
 				// eerste 4 layers tekenen -> standaard layers.
 
-				for (int i = 0; i < 4; i++) {
+				for (int i = 0; i < 5; i++) {
 					
 					JSONObject currentlayer = (JSONObject) layers.get(i);
 					System.out.println(" layer : " + currentlayer.get("name"));
 					if (currentlayer.get("visible").equals(true)) {
 						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
 						layerslist.add(temp);
-						System.out.println(" layer : " + currentlayer.get("name" + currentlayer.get("naam") + "visible true : "));
-								
 					} else {
 						JSONArray data = (JSONArray) currentlayer.get("data");
 						for (int k = 0; k < data.size(); k++) {
 							int tileType = ((Long) data.get(k)).intValue();
 							switch (tileType) {
 							case collidableTrue:
-								System.out.println(" layer : " + currentlayer.get("name"));
 								collisionInfo[k % width][k / width] = true;
 								break;
 							}
@@ -193,17 +190,24 @@ public class World {
 								for (int i = 0; i < data.size(); i++) {
 									int tileType = ((Long) data.get(i)).intValue();
 									switch (tileType) {
+									//collision info false wanneer er geen collision is dus je mag wel lopen.
+									//collision info true wanneer er WEL collision is dus je mag NIET lopen.
 									case entranceExit:
+										collisionInfo[i % width][i / width] = false;
 										entrance.add(tiles[i % width][i / width]);
 										break;
 									case collidableTrue:
+										System.out.println("collision toegevoegd voor : " + layer.get("name"));
 										collisionInfo[i % width][i / width] = true;
 										break;
 
 									case danceFloorTrue:
+										collisionInfo[i % width][i / width] = false;
 										danceFloor.add(tiles[i % width][i / width]);
 										break;
-
+									case collidableFalse:
+										collisionInfo[i % width][i / width] = false;
+										break;
 									}
 
 								}
