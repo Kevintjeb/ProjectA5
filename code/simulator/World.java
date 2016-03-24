@@ -139,7 +139,6 @@ public class World {
 				for (int i = 0; i < 5; i++) {
 					
 					JSONObject currentlayer = (JSONObject) layers.get(i);
-					System.out.println(" layer : " + currentlayer.get("name"));
 					if (currentlayer.get("visible").equals(true)) {
 						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
 						layerslist.add(temp);
@@ -197,7 +196,6 @@ public class World {
 										entrance.add(tiles[i % width][i / width]);
 										break;
 									case collidableTrue:
-										System.out.println("collision toegevoegd voor : " + layer.get("name"));
 										collisionInfo[i % width][i / width] = true;
 										break;
 
