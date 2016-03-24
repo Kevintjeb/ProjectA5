@@ -105,17 +105,21 @@ public class World {
 				// eerste 4 layers tekenen -> standaard layers.
 
 				for (int i = 0; i < 4; i++) {
+					
 					JSONObject currentlayer = (JSONObject) layers.get(i);
+					System.out.println(" layer : " + currentlayer.get("name"));
 					if (currentlayer.get("visible").equals(true)) {
 						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
 						layerslist.add(temp);
-
+						System.out.println(" layer : " + currentlayer.get("name" + currentlayer.get("naam") + "visible true : "));
+								
 					} else {
 						JSONArray data = (JSONArray) currentlayer.get("data");
 						for (int k = 0; k < data.size(); k++) {
 							int tileType = ((Long) data.get(k)).intValue();
 							switch (tileType) {
 							case collidableTrue:
+								System.out.println(" layer : " + currentlayer.get("name"));
 								collisionInfo[k % width][k / width] = true;
 								break;
 							}
