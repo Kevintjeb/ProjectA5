@@ -22,7 +22,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-
 public class World {
 	private final int UNINITIALIZED = -1;
 
@@ -59,7 +58,11 @@ public class World {
 		updateables = new LinkedList<>();
 		drawables = new LinkedList<>();
 		toRemove = new LinkedList<>();
+<<<<<<< HEAD
 		buildingMap = new HashMap<>();
+=======
+		worldTime = 60 * 60 * 16;
+>>>>>>> a5bc21a7a079f9260b40112ee6b373f42ac501b7
 
 		boolean[][] collisionInfo = null;
 		{
@@ -72,13 +75,13 @@ public class World {
 			final int collidableTrue = 90;
 			final int collidableFalse = 86;
 			final int danceFloorTrue = 63;
-			
+
 			JSONParser parser = new JSONParser();
 			int height;
 			int width;
-			
+
 			ArrayList<TileLayer> layerslist = new ArrayList<>();
-			
+
 			try {
 				// tilemap maken door een tilemap object aan te maken.
 				map = new TileMap(tileMapPath, 32, 32);
@@ -93,9 +96,9 @@ public class World {
 				collisionInfo = new boolean[width][height];
 				mapImage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
 						BufferedImage.TYPE_INT_ARGB);
-				tiles = new  Tile[width][height];
-				for(int x = 0; x < width; x++)
-					for(int y = 0; y < height; y++)
+				tiles = new Tile[width][height];
+				for (int x = 0; x < width; x++)
+					for (int y = 0; y < height; y++)
 						tiles[x][y] = new Tile(x, y);
 				// jsonfile uitlezen op layers en toevoegen als tilelayer in
 				// tilelayer arraylist.
@@ -105,16 +108,30 @@ public class World {
 				// moet worden getekend.
 				// dit is voor de collision layers : die hebben false in de
 				// JSON.
-				//eerste 4 layers tekenen  -> standaard layers.
-				
-				for(int i = 0; i < 4;i++)
-				{
+				// eerste 4 layers tekenen -> standaard layers.
+
+				for (int i = 0; i < 4; i++) {
 					JSONObject currentlayer = (JSONObject) layers.get(i);
-					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
-					layerslist.add(e);
+					if (currentlayer.get("visible").equals(true)) {
+						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
+						layerslist.add(temp);
+
+					} else {
+						JSONArray data = (JSONArray) currentlayer.get("data");
+						for (int k = 0; k < data.size(); k++) {
+							int tileType = ((Long) data.get(k)).intValue();
+							switch (tileType) {
+							case collidableTrue:
+								collisionInfo[k % width][k / width] = true;
+								break;
+							}
+
+						}
+					}
 				}
+
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
-					
+
 					agenda.Stage stage = entry.getKey();
 					int stageIndex = entry.getValue();
 					ArrayList<Tile> entrance = new ArrayList<>();
@@ -125,13 +142,13 @@ public class World {
 					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
 					layerslist.add(e);
 					if (currentlayer.get("properties") != null) {
-						
+
 						JSONObject properties = (JSONObject) currentlayer.get("properties");
 						int maxAgents = Integer.parseInt((String) properties.get("maxAgents"));
-						
+
 						String drawProperties = (String) properties.get("drawwith");
 						String[] bundel = drawProperties.split(",");
-						
+
 						for (int j = 0; j < bundel.length; j++) {
 							JSONObject layer = (JSONObject) layers.get(Integer.parseInt(bundel[j]));
 
@@ -150,7 +167,7 @@ public class World {
 									case collidableTrue:
 										collisionInfo[i % width][i / width] = true;
 										break;
-						
+
 									case danceFloorTrue:
 										danceFloor.add(tiles[i % width][i / width]);
 										break;
@@ -172,8 +189,6 @@ public class World {
 				// van
 				// de map en tilewidth is puur de tilewidth (32 bij ons..)
 
-				
-
 			} catch (Exception e) {
 				e.printStackTrace();
 
@@ -190,7 +205,7 @@ public class World {
 					g.drawImage(layer.getLayerImage(), 0, 0, null);
 				}
 				layerslist.clear();
-				//saved de file naar het systeem.
+				// saved de file naar het systeem.
 				File outputfile = new File("resultaat.png");
 				ImageIO.write(mapImage, "png", outputfile);
 				// Garbage collecter notification voor java, om die tering
@@ -398,9 +413,8 @@ public class World {
 		}
 
 	}
-	
-	protected Tile getTileAt(int x, int y)
-	{
+
+	protected Tile getTileAt(int x, int y) {
 		if (x < 0 || y < 0 || x > tiles.length || y > tiles[0].length)
 			return null;
 		return tiles[x][y];
