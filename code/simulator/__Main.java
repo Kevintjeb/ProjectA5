@@ -1,16 +1,24 @@
 package simulator;
 
-import java.awt.Image;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.util.HashMap;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import agenda.Artist;
 import agenda.Performance;
 import agenda.Stage;
 
 // just for testing
-public class __Main {
-	public static void main(String[] args) throws Exception {
+public class __Main extends JPanel{
+	public __Main() throws Exception
+	{
 		agenda.Agenda agenda = new agenda.Agenda();
 		agenda.getArtist().add(new Artist("PAULTIE", null, "SLAGER", "ZEHR GUT", agenda));
 		agenda.getStages().add(new Stage("MAIN STAGE", agenda));
@@ -20,7 +28,7 @@ public class __Main {
 		agenda.getStages().add(new Stage("Kevin STAGE", agenda));
 		
 		agenda.getPerformances().add(new Performance(agenda.getStages().get(0), agenda.getArtist().get(0),
-				new agenda.Time(16, 00), new agenda.Time(19, 00), 123, agenda));
+				new agenda.Time(1, 00), new agenda.Time(19, 00), 123, agenda));
 
 		HashMap<agenda.Stage, Integer> map = new HashMap<>();
 		//test voor meer stages tekenen.
@@ -34,29 +42,31 @@ public class __Main {
 		World w = new World(agenda, map, "Endmap.json", "Tiled2.png");
 		System.out.println("world was constructed");
 		
-		class Foo extends Agent
+		new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(50, 50), new Point2D.Double(50, 50), 1.0f);
+	}
+	
+	public void paintComponent(Graphics g)
+	{
+		Graphics2D g2 = (Graphics2D)g;
+		System.out.println("paintComponent");
+		World.instance.inclusiveUpdate(g2);
+		AffineTransform transform = new AffineTransform();
+		float scaleX = getWidth()/(float)(100*32);
+		float scaleY = getHeight()/(float)(100*32);
+		float scale = (scaleX > scaleY) ? scaleY : scaleX;
+		transform.scale(scale, scale*-1);
+		g2.transform(transform);
+	}
+	
+	public static void main(String[] args) throws Exception {
+		JFrame frame = new JFrame("simulator");
+		frame.setContentPane(new __Main());
+		frame.setSize(500, 500);
+		frame.setVisible(true);
+		while (true)
 		{
-
-			public Foo() {
-				super(null, World.instance.getTileAt(0, 0), null, 0.0f);
-			}
-
-			@Override
-			public void update() {
-				System.out.println("Agent " + World.instance.getWorldTime());
-				
-			}
-
-			@Override
-			void destenationReached() {
-				// TODO Auto-generated method stub
-				
-			}
-			
+			frame.repaint();
+			Thread.sleep(100);
 		}
-		
-		new Foo();
-		
-		w.update();
 	}
 }

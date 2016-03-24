@@ -1,10 +1,12 @@
 package simulator;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +34,7 @@ public class World {
 	private HashMap<String, Integer> buildingMap; // maps between the building
 													// and it's corresponding id
 
-	private double realTimeToSimTime; // when a real time in ms is multiplied
+	private double realTimeToSimTime = 0.5; // when a real time in ms is multiplied
 										// with this number,
 	// and the ceiling of the product is taken is will give the time in
 	// simulation time in seconds
@@ -57,7 +59,7 @@ public class World {
 		updateables = new LinkedList<>();
 		drawables = new LinkedList<>();
 		toRemove = new LinkedList<>();
-		worldTime = 60*60*16;
+		buildingMap = new HashMap<>();
 
 		boolean[][] collisionInfo = null;
 		{
@@ -231,7 +233,7 @@ public class World {
 					int nodeCount = 0;
 					for (boolean[] boolArray : collisionInfo)
 						for (boolean bool : boolArray)
-							if (bool)
+							if (!bool)
 								nodeCount++;
 
 					graph = new ArrayList<>(nodeCount);
@@ -240,7 +242,7 @@ public class World {
 
 					for (int y = 0; y < collisionInfo.length; y++)
 						for (int x = 0; x < collisionInfo[0].length; x++)
-							if (collisionInfo[y][x] == true) {
+							if (collisionInfo[y][x] == false) {
 								Node n = new Node(x, y);
 								graph.add(n);
 								positionToNodeMap.put(new Position(x, y), n);
@@ -281,6 +283,7 @@ public class World {
 					Stack<Node> nodeStack = new Stack<>();
 					HashSet<Node> visitedNodes = new HashSet<>(graph.size());
 
+					System.out.println("gaph size " + graph.size());
 					nodeStack.push(graph.get(0));
 					visitedNodes.add(nodeStack.peek());
 
@@ -299,6 +302,34 @@ public class World {
 
 						if (pushed == false)
 							nodeStack.pop();
+					}
+					
+					{////////// Create a debug image /////////////////
+						Color inGraph = new Color(0, 255, 0, 128);
+						Color outGraph = new Color(255, 0, 0, 128);
+						
+						BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+						Graphics2D graphics = (Graphics2D)debugImage.getGraphics();
+						graphics.drawImage(mapImage, 0, 0, null);
+						
+						
+						for (Node n : graph)
+						{
+							Color c = Color.BLACK;
+							
+							if (visitedNodes.contains(n) == false)
+								c = outGraph;
+							
+							graphics.setColor(c);
+							graphics.fillRect(n.Y*32, n.X*32, 32, 32);
+						}
+						
+						try {
+							ImageIO.write(debugImage, "png", new File("pathfinding_debug_image.png"));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 
 					if (visitedNodes.size() != graph.size()) {
@@ -445,6 +476,9 @@ public class World {
 			long realTime = System.currentTimeMillis();
 			if (lastRealTime == UNINITIALIZED)
 				lastRealTime = realTime;
+			if (Double.isNaN(timeRemainder))
+				timeRemainder = 0.0;
+				
 			double deltaTimeDouble = realTime - lastRealTime + timeRemainder;
 			deltaTime = (int) (deltaTimeDouble * realTimeToSimTime);
 			timeRemainder = (deltaTimeDouble * realTimeToSimTime - deltaTime) / realTimeToSimTime;

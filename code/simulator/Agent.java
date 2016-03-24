@@ -22,6 +22,7 @@ abstract class Agent implements Updateable, Drawable {
 		this.destenation = NO_DESTENATION;
 		this.speed = speed;
 		this.rotation = 0.0f;
+		this.currentPosition = point;
 		
 		World.instance.regesterDrawable(this);
 		World.instance.regesterUpdateable(this);
@@ -43,6 +44,9 @@ abstract class Agent implements Updateable, Drawable {
 	
 	void move()
 	{
+		currentPosition.setLocation(currentPosition.getX(), currentPosition.getY()+0.1f*World.instance.getDeltaTime());
+	
+		/*
 		// we don't need to go anywhere so we can just return
 		if (destenation == NO_DESTENATION)
 			return;
@@ -85,13 +89,14 @@ abstract class Agent implements Updateable, Drawable {
 			}
 			
 		}
+		*/
 	}
 	
 	@Override
 	public void draw(Graphics2D graphics)
 	{
 		// TODO implement the rotation
-		graphics.drawImage(image, (int)(currentPosition.getX()+image.getWidth(null)/2),
-				(int)(currentPosition.getY()+image.getHeight(null)/2), null);
+		graphics.drawImage(image, (int)(currentPosition.getX()-image.getWidth(null)/2),
+				(int)(currentPosition.getY()-image.getHeight(null)/2), null);
 	}
 }
