@@ -15,16 +15,12 @@ import agenda.Artist;
 import agenda.Performance;
 import agenda.Stage;
 
-<<<<<<< HEAD
+
 // just for testing
 public class __Main extends JPanel{
-	public __Main() throws Exception
-	{
-=======
-// just for Otesting
-public class __Main {
-	public static void main(String[] args) throws Exception {
->>>>>>> a5bc21a7a079f9260b40112ee6b373f42ac501b7
+	
+	public __Main() throws Exception {
+
 		agenda.Agenda agenda = new agenda.Agenda();
 		agenda.getArtist().add(new Artist("PAULTIE", null, "SLAGER", "ZEHR GUT", agenda));
 		agenda.getStages().add(new Stage("MAIN STAGE", agenda));
@@ -77,28 +73,8 @@ public class __Main {
 		frame.setVisible(true);
 		while (true)
 		{
-<<<<<<< HEAD
 			frame.repaint();
 			Thread.sleep(100);
-=======
-
-			public Foo() {
-				super(null, World.instance.getTileAt(0, 0), null, 0.0f);
-			}
-
-			@Override
-			public void update() {
-				System.out.println("Agent updated");
-				
-			}
-
-			@Override
-			void destenationReached() {
-				// TODO Auto-generated method stub
-				
-			}
-			
->>>>>>> a5bc21a7a079f9260b40112ee6b373f42ac501b7
 		}
 	}
 }

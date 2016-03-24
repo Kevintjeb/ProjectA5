@@ -51,6 +51,35 @@ public class World {
 
 	protected static World instance;
 
+	static int index = 0;
+	
+	private void drawBoolArray(boolean[][] info)
+	{
+		final int size = 1;
+		BufferedImage img = new BufferedImage(info.length*size, info[0].length*size,  BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = (Graphics2D)img.getGraphics();
+		
+		for (int x =0; x < info.length; x++)
+		{
+			for (int y = 0; y < info[0].length; y++)
+			{
+				if (info[x][y])
+					g.setColor(Color.BLACK);
+				else
+					g.setColor(Color.WHITE);
+				
+				g.fillRect(x*size, y*size, size, size);
+			}
+		}
+		
+		try {
+			ImageIO.write(img, "png", new File("debug_data/boolean_print" + index++ + ".png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath, String tileMapPath) {
 		instance = this;
 		this.agenda = agenda;
@@ -58,11 +87,7 @@ public class World {
 		updateables = new LinkedList<>();
 		drawables = new LinkedList<>();
 		toRemove = new LinkedList<>();
-<<<<<<< HEAD
 		buildingMap = new HashMap<>();
-=======
-		worldTime = 60 * 60 * 16;
->>>>>>> a5bc21a7a079f9260b40112ee6b373f42ac501b7
 
 		boolean[][] collisionInfo = null;
 		{
@@ -94,6 +119,7 @@ public class World {
 				width = ((Long) json.get("width")).intValue();
 
 				collisionInfo = new boolean[width][height];
+				drawBoolArray(collisionInfo);
 				mapImage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
 						BufferedImage.TYPE_INT_ARGB);
 				tiles = new Tile[width][height];
@@ -129,6 +155,8 @@ public class World {
 						}
 					}
 				}
+				
+				drawBoolArray(collisionInfo);
 
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
 
@@ -179,7 +207,7 @@ public class World {
 
 						}
 						buildings.add(new Stage("", entrance, entrance, maxAgents, stage, danceFloor));
-						
+						drawBoolArray(collisionInfo);
 					}
 
 				}
@@ -330,7 +358,7 @@ public class World {
 						
 						for (Node n : graph)
 						{
-							Color c = Color.BLACK;
+							Color c = inGraph;
 							
 							if (visitedNodes.contains(n) == false)
 								c = outGraph;
@@ -340,7 +368,7 @@ public class World {
 						}
 						
 						try {
-							ImageIO.write(debugImage, "png", new File("pathfinding_debug_image.png"));
+							ImageIO.write(debugImage, "png", new File("debug_data/pathfinding_debug_image.png"));
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
