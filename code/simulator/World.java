@@ -136,7 +136,7 @@ public class World {
 				// JSON.
 				// eerste 4 layers tekenen -> standaard layers.
 
-				for (int i = 0; i < 4; i++) {
+				for (int i = 0; i < 5; i++) {
 					JSONObject currentlayer = (JSONObject) layers.get(i);
 					if (currentlayer.get("visible").equals(true)) {
 						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
@@ -191,13 +191,18 @@ public class World {
 									switch (tileType) {
 									case entranceExit:
 										entrance.add(tiles[i % width][i / width]);
+										collisionInfo[i % width][i / width] = false;
 										break;
+									case collidableFalse:
+										collisionInfo[i % width][i / width] = false;
+									break;
 									case collidableTrue:
 										collisionInfo[i % width][i / width] = true;
 										break;
 
 									case danceFloorTrue:
 										danceFloor.add(tiles[i % width][i / width]);
+										collisionInfo[i % width][i / width] = false;
 										break;
 
 									}
@@ -321,7 +326,7 @@ public class World {
 					}
 
 				} ////////////// End of graph generation ///////////
-
+				System.out.println("positionToNodeMap size " + positionToNodeMap.size());
 				{ ////////////// Graph test using depth first search /////////
 					Stack<Node> nodeStack = new Stack<>();
 					HashSet<Node> visitedNodes = new HashSet<>(graph.size());
@@ -385,6 +390,7 @@ public class World {
 				{ ////////// generating directions /////////////////////
 					class TypeIdTilePair {
 						int typeID;
+						String name;
 						ArrayList<Tile> entances;
 						ArrayList<Tile> exits;
 
@@ -409,21 +415,28 @@ public class World {
 						if (found == false) {
 							TypeIdTilePair pair = new TypeIdTilePair();
 							pair.typeID = b.typeID;
+							pair.name = b.name;
 							pair.entances.addAll(b.entrances);
 							pair.exits.addAll(b.exits);
+							pairs.add(pair);
 						}
 					}
 
 					for (TypeIdTilePair pair : pairs) {
+						System.out.println("pair<" + pair.typeID + ", " + pair.name +", " + pair.entances.size() + ">");
+						
 						Queue<Node> queue = new LinkedList<Node>();
 						HashSet<Node> visited = new HashSet<Node>();
-
+						
 						for (Tile tile : pair.entances) {
-							queue.add(positionToNodeMap.get(new Position(tile.X, tile.Y)));
+							Node n = positionToNodeMap.get(new Position(tile.X, tile.Y));
+							queue.add(n);
+							System.out.println("tile(" + tile.X + ", " + tile.Y + ") " + n != null);
 						}
 
 						while (queue.isEmpty() == false) {
-							Node node = queue.remove();
+							Node node = queue.poll();
+							System.out.println(node != null);
 							for (int i = 0; i < node.straitEdges.length; i++) {
 								if (node.straitEdges[i] == null)
 									continue;

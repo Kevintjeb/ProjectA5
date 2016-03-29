@@ -5,7 +5,7 @@ import java.util.HashMap;
 class Tile {
 	private static int tileSize;
 	final int X, Y;
-	private HashMap<Integer, Tile> directions;
+	public HashMap<Integer, Tile> directions;
 	
 	Tile(int x, int y)
 	{
