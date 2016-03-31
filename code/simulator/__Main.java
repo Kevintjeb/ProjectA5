@@ -57,13 +57,13 @@ public class __Main extends JPanel{
 	{
 		Graphics2D g2 = (Graphics2D)g;
 		System.out.println("paintComponent");
-		World.instance.inclusiveUpdate(g2);
 		AffineTransform transform = new AffineTransform();
 		float scaleX = getWidth()/(float)(100*32);
 		float scaleY = getHeight()/(float)(100*32);
 		float scale = (scaleX > scaleY) ? scaleY : scaleX;
 		transform.scale(scale, scale*-1);
 		g2.transform(transform);
+		World.instance.inclusiveUpdate(g2, transform);
 	}
 	
 	public static void main(String[] args) throws Exception {
