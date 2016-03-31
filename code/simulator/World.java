@@ -464,6 +464,14 @@ public class World {
 
 	}
 
+	public String setRealTimeToSimTime(double realTimeToSimTime)
+	{
+		if (realTimeToSimTime < 0)
+			return "sim time can't be lower than 0";
+		this.realTimeToSimTime = realTimeToSimTime;
+		return null;
+	}
+
 	protected Tile getTileAt(int x, int y) {
 		if (x < 0 || y < 0 || x > tiles.length || y > tiles[0].length)
 			return null;
