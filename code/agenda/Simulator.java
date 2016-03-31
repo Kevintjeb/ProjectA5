@@ -21,6 +21,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
@@ -30,18 +32,28 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.Timer;
 
+import simulator.World;
+
 public class Simulator extends JPanel
 {
 	File json;
 	Planner planner;
 	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
 	Font timeFont = new Font("SANS_SERIF", Font.BOLD, 36);
-	public Simulator(File json, Planner planner)
+	
+	Map<agenda.Stage, Integer> stageMap = new HashMap<>();
+	
+	World world;
+	
+	public Simulator(File json, Planner planner)//, Map<agenda.Stage, Integer> stageMap)
 	{
 		super(new BorderLayout());
 		
 		this.json = json;
 		this.planner = planner;
+		//this.stageMap = stageMap;
+		
+		world = new World(planner.agenda, stageMap, json.getAbsolutePath());
 		
 		add(new ButtonPanel(planner), BorderLayout.NORTH);
 		add(new SimulatiePanel(planner), BorderLayout.CENTER);
@@ -251,6 +263,13 @@ public class Simulator extends JPanel
 					if(speed != oldSpeed)
 					{
 						System.out.println("wijzig snelheid");
+						
+						/*
+						 * min         /sec
+						 * 60*sec	   /sec
+						 * 60*sec/1000 / millisec
+						 */
+						//min*60/1000
 					}
 					if(newVisitors != oldVisitors)
 					{
