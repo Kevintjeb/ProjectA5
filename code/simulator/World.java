@@ -141,11 +141,11 @@ public class World {
 				// eerste 4 layers tekenen -> standaard layers.
 
 				for (int i = 0; i < 5; i++) {
+					
 					JSONObject currentlayer = (JSONObject) layers.get(i);
 					if (currentlayer.get("visible").equals(true)) {
 						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
 						layerslist.add(temp);
-
 					} else {
 						JSONArray data = (JSONArray) currentlayer.get("data");
 						for (int k = 0; k < data.size(); k++) {
@@ -193,7 +193,10 @@ public class World {
 								for (int i = 0; i < data.size(); i++) {
 									int tileType = ((Long) data.get(i)).intValue();
 									switch (tileType) {
+									//collision info false wanneer er geen collision is dus je mag wel lopen.
+									//collision info true wanneer er WEL collision is dus je mag NIET lopen.
 									case entranceExit:
+										collisionInfo[i % width][i / width] = false;
 										entrance.add(tiles[i % width][i / width]);
 										collisionInfo[i % width][i / width] = false;
 										break;
@@ -205,10 +208,13 @@ public class World {
 										break;
 
 									case danceFloorTrue:
+										collisionInfo[i % width][i / width] = false;
 										danceFloor.add(tiles[i % width][i / width]);
 										collisionInfo[i % width][i / width] = false;
 										break;
-
+									case collidableFalse:
+										collisionInfo[i % width][i / width] = false;
+										break;
 									}
 
 								}
