@@ -25,18 +25,16 @@ public class Linking extends JPanel {
 
 	Rectangle2D rectSelected;
 	Rectangle2D rectNumSelected;
+	
+	ArrayList<ArrayList<Rectangle2D>> lines = new ArrayList<ArrayList<Rectangle2D>>();
 
 	Stage selectedStage;
 	int selectedNumber;
 
 	int clickedStage = -1;
 	int clickedNumber = -1;
-
-	Rectangle2D applyButton;
-	Rectangle2D diposeButton;
-
-	boolean drawLine = false;
-	boolean hasBeenClicked = false;
+	
+	Rectangle2D runButton;
 
 	File json;
 
@@ -66,7 +64,7 @@ public class Linking extends JPanel {
 				g2d.setColor(new Color(25, 160, 95, 255));
 				System.out.println(stage);
 			} else
-				g2d.setColor(new Color(25, 160, 95, 192));
+				g2d.setColor(new Color(25, 160, 95, 128));
 
 			Rectangle2D rect = new Rectangle2D.Double(10, y, 100, 50);
 			g2d.fill(rect);
@@ -94,7 +92,7 @@ public class Linking extends JPanel {
 				g2d.setColor(new Color(225, 230, 150, 255));
 				System.out.println(i);
 			} else
-				g2d.setColor(new Color(225, 230, 150, 192));
+				g2d.setColor(new Color(225, 230, 150, 128));
 			count++;
 
 			Rectangle2D rect = new Rectangle2D.Double(290, y2, 100, 50);
@@ -112,47 +110,39 @@ public class Linking extends JPanel {
 			g2d.drawString("" + i, xPos + 290, (yPos + y2));
 
 			y2 += 60;
-			g2d.setColor(new Color(225, 230, 150, 192));
+			g2d.setColor(new Color(225, 230, 150, 128));
 		}
 
-		g2d.setColor(new Color(121, 121, 121));
-		applyButton = new Rectangle2D.Double(80, 500, 110, 50);
-		g2d.fill(applyButton);
-
-		int stringLen = (int) g2d.getFontMetrics().getStringBounds("APPLY", g2d).getWidth();
-		int stringHei = (int) g2d.getFontMetrics().getStringBounds("APPLY", g2d).getHeight();
-
-		int xPos = (int) 75 / 2 - stringLen / 2;
-		int yPos = (int) 50 / 2 + stringHei / 4;
-
-		g2d.setColor(Color.WHITE);
-		g2d.drawString("APPLY", xPos + 100, (yPos + 500));
 		// --------------------------------------------------------------------------
 		g2d.setColor(new Color(121, 121, 121));
-		diposeButton = new Rectangle2D.Double(210, 500, 110, 50);
-		g2d.fill(diposeButton);
+		runButton = new Rectangle2D.Double(145, 500, 110, 50);
+		g2d.fill(runButton);
 
-		int stringLenPotty = (int) g2d.getFontMetrics().getStringBounds("Close linker", g2d).getWidth();
-		int stringHeiPotty = (int) g2d.getFontMetrics().getStringBounds("Close linker", g2d).getHeight();
+		int stringLenPotty = (int) g2d.getFontMetrics().getStringBounds("Run", g2d).getWidth();
+		int stringHeiPotty = (int) g2d.getFontMetrics().getStringBounds("Run", g2d).getHeight();
 
 		int xPosPotty = (int) 75 / 2 - stringLenPotty / 2;
 		int yPosPotty = (int) 50 / 2 + stringHeiPotty / 4;
 
 		g2d.setColor(Color.WHITE);
-		g2d.drawString("Close linker", xPosPotty + 227, (yPosPotty + 500));
+		g2d.drawString("Run", xPosPotty + 162, (yPosPotty + 500));
 
-		if (drawLine) {
-			int lx = (int) rectSelected.getX() + 100;
-			int ly = (int) rectSelected.getY() + 25;
-			int rx = (int) rectNumSelected.getX();
-			int ry = (int) rectNumSelected.getY() + 25;
+		//if (drawLine) {
+		if(!lines.isEmpty()){
+		for(ArrayList<Rectangle2D> line: lines)
+		{
+			int lx = (int) line.get(0).getX() + 100;
+			int ly = (int) line.get(0).getY() + 25;
+			int rx = (int) line.get(1).getX();
+			int ry = (int) line.get(1).getY() + 25;
 
 			g2d.setColor(Color.BLACK);
 			g2d.setStroke(new BasicStroke(5));
 			g2d.drawLine(lx, ly, rx, ry);
-			drawLine = false;
-
 		}
+		}
+
+		//}
 	}
 
 	public void clicked() {
@@ -174,6 +164,22 @@ public class Linking extends JPanel {
 						selectedNumber = 5 + (i * 3);
 						rectNumSelected = numbers.get(i);
 						clickedNumber = i;
+						if(!lines.isEmpty()){
+							for(int y = lines.size()-1; y > 0; y--)
+							{
+								System.out.println(lines.size());
+							if(lines.get(y).get(0).equals(rectSelected))
+								lines.remove(lines.get(y));							
+							}
+						}
+						ArrayList<Rectangle2D> line = new ArrayList<Rectangle2D>();
+						line.add(rectSelected);
+						line.add(rectNumSelected);
+						lines.add(line);
+						
+
+						map.put(selectedStage, selectedNumber);
+						System.out.println(map.entrySet());
 						repaint();
 					}
 
@@ -183,19 +189,7 @@ public class Linking extends JPanel {
 
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				if (applyButton.contains(e.getPoint())) {
-					map.put(selectedStage, selectedNumber);
-					System.out.println(map.entrySet());
-
-					drawLine = true;
-					repaint();
-				}
-			}
-		});
-
-		addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (diposeButton.contains(e.getPoint())) {
+				if (runButton.contains(e.getPoint())) {
 					planner.tabbedPane.removeTabAt(2);
 					planner.tabbedPane.addTab("Simulatie", new Simulator(json, planner, map));
 					planner.repaint();
