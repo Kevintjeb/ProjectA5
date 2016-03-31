@@ -315,7 +315,7 @@ public class Simulator extends JPanel
 						uren++;
 					}
 					
-					if(uren == 23 && minuten == 59)
+					if(uren == 23 && minuten >= 59)
 					{
 						uren = 9;
 					}
