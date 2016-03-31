@@ -11,23 +11,28 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.Timer;
 
-import com.sun.javafx.font.Disposer;
+import simulator.World;
 
 public class Simulator extends JPanel
 {
@@ -35,12 +40,29 @@ public class Simulator extends JPanel
 	Planner planner;
 	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
 	Font timeFont = new Font("SANS_SERIF", Font.BOLD, 36);
-	public Simulator(File json, Planner planner)
+	
+	Map<agenda.Stage, Integer> stageMap = new HashMap<>();
+	
+	World world;
+	
+	int uren = 9;
+	double minuten = 0;
+	
+	int updatetijd = 1000/30;
+	
+	ActionListener updateTime;
+	
+	Timer updateT;
+	
+	public Simulator(File json, Planner planner, Map<agenda.Stage, Integer> stageMap)
 	{
 		super(new BorderLayout());
 		
 		this.json = json;
 		this.planner = planner;
+		this.stageMap = stageMap;
+		
+		world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png");
 		
 		add(new ButtonPanel(planner), BorderLayout.NORTH);
 		add(new SimulatiePanel(planner), BorderLayout.CENTER);
@@ -59,7 +81,7 @@ public class Simulator extends JPanel
 		JLabel speed1 = new JLabel("Speed: ");
 		JLabel speed2 = new JLabel(" min/sec");
 		JLabel time = new JLabel("09:00");
-		JTextField speedInvoer = new JTextField("0.0", 2);
+		JTextField speedInvoer = new JTextField("0.0", 3);
 		JLabel visitors = new JLabel("Bezoekers:");
 		JTextField visitorsField = new JTextField("0", 2);
 		JLabel visitors2 = new JLabel(" aantal/min");
@@ -75,6 +97,8 @@ public class Simulator extends JPanel
 			setLayout(layout);
 			
 			this.planner = planner;
+			
+			updateTime();
 			
 			add(speed1);
 			add(speedInvoer);
@@ -105,7 +129,7 @@ public class Simulator extends JPanel
 			layout.putConstraint(SpringLayout.WEST, speedInvoer, 45, SpringLayout.WEST, speed1);
 			layout.putConstraint(SpringLayout.NORTH, speedInvoer, 25, SpringLayout.NORTH, this);
 			
-			layout.putConstraint(SpringLayout.WEST, speed2, 25, SpringLayout.WEST, speedInvoer);
+			layout.putConstraint(SpringLayout.WEST, speed2, 30, SpringLayout.WEST, speedInvoer);
 			layout.putConstraint(SpringLayout.NORTH, speed2, 25, SpringLayout.NORTH, this);
 			
 			layout.putConstraint(SpringLayout.WEST, time, 900, SpringLayout.WEST, this);
@@ -115,6 +139,7 @@ public class Simulator extends JPanel
 			fillArrayList(mapmap);
 			fillPlaatjes();
 			clicked();
+			
 			
 			
 		}
@@ -249,7 +274,14 @@ public class Simulator extends JPanel
 					
 					if(speed != oldSpeed)
 					{
-						System.out.println("wijzig snelheid");
+						double realTimeToSimTime = (speed * 60)/1000;
+						world.setRealTimeToSimTime(realTimeToSimTime);
+						/*
+						 * min         /sec
+						 * 60*sec	   /sec
+						 * 60*sec/1000 / millisec
+						 */
+						//min*60/1000
 					}
 					if(newVisitors != oldVisitors)
 					{
@@ -261,13 +293,67 @@ public class Simulator extends JPanel
 				}
 			};
 			
-			Timer updateTime = new Timer(50, update);
-			updateTime.start();
+			Timer updateTimer = new Timer(50, update);
+			updateTimer.start();
+			
+			
+		}
+		
+		public void updateTime()
+		{
+			updateTime = new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					//TODO aanpassen met methode van flobo
+					minuten += Double.parseDouble(speedInvoer.getText())/30;
+					
+					if(minuten >= 60)
+					{
+						minuten = 0;
+						uren++;
+					}
+					
+					if(uren == 23 && minuten >= 59)
+					{
+						uren = 9;
+					}
+					
+					String urenS;
+					if(uren < 10)
+					{
+						urenS = "0" + uren;
+					}
+					else
+					{
+						urenS = "" + uren;
+					}
+					
+					String minutenS;
+					if(Math.round(minuten) < 10)
+					{
+						minutenS = "0" + Math.round(minuten);
+					}
+					else
+					{
+						minutenS = "" + Math.round(minuten);
+					}
+					
+					time.setText(urenS + ":" + minutenS);
+				}
+			};
+			
+			updateT = new Timer(updatetijd, updateTime);
 		}
 		
 		public void refreshSim()
 		{
-			
+			pauseSim();
+			planner.tabbedPane.removeTabAt(2);
+			planner.tabbedPane.addTab("Simulatie", new SimulatieGUI(planner));
+			planner.repaint();
+			planner.revalidate();
 		}
 		
 		public void backSim()
@@ -277,12 +363,15 @@ public class Simulator extends JPanel
 		
 		public void playSim()
 		{
-			
+			world.setRealTimeToSimTime((Double.parseDouble(speedInvoer.getText())*60)/1000);
+			//explaination formule linenumber 269
+			updateT.start();
 		}
 		
 		public void pauseSim()
 		{
-			
+			world.setRealTimeToSimTime(0.0);
+			updateT.stop();
 		}
 		
 		public void forwardSim()
@@ -310,9 +399,18 @@ public class Simulator extends JPanel
 		}
 	}
 	
-	class SimulatiePanel extends JPanel
+	class SimulatiePanel extends JPanel implements MouseMotionListener, MouseListener
 	{
 		Planner planner;
+		
+		int x = 0;
+		int y = 0;
+		
+		int oldX = -1;
+		int oldY = -1;
+		
+		float scale = 1;
+		AffineTransform transform = new AffineTransform();
 		
 		public SimulatiePanel(Planner planner)
 		{
@@ -320,7 +418,102 @@ public class Simulator extends JPanel
 			setPreferredSize(new Dimension(1200, 500));
 			this.planner = planner;
 			
-			//TODO simulatie 
+			addMouseMotionListener(this);
+			addMouseListener(this);
+			addMouseWheelListener(new zoomMap());
+			
+			ActionListener simulate = new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					repaint();
+				}
+			};
+			
+			Timer simulateTime = new Timer(1000/30, simulate);
+			simulateTime.start(); 
+		}
+		
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2d = (Graphics2D) g;
+
+			AffineTransform oldtransform = g2d.getTransform();
+			
+			transform = new AffineTransform();
+			transform.scale(scale, scale);
+			transform.translate(x, y);
+
+			g2d.setTransform(transform);
+
+			world.inclusiveUpdate(g2d, transform);
+
+			g2d.setTransform(oldtransform);
+		}
+
+		public void mouseDragged(MouseEvent e) {
+
+			x += (-1 * ((oldX - e.getX())) / scale);
+			y += (-1 * ((oldY - e.getY())) / scale);
+			oldX = e.getX();
+			oldY = e.getY();
+			repaint();
+		}
+
+		class zoomMap implements MouseWheelListener {
+			float maxScale = 1.20f;
+			float minScale = 0.50f;
+
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+
+				double delta = -(0.05f * e.getPreciseWheelRotation());
+
+				scale += delta;
+				if (scale <= minScale) {
+					scale = minScale;
+				} else if (scale >= maxScale) {
+					scale = maxScale;
+				}
+				repaint();
+			}
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			oldX = e.getX();
+			oldY = e.getY();
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			// TODO Auto-generated method stub
+
 		}
 	}
 	
@@ -361,10 +554,14 @@ public class Simulator extends JPanel
 				{
 					if(slider.getValue() != oldTime)
 					{
+						oldTime = slider.getValue();
 						
+						uren = oldTime;
+						minuten = 0;
+					
 					}
 					
-					oldTime = slider.getValue();
+					slider.setValue(uren);
 				}
 				
 			};

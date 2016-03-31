@@ -33,6 +33,7 @@ public class Planner extends JFrame {
 	Agenda agenda = new Agenda();
 	Planner _this = this;
 	JTabbedPane tabbedPane;
+
 	public static void main(String[] args) {
 		new Planner();
 		
@@ -40,15 +41,16 @@ public class Planner extends JFrame {
 
 	public Planner() {
 		super("Festival Planner");
-		//agenda = Agenda.debugSetup();
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 			| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 			}
+		//agenda = Agenda.debugSetup();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		tabbedPane  = new JTabbedPane();
+		
+		tabbedPane = new JTabbedPane();
 		contentPane = new JPanel(new GridLayout());
 		
 		menuBar = new JMenuBar();
@@ -66,12 +68,10 @@ public class Planner extends JFrame {
 		JMenuItem load = new JMenuItem("load");
 		JMenuItem edit = new JMenuItem("Edit");
 		JMenuItem credit = new JMenuItem("Credits");
-		JMenuItem linker = new JMenuItem("Stage linking");
 
 		file.add(save);
 		file.add(load);
 		file.add(edit);
-		file.add(linker);
 		credits.add(credit);
 
 		save.addActionListener(new ActionListener() {
@@ -143,12 +143,13 @@ public class Planner extends JFrame {
 				
 				if(verification == JFileChooser.APPROVE_OPTION){
 					file = chooser.getSelectedFile();
-					agenda = new Agenda(file.getPath());
 				}
 				else if(verification == JFileChooser.CANCEL_OPTION){
 					JOptionPane.showMessageDialog(null, "The loading has been cancelled.");
 				}
 				
+				//System.out.print(file.exists());
+				agenda = new Agenda(file.getPath());
 				
 				//agenda = new Agenda("agenda");
 				repaint();
@@ -163,15 +164,6 @@ public class Planner extends JFrame {
 			public void actionPerformed(ActionEvent e) 
 			{
 				new EditorFrame(_this);
-			}
-		});
-		
-		linker.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				new StageLinker(agenda);
 			}
 		});
 		
