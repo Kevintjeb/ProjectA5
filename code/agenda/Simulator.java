@@ -21,6 +21,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
@@ -30,18 +32,28 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.Timer;
 
+import simulator.World;
+
 public class Simulator extends JPanel
 {
 	File json;
 	Planner planner;
 	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
 	Font timeFont = new Font("SANS_SERIF", Font.BOLD, 36);
-	public Simulator(File json, Planner planner)
+	
+	Map<agenda.Stage, Integer> stageMap = new HashMap<>();
+	
+	World world;
+	
+	public Simulator(File json, Planner planner, Map<agenda.Stage, Integer> stageMap)
 	{
 		super(new BorderLayout());
 		
 		this.json = json;
 		this.planner = planner;
+		this.stageMap = stageMap;
+		
+		world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png");
 		
 		add(new ButtonPanel(planner), BorderLayout.NORTH);
 		add(new SimulatiePanel(planner), BorderLayout.CENTER);
@@ -60,7 +72,7 @@ public class Simulator extends JPanel
 		JLabel speed1 = new JLabel("Speed: ");
 		JLabel speed2 = new JLabel(" min/sec");
 		JLabel time = new JLabel("09:00");
-		JTextField speedInvoer = new JTextField("0.0", 2);
+		JTextField speedInvoer = new JTextField("0.0", 3);
 		JLabel visitors = new JLabel("Bezoekers:");
 		JTextField visitorsField = new JTextField("0", 2);
 		JLabel visitors2 = new JLabel(" aantal/min");
@@ -106,7 +118,7 @@ public class Simulator extends JPanel
 			layout.putConstraint(SpringLayout.WEST, speedInvoer, 45, SpringLayout.WEST, speed1);
 			layout.putConstraint(SpringLayout.NORTH, speedInvoer, 25, SpringLayout.NORTH, this);
 			
-			layout.putConstraint(SpringLayout.WEST, speed2, 25, SpringLayout.WEST, speedInvoer);
+			layout.putConstraint(SpringLayout.WEST, speed2, 30, SpringLayout.WEST, speedInvoer);
 			layout.putConstraint(SpringLayout.NORTH, speed2, 25, SpringLayout.NORTH, this);
 			
 			layout.putConstraint(SpringLayout.WEST, time, 900, SpringLayout.WEST, this);
@@ -251,6 +263,14 @@ public class Simulator extends JPanel
 					if(speed != oldSpeed)
 					{
 						System.out.println("wijzig snelheid");
+						double realTimeToSimTime = (speed * 60)/1000;
+						world.setRealTimeToSimTime(realTimeToSimTime);
+						/*
+						 * min         /sec
+						 * 60*sec	   /sec
+						 * 60*sec/1000 / millisec
+						 */
+						//min*60/1000
 					}
 					if(newVisitors != oldVisitors)
 					{
@@ -348,6 +368,8 @@ public class Simulator extends JPanel
 			g2d.drawImage(mapimage, new AffineTransform(), this);
 
 			g2d.setTransform(oldtransform);
+			
+			world.inclusiveUpdate(g2d);
 		}
 
 		int oldX = -1;

@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -20,6 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Planner extends JFrame {
@@ -31,7 +32,7 @@ public class Planner extends JFrame {
 	JMenuBar menuBar;
 	Agenda agenda = new Agenda();
 	Planner _this = this;
-	JTabbedPane tabbedPane = new JTabbedPane();
+	JTabbedPane tabbedPane;
 
 	public static void main(String[] args) {
 		new Planner();
@@ -40,9 +41,16 @@ public class Planner extends JFrame {
 
 	public Planner() {
 		super("Festival Planner");
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+			| UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+			}
 		//agenda = Agenda.debugSetup();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		tabbedPane = new JTabbedPane();
 		contentPane = new JPanel(new GridLayout());
 		
 		menuBar = new JMenuBar();
@@ -60,12 +68,10 @@ public class Planner extends JFrame {
 		JMenuItem load = new JMenuItem("load");
 		JMenuItem edit = new JMenuItem("Edit");
 		JMenuItem credit = new JMenuItem("Credits");
-		JMenuItem linker = new JMenuItem("Stage linking");
 
 		file.add(save);
 		file.add(load);
 		file.add(edit);
-		file.add(linker);
 		credits.add(credit);
 
 		save.addActionListener(new ActionListener() {
@@ -158,15 +164,6 @@ public class Planner extends JFrame {
 			public void actionPerformed(ActionEvent e) 
 			{
 				new EditorFrame(_this);
-			}
-		});
-		
-		linker.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				new Linking(_this);
 			}
 		});
 		

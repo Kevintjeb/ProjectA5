@@ -47,3 +47,40 @@
 /EditGUI$6.class
 /Performance$1.class
 /Time.class
+<<<<<<< HEAD
+=======
+/Service.class
+>>>>>>> e420b4189605af52d4f7f256903999219f2fb6a6
+/Planner$5.class
+/SimulatieGUI$ButtonListener.class
+/SimulatieGUI$ChooseMapPanel.class
+/SimulatieGUI$LabelPanel.class
+/SimulatieGUI.class
+<<<<<<< HEAD
+/Simulator$ButtonPanel.class
+/Simulator$SimulatiePanel.class
+=======
+/Simulator$ButtonPanel$1.class
+/Simulator$ButtonPanel$2.class
+/Simulator$ButtonPanel.class
+/Simulator$SimulatiePanel.class
+/Simulator$TimePanel$1.class
+>>>>>>> e420b4189605af52d4f7f256903999219f2fb6a6
+/Simulator$TimePanel.class
+/Simulator.class
+/StageLinker$1.class
+/StageLinker$2.class
+/StageLinker.class
+<<<<<<< HEAD
+/Simulator$ButtonPanel$1.class
+/Simulator$TimePanel$1.class
+/Simulator$ButtonPanel$2.class
+/Linking.class
+/Linking$LinkingPanel.class
+/StageLinker$LinkerPanel.class
+/Linking$LinkingPanel$1.class
+/Linking$LinkingPanel$2.class
+/Simulator$SimulatiePanel$zoomMap.class
+/Linking$LinkingPanel$3.class
+=======
+>>>>>>> e420b4189605af52d4f7f256903999219f2fb6a6
