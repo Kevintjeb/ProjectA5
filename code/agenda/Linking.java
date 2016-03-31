@@ -241,7 +241,7 @@ public class Linking extends JPanel
 				if(diposeButton.contains(e.getPoint()))
 				{
 					planner.tabbedPane.removeTabAt(2);
-					planner.tabbedPane.addTab("Simulatie", new Simulator(json, planner));//, linking.getLinkMap()));
+					planner.tabbedPane.addTab("Simulatie", new Simulator(json, planner, map));//, linking.getLinkMap()));
 					planner.repaint();
 			        planner.revalidate();
 				}

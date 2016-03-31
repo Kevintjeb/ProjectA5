@@ -77,7 +77,7 @@ public class World {
 		}
 		
 		try {
-			ImageIO.write(img, "png", new File("debug_data/boolean_print" + index++ + ".png"));
+			ImageIO.write(img, "png", new File("debug_data/boolean_printtest" + index++ + ".png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
