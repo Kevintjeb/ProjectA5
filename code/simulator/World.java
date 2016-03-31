@@ -266,7 +266,7 @@ public class World {
 				}
 				layerslist.clear();
 				// saved de file naar het systeem.
-				File outputfile = new File("resultaat.png");
+				File outputfile = new File("debug_data/mapImage.png");
 				ImageIO.write(mapImage, "png", outputfile);
 				// Garbage collecter notification voor java, om die tering
 				// rommel op
