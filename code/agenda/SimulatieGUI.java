@@ -38,6 +38,9 @@ public class SimulatieGUI extends JPanel
 		add(LabelPanel, BorderLayout.NORTH);
 		add(ChooseMapPanel, BorderLayout.CENTER);
 	}
+	
+	
+	
 	class LabelPanel extends JPanel
 	{
 		Planner planner;
@@ -161,15 +164,14 @@ public class SimulatieGUI extends JPanel
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			//TODO linking stages 
-//			planner.tabbedPane.removeTabAt(2);
-//			linking = new Linking(planner); //linking of stages in the agenda to stages in the simulator
-//			planner.tabbedPane.addTab("Simulatie", linking);
 			
 			planner.tabbedPane.removeTabAt(2);
-			planner.tabbedPane.addTab("Simulatie", new Simulator(maps.get(number), planner));//, linking.getLinkMap()));
+			linking = new Linking(planner, maps.get(number)); //linking of stages in the agenda to stages in the simulator
+			planner.tabbedPane.addTab("Simulatie", linking);
 			planner.repaint();
 	        planner.revalidate();
 		}
+		
+		
 	}
 }

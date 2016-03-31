@@ -84,7 +84,7 @@ public class World {
 		}
 	}
 	
-	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath, String tileMapPath) {
+	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath) {
 		instance = this;
 		this.agenda = agenda;
 		buildings = new ArrayList<>();

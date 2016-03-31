@@ -6,16 +6,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Linking extends JPanel
@@ -38,13 +35,16 @@ public class Linking extends JPanel
 		
 	boolean drawLine = false;
 	boolean hasBeenClicked = false;
+	
+	File json;
 		
 		
 		
-	public Linking(Planner planner)
+	public Linking(Planner planner, File json)
 	{
 		super(null);
 		this.planner = planner;
+		this.json = json;
 		setPreferredSize(new Dimension(400, 550));
 		clicked();
 	}
@@ -236,11 +236,15 @@ public class Linking extends JPanel
 		
 		addMouseListener(new MouseAdapter()
 		{
-		public void mousePressed(MouseEvent e)
-		{
-			if(diposeButton.contains(e.getPoint()))
+			public void mousePressed(MouseEvent e)
 			{
-				System.out.println("Doet helemaal niets");					}
+				if(diposeButton.contains(e.getPoint()))
+				{
+					planner.tabbedPane.removeTabAt(2);
+					planner.tabbedPane.addTab("Simulatie", new Simulator(json, planner));//, linking.getLinkMap()));
+					planner.repaint();
+			        planner.revalidate();
+				}
 			}
 		});
 	}

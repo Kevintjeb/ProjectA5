@@ -53,7 +53,7 @@ public class Simulator extends JPanel
 		this.planner = planner;
 		//this.stageMap = stageMap;
 		
-		world = new World(planner.agenda, stageMap, json.getAbsolutePath());
+		//world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png");
 		
 		add(new ButtonPanel(planner), BorderLayout.NORTH);
 		add(new SimulatiePanel(planner), BorderLayout.CENTER);
@@ -263,7 +263,8 @@ public class Simulator extends JPanel
 					if(speed != oldSpeed)
 					{
 						System.out.println("wijzig snelheid");
-						
+						double realTimeToSimTime = (speed * 60)/1000;
+						world.setRealTimeToSimTime(realTimeToSimTime);
 						/*
 						 * min         /sec
 						 * 60*sec	   /sec
