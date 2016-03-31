@@ -263,6 +263,13 @@ public class Simulator extends JPanel
 					if(speed != oldSpeed)
 					{
 						System.out.println("wijzig snelheid");
+						
+						/*
+						 * min         /sec
+						 * 60*sec	   /sec
+						 * 60*sec/1000 / millisec
+						 */
+						//min*60/1000
 					}
 					if(newVisitors != oldVisitors)
 					{
