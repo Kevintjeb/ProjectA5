@@ -83,7 +83,13 @@ public class World {
 		}
 	}
 	
-	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath) {
+	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath)
+	{
+		this(agenda, stageMap, jsonPath, tileMapPath, false, false);
+	}
+	
+	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath, final boolean debug, final boolean numberOrText) {
+		long constructorStart = System.currentTimeMillis();
 		instance = this;
 		this.agenda = agenda;
 		buildings = new ArrayList<>();
@@ -143,7 +149,7 @@ public class World {
 				width = ((Long) json.get("width")).intValue();
 
 				collisionInfo = new boolean[width][height];
-				drawBoolArray(collisionInfo);
+				if (debug) drawBoolArray(collisionInfo);
 				mapImage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
 						BufferedImage.TYPE_INT_ARGB);
 				tiles = new Tile[width][height];
@@ -180,7 +186,7 @@ public class World {
 					}
 				}
 				
-				drawBoolArray(collisionInfo);
+				if(debug) drawBoolArray(collisionInfo);
 
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
 
@@ -237,7 +243,7 @@ public class World {
 
 						}
 						buildings.add(new Stage("", entrance, entrance, maxAgents, stage, danceFloor));
-						drawBoolArray(collisionInfo);
+						if (debug) drawBoolArray(collisionInfo);
 					}
 
 				}
@@ -264,8 +270,11 @@ public class World {
 				}
 				layerslist.clear();
 				// saved de file naar het systeem.
-				File outputfile = new File("debug_data/mapImage.png");
-				ImageIO.write(mapImage, "png", outputfile);
+				if (debug)
+				{
+					File outputfile = new File("debug_data/mapImage.png");
+					ImageIO.write(mapImage, "png", outputfile);
+				}
 				// Garbage collecter notification voor java, om die tering
 				// rommel op
 				// te ruimen >> 1500MB.
@@ -378,7 +387,7 @@ public class World {
 							nodeStack.pop();
 					}
 					
-					{////////// Create a debug image /////////////////
+					if (debug) {////////// Create a debug image /////////////////
 						Color inGraph = new Color(0, 255, 0, 128);
 						Color outGraph = new Color(255, 0, 0, 128);
 						
@@ -453,14 +462,15 @@ public class World {
 						
 						Queue<Node> queue = new LinkedList<>();
 						HashSet<Node> visited = new HashSet<Node>();
-						HashMap<Position, Integer> nodeToDistanceMap = new HashMap<>(graph.size());
+						HashMap<Position, Integer> nodeToDistanceMap = null;
+						if (debug) nodeToDistanceMap = new HashMap<>(graph.size());
 						
 						for (Tile tile : pair.entances) {
 							Node n = positionToNodeMap.get(new Position(tile.X, tile.Y));
 							queue.add(n);
 							tiles[n.X][n.Y].directions.put(pair.typeID, tiles[n.X][n.Y]);
 							visited.add(n);
-							nodeToDistanceMap.put(new Position(tile.X, tile.Y), -1);
+							if (debug) nodeToDistanceMap.put(new Position(tile.X, tile.Y), -1);
 							System.out.println("tile(" + tile.X + ", " + tile.Y + ") " + ((n == null) ? "node is null" : "node was found")+
 									((collisionInfo[tile.X][tile.Y]) ? ", there should be no node" : ", there should be a node"));
 						}
@@ -470,7 +480,8 @@ public class World {
 						while (queue.isEmpty() == false) {
 							Node node = queue.poll();
 							visitedNodeCount++;
-							int newNodeDistance = nodeToDistanceMap.get(new Position(node.X, node.Y)) + 1;
+							int newNodeDistance = 0;
+							if (debug) newNodeDistance = nodeToDistanceMap.get(new Position(node.X, node.Y)) + 1;
 							if (newNodeDistance > highestDistance)
 								highestDistance = newNodeDistance;
 							//System.out.println(((node == null) ? "node is null" : "node was found"));
@@ -482,14 +493,14 @@ public class World {
 								if (visited.contains(node.straitEdges[i]) == true)
 									continue;
 								visited.add(node.straitEdges[i]);
-								nodeToDistanceMap.put(new Position(node.straitEdges[i].X, node.straitEdges[i].Y), newNodeDistance);
+								if (debug) nodeToDistanceMap.put(new Position(node.straitEdges[i].X, node.straitEdges[i].Y), newNodeDistance);
 								queue.add(node.straitEdges[i]);
 								tiles[node.straitEdges[i].X][node.straitEdges[i].Y].addDirection(pair.typeID,
 										tiles[node.X][node.Y]);
 							}
 						}
 						System.out.println("direction generation visitedNodeCount : " + visitedNodeCount);
-						{/// Creating a debug image
+						if (debug){/// Creating a debug image
 							BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
 							Graphics2D graphics = (Graphics2D)debugImage.getGraphics();
 							graphics.drawImage(mapImage, 0, 0, null);
@@ -501,33 +512,39 @@ public class World {
 								//System.out.println("("+n.X+", " + n.Y +") " + color);
 								if (color < 0 || color> 255)
 									color = 128;
-								graphics.setColor(new Color(color, color, color, 128));
+								graphics.setColor(new Color(color, color, color, 180));
 								graphics.fillRect(n.X*32, n.Y*32, 32, 32);
 								graphics.setColor(Color.BLACK);
-								//graphics.drawString(nodeToDistanceMap.get(new Position(n.X, n.Y)).toString(), n.X*32+16, n.Y*32+16);
-								Tile direction = tiles[n.X][n.Y].getDirection(pair.typeID);
-								if (direction.X < n.X)
+								if (numberOrText)
 								{
-									graphics.drawString("left", n.X*32+16, n.Y*32+16);
+									graphics.drawString(nodeToDistanceMap.get(new Position(n.X, n.Y)).toString(), n.X*32+16, n.Y*32+16);
 								}
-								else if (direction.X > n.X)
+								else
 								{
-									graphics.drawString("right", n.X*32+16, n.Y*32+16);
-								}
-								else if (direction.Y < n.Y)
-								{
-									graphics.drawString("up", n.X*32+16, n.Y*32+16);
-								}
-								else if (direction.Y > n.Y)
-								{
-									graphics.drawString("down", n.X*32+16, n.Y*32+16);
-								}
-								else 
-								{
-									graphics.setColor(Color.ORANGE);
-									graphics.fillRect(n.X*32, n.Y*32, 32, 32);
-									graphics.setColor(Color.BLACK);
-									graphics.drawString("dest", n.X*32+4, n.Y*32+16);
+									Tile direction = tiles[n.X][n.Y].getDirection(pair.typeID);
+									if (direction.X < n.X)
+									{
+										graphics.drawString("left", n.X*32+16, n.Y*32+16);
+									}
+									else if (direction.X > n.X)
+									{
+										graphics.drawString("right", n.X*32+16, n.Y*32+16);
+									}
+									else if (direction.Y < n.Y)
+									{
+										graphics.drawString("up", n.X*32+16, n.Y*32+16);
+									}
+									else if (direction.Y > n.Y)
+									{
+										graphics.drawString("down", n.X*32+16, n.Y*32+16);
+									}
+									else 
+									{
+										graphics.setColor(Color.ORANGE);
+										graphics.fillRect(n.X*32, n.Y*32, 32, 32);
+										graphics.setColor(Color.BLACK);
+										graphics.drawString("dest", n.X*32+4, n.Y*32+16);
+									}
 								}
 							}
 							
@@ -544,8 +561,9 @@ public class World {
 		}
 		
 		{
+			long delta = System.currentTimeMillis() - constructorStart;
 			System.setOut(oldStream);
-			System.out.println("World was created");
+			System.out.println("World was created in " + (double)delta/1000 + " seconds");
 		}
 
 	}
