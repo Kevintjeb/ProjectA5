@@ -7,18 +7,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.AbstractQueue;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.imageio.ImageIO;
 
@@ -84,7 +80,7 @@ public class World {
 		}
 	}
 	
-	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath, String tileMapPath) {
+	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath) {
 		instance = this;
 		this.agenda = agenda;
 		buildings = new ArrayList<>();
@@ -198,7 +194,6 @@ public class World {
 									case entranceExit:
 										collisionInfo[i % width][i / width] = false;
 										entrance.add(tiles[i % width][i / width]);
-										collisionInfo[i % width][i / width] = false;
 										break;
 									case collidableFalse:
 										collisionInfo[i % width][i / width] = false;
@@ -210,7 +205,6 @@ public class World {
 									case danceFloorTrue:
 										collisionInfo[i % width][i / width] = false;
 										danceFloor.add(tiles[i % width][i / width]);
-										collisionInfo[i % width][i / width] = false;
 										break;
 									}
 

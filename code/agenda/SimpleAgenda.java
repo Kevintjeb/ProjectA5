@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.AbstractTableModel;
 
 public class SimpleAgenda extends JPanel {
@@ -19,6 +21,12 @@ public class SimpleAgenda extends JPanel {
 
 	public SimpleAgenda(Planner planner) {
 		super(new BorderLayout());
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+			| UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+			}
 		this.planner = planner;
 
 		table = new JTable(new AgendaTable());
