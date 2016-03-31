@@ -48,13 +48,13 @@ abstract class Agent implements Updateable, Drawable {
 	
 		/*
 		// we don't need to go anywhere so we can just return
-		if (destenation == NO_DESTENATION)
+		if (destination == NO_DESTENATION)
 			return;
 		
 		// if the next time is null we have reset our destination so we need to
 		// get our nextTile from the currentTile
 		if (nextTile == null)
-			nextTile = currentTile.getDirection(destenation);
+			nextTile = currentTile.getDirection(destination);
 		
 		// if the nextTile is the currentTile we have reached our position
 		// NOTE: this is because Tile.getDirection will give us the tile itself if it is the destination
@@ -66,7 +66,7 @@ abstract class Agent implements Updateable, Drawable {
 		{
 			currentPosition = nextPosition; 
 			currentTile = nextTile;
-			nextTile = nextTile.getDirection(destenation); // we get the next tile from our currentTile
+			nextTile = nextTile.getDirection(destination); // we get the next tile from our currentTile
 			// the nextPosition gets generated
 			// TODO make the generated point be semi random so not all agents will move throu the same 
 			//      points

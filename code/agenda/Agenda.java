@@ -18,9 +18,6 @@ public class Agenda implements Serializable {
 	ArrayList<Stage> stages;
 	ArrayList<Performance> performances;
 
-	// TODO create a constuct method to prevent code duplication between
-	// constructors
-
 	private void construct() {
 		artists = new ArrayList<Artist>();
 		stages = new ArrayList<Stage>();
@@ -156,8 +153,7 @@ public class Agenda implements Serializable {
 	}
 
 	public static void save(Agenda agenda, String filePath) {
-		// TODO more checks?
-
+		
 		try {
 			FileOutputStream out = new FileOutputStream(filePath);
 			ObjectOutputStream objOut = new ObjectOutputStream(out);
@@ -166,13 +162,12 @@ public class Agenda implements Serializable {
 
 			objOut.close();
 		} catch (IOException e) {
-			System.out.println("Agenda::safe(agenda, filePath) : ERROR: an exeption ocured while safing the file");
+			System.out.println("Agenda::safe(agenda, filePath) : ERROR: an exeption ocured while saving the file");
 		}
 	}
 
 	public static Agenda load(String filePath) {
-		// TODO more checks?
-
+		
 		try {
 			FileInputStream in = new FileInputStream(filePath);
 			ObjectInputStream objIn = new ObjectInputStream(in);

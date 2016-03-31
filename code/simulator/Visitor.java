@@ -16,8 +16,5 @@ public class Visitor extends Agent {
 
 	@Override
 	void destenationReached() {
-		// TODO Auto-generated method stub
-
 	}
-
 }
