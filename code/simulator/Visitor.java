@@ -10,6 +10,7 @@ import java.awt.geom.Point2D;
   * TODO: Random genrevoorkeur meegeven, kan door middel 
   * 	  van performances uit te lezen
   * TODO: Implementeren, kan wanneer Pathfinding werkt
+  * TODO: Zakgeld toevoegen
   * TODO: Static array maken met agent images erin, geheugen friendly alles
   * Optional TODO: Omdraainen waarden van oplopend naar aflopend
   * 
