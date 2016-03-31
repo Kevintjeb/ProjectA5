@@ -73,7 +73,7 @@ public class __Main extends JPanel{
 		frame.setVisible(true);
 		while (true)
 		{
-			frame.repaint();
+			//frame.repaint();
 			Thread.sleep(100);
 		}
 	}

@@ -7,14 +7,18 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.AbstractQueue;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.imageio.ImageIO;
 
@@ -425,18 +429,20 @@ public class World {
 					for (TypeIdTilePair pair : pairs) {
 						System.out.println("pair<" + pair.typeID + ", " + pair.name +", " + pair.entances.size() + ">");
 						
-						Queue<Node> queue = new LinkedList<Node>();
+						Queue<Node> queue = new LinkedList<>();
 						HashSet<Node> visited = new HashSet<Node>();
 						
 						for (Tile tile : pair.entances) {
 							Node n = positionToNodeMap.get(new Position(tile.X, tile.Y));
 							queue.add(n);
-							System.out.println("tile(" + tile.X + ", " + tile.Y + ") " + n != null);
+							System.out.println("tile(" + tile.X + ", " + tile.Y + ") " + (n != null));
 						}
 
 						while (queue.isEmpty() == false) {
 							Node node = queue.poll();
-							System.out.println(node != null);
+							System.out.println("node == null : " + node != null);
+							if (node == null)
+								continue;
 							for (int i = 0; i < node.straitEdges.length; i++) {
 								if (node.straitEdges[i] == null)
 									continue;
