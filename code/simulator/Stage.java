@@ -42,7 +42,7 @@ class Stage extends Building implements Updateable{
 
 	@Override
 	public void update() {
-		final int NO_PERFORMANCE = -1;
+		/*final int NO_PERFORMANCE = -1;
 		int lastPerformance = NO_PERFORMANCE, currentPerformance = NO_PERFORMANCE;
 		
 		System.out.println(new agenda.Time(World.instance.getWorldTime()/60));
@@ -84,7 +84,7 @@ class Stage extends Building implements Updateable{
 			
 			System.out.println(message);
 			int a = 0;
-		}
+		}*/
 	}
 
 }

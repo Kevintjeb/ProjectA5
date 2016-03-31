@@ -5,20 +5,19 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.AbstractQueue;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
-import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.imageio.ImageIO;
 
@@ -77,14 +76,20 @@ public class World {
 		}
 		
 		try {
-			ImageIO.write(img, "png", new File("debug_data/boolean_printtest" + index++ + ".png"));
+			ImageIO.write(img, "png", new File("debug_data/boolean_print" + index++ + ".png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath) {
+	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath)
+	{
+		this(agenda, stageMap, jsonPath, tileMapPath, false, false);
+	}
+	
+	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath, final boolean debug, final boolean numberOrText) {
+		long constructorStart = System.currentTimeMillis();
 		instance = this;
 		this.agenda = agenda;
 		buildings = new ArrayList<>();
@@ -93,6 +98,27 @@ public class World {
 		toRemove = new LinkedList<>();
 		buildingMap = new HashMap<>();
 
+		PrintStream oldStream;
+		{
+			PrintStream debugTxt;
+			File debugInfo = new File("debug_data/");
+			if (debugInfo.exists() == false)
+				debugInfo.mkdir();
+			
+			for (File file : debugInfo.listFiles())
+				file.delete();
+			
+			try {
+				debugTxt = new PrintStream(new File("debug_data/log.txt"));
+			} catch (FileNotFoundException e) {
+				System.out.println("log could not be created");
+				return;
+			}
+			System.out.println("starting world creation");
+			oldStream = System.out;
+			System.setOut(debugTxt);
+		}
+		
 		boolean[][] collisionInfo = null;
 		{
 			// ATRIBUTEN, moeten worden aangemaakt boven constructor ofcourse..
@@ -123,7 +149,7 @@ public class World {
 				width = ((Long) json.get("width")).intValue();
 
 				collisionInfo = new boolean[width][height];
-				drawBoolArray(collisionInfo);
+				if (debug) drawBoolArray(collisionInfo);
 				mapImage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
 						BufferedImage.TYPE_INT_ARGB);
 				tiles = new Tile[width][height];
@@ -160,7 +186,7 @@ public class World {
 					}
 				}
 				
-				drawBoolArray(collisionInfo);
+				if(debug) drawBoolArray(collisionInfo);
 
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
 
@@ -198,7 +224,6 @@ public class World {
 									case entranceExit:
 										collisionInfo[i % width][i / width] = false;
 										entrance.add(tiles[i % width][i / width]);
-										collisionInfo[i % width][i / width] = false;
 										break;
 									case collidableFalse:
 										collisionInfo[i % width][i / width] = false;
@@ -210,7 +235,6 @@ public class World {
 									case danceFloorTrue:
 										collisionInfo[i % width][i / width] = false;
 										danceFloor.add(tiles[i % width][i / width]);
-										collisionInfo[i % width][i / width] = false;
 										break;
 									}
 
@@ -219,7 +243,7 @@ public class World {
 
 						}
 						buildings.add(new Stage("", entrance, entrance, maxAgents, stage, danceFloor));
-						drawBoolArray(collisionInfo);
+						if (debug) drawBoolArray(collisionInfo);
 					}
 
 				}
@@ -246,8 +270,11 @@ public class World {
 				}
 				layerslist.clear();
 				// saved de file naar het systeem.
-				File outputfile = new File("resultaat.png");
-				ImageIO.write(mapImage, "png", outputfile);
+				if (debug)
+				{
+					File outputfile = new File("debug_data/mapImage.png");
+					ImageIO.write(mapImage, "png", outputfile);
+				}
 				// Garbage collecter notification voor java, om die tering
 				// rommel op
 				// te ruimen >> 1500MB.
@@ -294,13 +321,14 @@ public class World {
 					graph = new ArrayList<>(nodeCount);
 
 					positionToNodeMap = new HashMap<>(nodeCount);
-
+					
 					for (int y = 0; y < collisionInfo.length; y++)
 						for (int x = 0; x < collisionInfo[0].length; x++)
-							if (collisionInfo[y][x] == false) {
+							if (collisionInfo[x][y] == false) {
 								Node n = new Node(x, y);
 								graph.add(n);
 								positionToNodeMap.put(new Position(x, y), n);
+								//System.out.println((positionToNodeMap.get(new Position(x,y)) == null) ? "node could not be reovered" : "node could be recovereded");
 							}
 
 					for (Node n : graph) { // adding the edges to the node TODO
@@ -359,7 +387,7 @@ public class World {
 							nodeStack.pop();
 					}
 					
-					{////////// Create a debug image /////////////////
+					if (debug) {////////// Create a debug image /////////////////
 						Color inGraph = new Color(0, 255, 0, 128);
 						Color outGraph = new Color(255, 0, 0, 128);
 						
@@ -376,7 +404,7 @@ public class World {
 								c = outGraph;
 							
 							graphics.setColor(c);
-							graphics.fillRect(n.Y*32, n.X*32, 32, 32);
+							graphics.fillRect(n.X*32, n.Y*32, 32, 32);
 						}
 						
 						try {
@@ -434,16 +462,29 @@ public class World {
 						
 						Queue<Node> queue = new LinkedList<>();
 						HashSet<Node> visited = new HashSet<Node>();
+						HashMap<Position, Integer> nodeToDistanceMap = null;
+						if (debug) nodeToDistanceMap = new HashMap<>(graph.size());
 						
 						for (Tile tile : pair.entances) {
 							Node n = positionToNodeMap.get(new Position(tile.X, tile.Y));
 							queue.add(n);
-							System.out.println("tile(" + tile.X + ", " + tile.Y + ") " + (n != null));
+							tiles[n.X][n.Y].directions.put(pair.typeID, tiles[n.X][n.Y]);
+							visited.add(n);
+							if (debug) nodeToDistanceMap.put(new Position(tile.X, tile.Y), -1);
+							System.out.println("tile(" + tile.X + ", " + tile.Y + ") " + ((n == null) ? "node is null" : "node was found")+
+									((collisionInfo[tile.X][tile.Y]) ? ", there should be no node" : ", there should be a node"));
 						}
 
+						int visitedNodeCount = 0;
+						int highestDistance = 0;
 						while (queue.isEmpty() == false) {
 							Node node = queue.poll();
-							System.out.println("node == null : " + node != null);
+							visitedNodeCount++;
+							int newNodeDistance = 0;
+							if (debug) newNodeDistance = nodeToDistanceMap.get(new Position(node.X, node.Y)) + 1;
+							if (newNodeDistance > highestDistance)
+								highestDistance = newNodeDistance;
+							//System.out.println(((node == null) ? "node is null" : "node was found"));
 							if (node == null)
 								continue;
 							for (int i = 0; i < node.straitEdges.length; i++) {
@@ -452,14 +493,77 @@ public class World {
 								if (visited.contains(node.straitEdges[i]) == true)
 									continue;
 								visited.add(node.straitEdges[i]);
+								if (debug) nodeToDistanceMap.put(new Position(node.straitEdges[i].X, node.straitEdges[i].Y), newNodeDistance);
 								queue.add(node.straitEdges[i]);
 								tiles[node.straitEdges[i].X][node.straitEdges[i].Y].addDirection(pair.typeID,
 										tiles[node.X][node.Y]);
 							}
 						}
+						System.out.println("direction generation visitedNodeCount : " + visitedNodeCount);
+						if (debug){/// Creating a debug image
+							BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+							Graphics2D graphics = (Graphics2D)debugImage.getGraphics();
+							graphics.drawImage(mapImage, 0, 0, null);
+							
+							
+							for (Node n : graph)
+							{
+								int color = 255-(int)(255/(double)highestDistance*nodeToDistanceMap.get(new Position(n.X, n.Y)));
+								//System.out.println("("+n.X+", " + n.Y +") " + color);
+								if (color < 0 || color> 255)
+									color = 128;
+								graphics.setColor(new Color(color, color, color, 180));
+								graphics.fillRect(n.X*32, n.Y*32, 32, 32);
+								graphics.setColor(Color.BLACK);
+								if (numberOrText)
+								{
+									graphics.drawString(nodeToDistanceMap.get(new Position(n.X, n.Y)).toString(), n.X*32+16, n.Y*32+16);
+								}
+								else
+								{
+									Tile direction = tiles[n.X][n.Y].getDirection(pair.typeID);
+									if (direction.X < n.X)
+									{
+										graphics.drawString("left", n.X*32+16, n.Y*32+16);
+									}
+									else if (direction.X > n.X)
+									{
+										graphics.drawString("right", n.X*32+16, n.Y*32+16);
+									}
+									else if (direction.Y < n.Y)
+									{
+										graphics.drawString("up", n.X*32+16, n.Y*32+16);
+									}
+									else if (direction.Y > n.Y)
+									{
+										graphics.drawString("down", n.X*32+16, n.Y*32+16);
+									}
+									else 
+									{
+										graphics.setColor(Color.ORANGE);
+										graphics.fillRect(n.X*32, n.Y*32, 32, 32);
+										graphics.setColor(Color.BLACK);
+										graphics.drawString("dest", n.X*32+4, n.Y*32+16);
+									}
+								}
+							}
+							
+							try {
+								ImageIO.write(debugImage, "png", new File("debug_data/pathfinding_debug_image" + pair.typeID + "_" + pair.name+".png"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
 					}
 				}
 			}
+		}
+		
+		{
+			long delta = System.currentTimeMillis() - constructorStart;
+			System.setOut(oldStream);
+			System.out.println("World was created in " + (double)delta/1000 + " seconds");
 		}
 
 	}
@@ -536,9 +640,9 @@ public class World {
 		}
 	}
 
-	public void inclusiveUpdate(Graphics2D g2, AffineTransform transform) {
+	public void inclusiveUpdate(Graphics2D g2) {
 		update();
-		draw(g2, transform);
+		draw(g2);
 		cleanUp();
 	}
 
@@ -574,8 +678,8 @@ public class World {
 		toRemove.clear();
 	}
 
-	public void draw(Graphics2D graphics, AffineTransform transform) {
-		graphics.drawImage(mapImage, transform, null);
+	public void draw(Graphics2D graphics) {
+		graphics.drawImage(mapImage, new AffineTransform(), null);
 
 		ListIterator<Drawable> iterator = drawables.listIterator();
 		while (iterator.hasNext())

@@ -44,9 +44,8 @@ abstract class Agent implements Updateable, Drawable {
 	
 	void move()
 	{
-		currentPosition.setLocation(currentPosition.getX(), currentPosition.getY()+0.1f*World.instance.getDeltaTime());
-	
-		/*
+		System.out.println("current location: " + currentPosition);
+		
 		// we don't need to go anywhere so we can just return
 		if (destenation == NO_DESTENATION)
 			return;
@@ -89,7 +88,6 @@ abstract class Agent implements Updateable, Drawable {
 			}
 			
 		}
-		*/
 	}
 	
 	@Override
