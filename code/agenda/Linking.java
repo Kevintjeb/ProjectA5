@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -21,6 +22,7 @@ public class Linking extends JFrame
 {
 	Planner planner;
 	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
+	HashMap<Stage, Integer> map = new HashMap<Stage, Integer>();
 	public Linking(Planner planner)
 	{
 		super("Linking");
@@ -34,8 +36,13 @@ public class Linking extends JFrame
 		setContentPane(pane);
 		setVisible(true);
 		setResizable(false);
-		setSize(400, 550);
+		setSize(400, 600);
 		setLocationRelativeTo(null);
+	}
+	
+	public HashMap<Stage, Integer> getLinkMap()
+	{
+		return map;
 	}
 	
 	class LinkingPanel extends JPanel
@@ -51,10 +58,10 @@ public class Linking extends JFrame
 		int selectedNumber;
 		
 		Rectangle2D applyButton;
+		Rectangle2D diposeButton;
 		
 		boolean drawLine = false;
-		
-		HashMap<Stage, Integer> map = new HashMap<Stage, Integer>();
+		boolean hasBeenClicked = false;
 		
 		Planner planner;
 		
@@ -88,46 +95,86 @@ public class Linking extends JFrame
 			
 			for(Stage stage : planner.agenda.getStages())
 			{
-				g2d.setColor(new Color(25, 160, 95, 128));
-				Rectangle2D rect = new Rectangle2D.Double(10, y, 100, 50);
-				g2d.fill(rect);
+				if(hasBeenClicked){
+					g2d.setColor(new Color(25, 160, 95, 192));
+					Rectangle2D rect = new Rectangle2D.Double(10, y, 100, 50);
+					g2d.fill(rect);
 				
-				stages.add(rect);
+					stages.add(rect);
 				
-				int stringLen = (int) g2d.getFontMetrics().getStringBounds(stage.getName(), g2d).getWidth();
-				int stringHei = (int) g2d.getFontMetrics().getStringBounds(stage.getName(), g2d).getHeight();
+					int stringLen = (int) g2d.getFontMetrics().getStringBounds(stage.getName(), g2d).getWidth();
+					int stringHei = (int) g2d.getFontMetrics().getStringBounds(stage.getName(), g2d).getHeight();
 				
-				int xPos = (int) 100 / 2 - stringLen / 2;
-				int yPos = (int) 50 / 2 + stringHei / 4;
+					int xPos = (int) 100 / 2 - stringLen / 2;
+					int yPos = (int) 50 / 2 + stringHei / 4;
 				
-				g2d.setColor(Color.BLACK);
-				g2d.drawString(stage.getName(), xPos + 10, (yPos + y));
+					g2d.setColor(Color.BLACK);
+					g2d.drawString(stage.getName(), xPos + 10, (yPos + y));
 				
-				y += 60;
+					y += 60;
+				}
+				else{
+					g2d.setColor(new Color(25, 160, 95, 128));
+					Rectangle2D rect = new Rectangle2D.Double(10, y, 100, 50);
+					g2d.fill(rect);
+					
+					stages.add(rect);
+					
+					int stringLen = (int) g2d.getFontMetrics().getStringBounds(stage.getName(), g2d).getWidth();
+					int stringHei = (int) g2d.getFontMetrics().getStringBounds(stage.getName(), g2d).getHeight();
+					
+					int xPos = (int) 100 / 2 - stringLen / 2;
+					int yPos = (int) 50 / 2 + stringHei / 4;
+					
+					g2d.setColor(Color.BLACK);
+					g2d.drawString(stage.getName(), xPos + 10, (yPos + y));
+					
+					y += 60;
+				}
 			}
 			
 			for(int i = 6; i <= 27; i = i+3)
 			{
-				g2d.setColor(new Color(225, 230, 150, 128));
-				Rectangle2D rect = new Rectangle2D.Double(290, y2, 100, 50);
-				g2d.fill(rect);
+				if(hasBeenClicked){
+					g2d.setColor(new Color(225, 230, 150, 192));
+					Rectangle2D rect = new Rectangle2D.Double(290, y2, 100, 50);
+					g2d.fill(rect);
 				
-				numbers.add(rect);
+					numbers.add(rect);
 				
-				int stringLen = (int) g2d.getFontMetrics().getStringBounds(""+i, g2d).getWidth();
-				int stringHei = (int) g2d.getFontMetrics().getStringBounds(""+i, g2d).getHeight();
+					int stringLen = (int) g2d.getFontMetrics().getStringBounds(""+i, g2d).getWidth();
+					int stringHei = (int) g2d.getFontMetrics().getStringBounds(""+i, g2d).getHeight();
 				
-				int xPos = (int) 100 / 2 - stringLen / 2;
-				int yPos = (int) 50 / 2 + stringHei / 4;
+					int xPos = (int) 100 / 2 - stringLen / 2;
+					int yPos = (int) 50 / 2 + stringHei / 4;
 				
-				g2d.setColor(Color.BLACK);
-				g2d.drawString(""+i, xPos + 290, (yPos + y2));
+					g2d.setColor(Color.BLACK);
+					g2d.drawString(""+i, xPos + 290, (yPos + y2));
 				
-				y2 += 60;
+					y2 += 60;
+				}
+				else{
+					g2d.setColor(new Color(225, 230, 150, 128));
+					Rectangle2D rect = new Rectangle2D.Double(290, y2, 100, 50);
+					g2d.fill(rect);
+				
+					numbers.add(rect);
+				
+					int stringLen = (int) g2d.getFontMetrics().getStringBounds(""+i, g2d).getWidth();
+					int stringHei = (int) g2d.getFontMetrics().getStringBounds(""+i, g2d).getHeight();
+				
+					int xPos = (int) 100 / 2 - stringLen / 2;
+					int yPos = (int) 50 / 2 + stringHei / 4;
+				
+					g2d.setColor(Color.BLACK);
+					g2d.drawString(""+i, xPos + 290, (yPos + y2));
+				
+					y2 += 60;
+				}
 			}
 			
 			g2d.setColor(new Color(121, 121, 121));
-			applyButton = new Rectangle2D.Double(150, 450, 75, 50);
+			applyButton = new Rectangle2D.Double(80, 500, 110, 50);
 			g2d.fill(applyButton);
 			
 			int stringLen = (int) g2d.getFontMetrics().getStringBounds("APPLY", g2d).getWidth();
@@ -137,7 +184,20 @@ public class Linking extends JFrame
 			int yPos = (int) 50 / 2 + stringHei / 4;
 			
 			g2d.setColor(Color.WHITE);
-			g2d.drawString("APPLY", xPos + 150, (yPos + 450));
+			g2d.drawString("APPLY", xPos + 100, (yPos + 500));
+			//--------------------------------------------------------------------------
+			g2d.setColor(new Color(121, 121, 121));
+			diposeButton = new Rectangle2D.Double(210, 500, 110, 50);
+			g2d.fill(diposeButton);
+			
+			int stringLenPotty = (int) g2d.getFontMetrics().getStringBounds("Close linker", g2d).getWidth();
+			int stringHeiPotty = (int) g2d.getFontMetrics().getStringBounds("Close linker", g2d).getHeight();
+			
+			int xPosPotty = (int) 75 / 2 - stringLenPotty / 2;
+			int yPosPotty = (int) 50 / 2 + stringHeiPotty / 4;
+			
+			g2d.setColor(Color.WHITE);
+			g2d.drawString("Close linker", xPosPotty + 227, (yPosPotty + 500));
 			
 			if(drawLine)
 			{
@@ -149,6 +209,7 @@ public class Linking extends JFrame
 				g2d.setColor(Color.BLACK);
 				g2d.setStroke(new BasicStroke(5));
 				g2d.drawLine(lx, ly, rx, ry);
+				drawLine = false;
 				
 			}
 		}
@@ -165,6 +226,9 @@ public class Linking extends JFrame
 						{
 							selectedStage = planner.agenda.getStages().get(i);
 							rectSelected = stages.get(i);
+							toggleHasBeenClicked();
+							repaint();
+							toggleHasBeenClicked();
 						}
 					}
 					
@@ -174,6 +238,9 @@ public class Linking extends JFrame
 						{
 							selectedNumber = 6 + (i*3);
 							rectNumSelected = numbers.get(i);
+							toggleHasBeenClicked();
+							repaint();
+							toggleHasBeenClicked();
 						}
 					}
 				}
@@ -193,11 +260,21 @@ public class Linking extends JFrame
 					}
 				}
 			});
+			
+			addMouseListener(new MouseAdapter()
+			{
+				public void mousePressed(MouseEvent e)
+				{
+					if(diposeButton.contains(e.getPoint()))
+					{
+						dispose();
+					}
+				}
+			});
 		}
 		
-		public Map getLinkMap()
-		{
-			return map;
+		private void toggleHasBeenClicked(){
+			hasBeenClicked = !hasBeenClicked;
 		}
 	}
 }
