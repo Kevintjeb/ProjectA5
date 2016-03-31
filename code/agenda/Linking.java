@@ -89,7 +89,7 @@ public class Linking extends JPanel {
 		}
 
 		int count = 0;
-		for (int i = 6; i <= 27; i = i + 3) {
+		for (int i = 5; i <= 28; i = i + 3) {
 			if (count == clickedNumber) {
 				g2d.setColor(new Color(225, 230, 150, 255));
 				System.out.println(i);
