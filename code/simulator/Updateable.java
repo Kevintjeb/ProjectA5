@@ -1,5 +1,5 @@
 package simulator;
 
-interface Updateable {
+interface Updateable extends Closable{
 	public void update();
 }
