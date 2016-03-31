@@ -202,7 +202,7 @@ public class World {
 										break;
 									case collidableFalse:
 										collisionInfo[i % width][i / width] = false;
-									break;
+										break;
 									case collidableTrue:
 										collisionInfo[i % width][i / width] = true;
 										break;
@@ -210,9 +210,6 @@ public class World {
 									case danceFloorTrue:
 										collisionInfo[i % width][i / width] = false;
 										danceFloor.add(tiles[i % width][i / width]);
-										collisionInfo[i % width][i / width] = false;
-										break;
-									case collidableFalse:
 										collisionInfo[i % width][i / width] = false;
 										break;
 									}
