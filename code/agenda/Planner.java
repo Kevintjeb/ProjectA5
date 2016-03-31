@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -20,6 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Planner extends JFrame {
@@ -31,8 +32,7 @@ public class Planner extends JFrame {
 	JMenuBar menuBar;
 	Agenda agenda = new Agenda();
 	Planner _this = this;
-	JTabbedPane tabbedPane = new JTabbedPane();
-
+	JTabbedPane tabbedPane;
 	public static void main(String[] args) {
 		new Planner();
 		
@@ -41,8 +41,14 @@ public class Planner extends JFrame {
 	public Planner() {
 		super("Festival Planner");
 		//agenda = Agenda.debugSetup();
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+			| UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+			}
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+		tabbedPane  = new JTabbedPane();
 		contentPane = new JPanel(new GridLayout());
 		
 		menuBar = new JMenuBar();
@@ -137,13 +143,12 @@ public class Planner extends JFrame {
 				
 				if(verification == JFileChooser.APPROVE_OPTION){
 					file = chooser.getSelectedFile();
+					agenda = new Agenda(file.getPath());
 				}
 				else if(verification == JFileChooser.CANCEL_OPTION){
 					JOptionPane.showMessageDialog(null, "The loading has been cancelled.");
 				}
 				
-				//System.out.print(file.exists());
-				agenda = new Agenda(file.getPath());
 				
 				//agenda = new Agenda("agenda");
 				repaint();

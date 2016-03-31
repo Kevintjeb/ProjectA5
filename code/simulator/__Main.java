@@ -47,7 +47,7 @@ public class __Main extends JPanel{
 		map.put(agenda.getStages().get(7), 26);
 		
 		
-		World w = new World(agenda, map, "Endmap.json", "Tiled2.png");
+		World w = new World(agenda, map, new File("Endmap.json"), "Tiled2.png");
 		System.out.println("world was constructed");
 		
 		

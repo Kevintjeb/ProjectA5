@@ -83,7 +83,7 @@ public class World {
 		}
 	}
 	
-	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, String jsonPath, String tileMapPath) {
+	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath) {
 		instance = this;
 		this.agenda = agenda;
 		buildings = new ArrayList<>();
@@ -218,7 +218,6 @@ public class World {
 									case entranceExit:
 										collisionInfo[i % width][i / width] = false;
 										entrance.add(tiles[i % width][i / width]);
-										collisionInfo[i % width][i / width] = false;
 										break;
 									case collidableFalse:
 										collisionInfo[i % width][i / width] = false;
@@ -230,7 +229,6 @@ public class World {
 									case danceFloorTrue:
 										collisionInfo[i % width][i / width] = false;
 										danceFloor.add(tiles[i % width][i / width]);
-										collisionInfo[i % width][i / width] = false;
 										break;
 									}
 
