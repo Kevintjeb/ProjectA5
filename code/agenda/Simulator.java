@@ -298,12 +298,13 @@ public class Simulator extends JPanel
 		
 		public void playSim()
 		{
-			
+			world.setRealTimeToSimTime((Double.parseDouble(speedInvoer.getText())*60)/1000);
+			//explaination formule linenumber 269
 		}
 		
 		public void pauseSim()
 		{
-			
+			world.setRealTimeToSimTime(0.0);
 		}
 		
 		public void forwardSim()
@@ -338,8 +339,10 @@ public class Simulator extends JPanel
 		int x = 0;
 		int y = 0;
 		
+		int oldX = -1;
+		int oldY = -1;
+		
 		float scale = 1;
-		private BufferedImage mapimage;
 		AffineTransform transform = new AffineTransform();
 		
 		public SimulatiePanel(Planner planner)
@@ -351,7 +354,18 @@ public class Simulator extends JPanel
 			addMouseMotionListener(this);
 			addMouseListener(this);
 			addMouseWheelListener(new zoomMap());
-			//TODO simulatie 
+			
+			ActionListener simulate = new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					repaint();
+				}
+			};
+			
+			Timer simulateTime = new Timer(1000/30, simulate);
+			simulateTime.start(); 
 		}
 		
 		public void paintComponent(Graphics g) {
@@ -359,21 +373,17 @@ public class Simulator extends JPanel
 			Graphics2D g2d = (Graphics2D) g;
 
 			AffineTransform oldtransform = g2d.getTransform();
+			
 			transform = new AffineTransform();
 			transform.scale(scale, scale);
 			transform.translate(x, y);
 
 			g2d.setTransform(transform);
 
-			g2d.drawImage(mapimage, new AffineTransform(), this);
+			world.inclusiveUpdate(g2d, transform);
 
 			g2d.setTransform(oldtransform);
-			
-			world.inclusiveUpdate(g2d);
 		}
-
-		int oldX = -1;
-		int oldY = -1;
 
 		public void mouseDragged(MouseEvent e) {
 
