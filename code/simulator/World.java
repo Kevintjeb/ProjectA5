@@ -498,7 +498,7 @@ public class World {
 							for (Node n : graph)
 							{
 								int color = 255-(int)(255/(double)highestDistance*nodeToDistanceMap.get(new Position(n.X, n.Y)));
-								System.out.println("("+n.X+", " + n.Y +") " + color);
+								//System.out.println("("+n.X+", " + n.Y +") " + color);
 								
 								graphics.setColor(new Color(color, color, color, 128));
 								graphics.fillRect(n.X*32, n.Y*32, 32, 32);
