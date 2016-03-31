@@ -48,7 +48,6 @@ public class __Main extends JPanel{
 		
 		
 		World w = new World(agenda, map, new File("Endmap.json"), "Tiled2.png");
-		System.out.println("world was constructed");
 		
 		
 		new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(8, 16), new Point2D.Double(8, 16), 1.0f);
@@ -58,7 +57,7 @@ public class __Main extends JPanel{
 	{
 		Graphics2D g2 = (Graphics2D)g;
 		//System.out.println("paintComponent");
-		//World.instance.inclusiveUpdate(g2);
+		World.instance.inclusiveUpdate(g2);
 		AffineTransform transform = new AffineTransform();
 		float scaleX = getWidth()/(float)(100*32);
 		float scaleY = getHeight()/(float)(100*32);

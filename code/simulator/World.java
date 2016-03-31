@@ -458,6 +458,8 @@ public class World {
 						for (Tile tile : pair.entances) {
 							Node n = positionToNodeMap.get(new Position(tile.X, tile.Y));
 							queue.add(n);
+							tiles[n.X][n.Y].directions.put(pair.typeID, tiles[n.X][n.Y]);
+							visited.add(n);
 							nodeToDistanceMap.put(new Position(tile.X, tile.Y), -1);
 							System.out.println("tile(" + tile.X + ", " + tile.Y + ") " + ((n == null) ? "node is null" : "node was found")+
 									((collisionInfo[tile.X][tile.Y]) ? ", there should be no node" : ", there should be a node"));
@@ -497,11 +499,36 @@ public class World {
 							{
 								int color = 255-(int)(255/(double)highestDistance*nodeToDistanceMap.get(new Position(n.X, n.Y)));
 								//System.out.println("("+n.X+", " + n.Y +") " + color);
-								
+								if (color < 0 || color> 255)
+									color = 128;
 								graphics.setColor(new Color(color, color, color, 128));
 								graphics.fillRect(n.X*32, n.Y*32, 32, 32);
 								graphics.setColor(Color.BLACK);
-								graphics.drawString(nodeToDistanceMap.get(new Position(n.X, n.Y)).toString(), n.X*32+16, n.Y*32+16);
+								//graphics.drawString(nodeToDistanceMap.get(new Position(n.X, n.Y)).toString(), n.X*32+16, n.Y*32+16);
+								Tile direction = tiles[n.X][n.Y].getDirection(pair.typeID);
+								if (direction.X < n.X)
+								{
+									graphics.drawString("left", n.X*32+16, n.Y*32+16);
+								}
+								else if (direction.X > n.X)
+								{
+									graphics.drawString("right", n.X*32+16, n.Y*32+16);
+								}
+								else if (direction.Y < n.Y)
+								{
+									graphics.drawString("up", n.X*32+16, n.Y*32+16);
+								}
+								else if (direction.Y > n.Y)
+								{
+									graphics.drawString("down", n.X*32+16, n.Y*32+16);
+								}
+								else 
+								{
+									graphics.setColor(Color.ORANGE);
+									graphics.fillRect(n.X*32, n.Y*32, 32, 32);
+									graphics.setColor(Color.BLACK);
+									graphics.drawString("dest", n.X*32+4, n.Y*32+16);
+								}
 							}
 							
 							try {
