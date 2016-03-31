@@ -5,8 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -89,6 +92,27 @@ public class World {
 		toRemove = new LinkedList<>();
 		buildingMap = new HashMap<>();
 
+		PrintStream oldStream;
+		{
+			PrintStream debugTxt;
+			File debugInfo = new File("debug_data/");
+			if (debugInfo.exists() == false)
+				debugInfo.mkdir();
+			
+			for (File file : debugInfo.listFiles())
+				file.delete();
+			
+			try {
+				debugTxt = new PrintStream(new File("debug_data/log.txt"));
+			} catch (FileNotFoundException e) {
+				System.out.println("log could not be created");
+				return;
+			}
+			System.out.println("starting world creation");
+			oldStream = System.out;
+			System.setOut(debugTxt);
+		}
+		
 		boolean[][] collisionInfo = null;
 		{
 			// ATRIBUTEN, moeten worden aangemaakt boven constructor ofcourse..
@@ -290,13 +314,14 @@ public class World {
 					graph = new ArrayList<>(nodeCount);
 
 					positionToNodeMap = new HashMap<>(nodeCount);
-
+					
 					for (int y = 0; y < collisionInfo.length; y++)
 						for (int x = 0; x < collisionInfo[0].length; x++)
-							if (collisionInfo[y][x] == false) {
+							if (collisionInfo[x][y] == false) {
 								Node n = new Node(x, y);
 								graph.add(n);
 								positionToNodeMap.put(new Position(x, y), n);
+								//System.out.println((positionToNodeMap.get(new Position(x,y)) == null) ? "node could not be reovered" : "node could be recovereded");
 							}
 
 					for (Node n : graph) { // adding the edges to the node TODO
@@ -372,7 +397,7 @@ public class World {
 								c = outGraph;
 							
 							graphics.setColor(c);
-							graphics.fillRect(n.Y*32, n.X*32, 32, 32);
+							graphics.fillRect(n.X*32, n.Y*32, 32, 32);
 						}
 						
 						try {
@@ -430,16 +455,25 @@ public class World {
 						
 						Queue<Node> queue = new LinkedList<>();
 						HashSet<Node> visited = new HashSet<Node>();
+						HashMap<Position, Integer> nodeToDistanceMap = new HashMap<>(graph.size());
 						
 						for (Tile tile : pair.entances) {
 							Node n = positionToNodeMap.get(new Position(tile.X, tile.Y));
 							queue.add(n);
-							System.out.println("tile(" + tile.X + ", " + tile.Y + ") " + (n != null));
+							nodeToDistanceMap.put(new Position(tile.X, tile.Y), -1);
+							System.out.println("tile(" + tile.X + ", " + tile.Y + ") " + ((n == null) ? "node is null" : "node was found")+
+									((collisionInfo[tile.X][tile.Y]) ? ", there should be no node" : ", there should be a node"));
 						}
 
+						int visitedNodeCount = 0;
+						int highestDistance = 0;
 						while (queue.isEmpty() == false) {
 							Node node = queue.poll();
-							System.out.println("node == null : " + node != null);
+							visitedNodeCount++;
+							int newNodeDistance = nodeToDistanceMap.get(new Position(node.X, node.Y)) + 1;
+							if (newNodeDistance > highestDistance)
+								highestDistance = newNodeDistance;
+							//System.out.println(((node == null) ? "node is null" : "node was found"));
 							if (node == null)
 								continue;
 							for (int i = 0; i < node.straitEdges.length; i++) {
@@ -448,14 +482,45 @@ public class World {
 								if (visited.contains(node.straitEdges[i]) == true)
 									continue;
 								visited.add(node.straitEdges[i]);
+								nodeToDistanceMap.put(new Position(node.straitEdges[i].X, node.straitEdges[i].Y), newNodeDistance);
 								queue.add(node.straitEdges[i]);
 								tiles[node.straitEdges[i].X][node.straitEdges[i].Y].addDirection(pair.typeID,
 										tiles[node.X][node.Y]);
 							}
 						}
+						System.out.println("direction generation visitedNodeCount : " + visitedNodeCount);
+						{/// Creating a debug image
+							BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
+							Graphics2D graphics = (Graphics2D)debugImage.getGraphics();
+							graphics.drawImage(mapImage, 0, 0, null);
+							
+							
+							for (Node n : graph)
+							{
+								int color = 255-(int)(255/(double)highestDistance*nodeToDistanceMap.get(new Position(n.X, n.Y)));
+								System.out.println("("+n.X+", " + n.Y +") " + color);
+								
+								graphics.setColor(new Color(color, color, color, 128));
+								graphics.fillRect(n.X*32, n.Y*32, 32, 32);
+								graphics.setColor(Color.BLACK);
+								graphics.drawString(nodeToDistanceMap.get(new Position(n.X, n.Y)).toString(), n.X*32+16, n.Y*32+16);
+							}
+							
+							try {
+								ImageIO.write(debugImage, "png", new File("debug_data/pathfinding_debug_image" + pair.typeID + "_" + pair.name+".png"));
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
 					}
 				}
 			}
+		}
+		
+		{
+			System.setOut(oldStream);
+			System.out.println("World was created");
 		}
 
 	}

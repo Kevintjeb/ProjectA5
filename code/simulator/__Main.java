@@ -42,7 +42,7 @@ public class __Main extends JPanel{
 		//map.put(agenda.getStages().get(2), 11);
 		map.put(agenda.getStages().get(3), 14);
 		map.put(agenda.getStages().get(4), 17);
-	//	map.put(agenda.getStages().get(5), 20);
+		map.put(agenda.getStages().get(5), 20);
 		map.put(agenda.getStages().get(6), 23);
 		map.put(agenda.getStages().get(7), 26);
 		
@@ -50,14 +50,15 @@ public class __Main extends JPanel{
 		World w = new World(agenda, map, "Endmap.json", "Tiled2.png");
 		System.out.println("world was constructed");
 		
-		new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(50, 50), new Point2D.Double(50, 50), 1.0f);
+		
+		new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(8, 16), new Point2D.Double(8, 16), 1.0f);
 	}
 	
 	public void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D)g;
-		System.out.println("paintComponent");
-		World.instance.inclusiveUpdate(g2);
+		//System.out.println("paintComponent");
+		//World.instance.inclusiveUpdate(g2);
 		AffineTransform transform = new AffineTransform();
 		float scaleX = getWidth()/(float)(100*32);
 		float scaleY = getHeight()/(float)(100*32);
@@ -73,7 +74,7 @@ public class __Main extends JPanel{
 		frame.setVisible(true);
 		while (true)
 		{
-			//frame.repaint();
+			frame.repaint();
 			Thread.sleep(100);
 		}
 	}
