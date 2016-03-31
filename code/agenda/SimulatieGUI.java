@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,6 +22,8 @@ public class SimulatieGUI extends JPanel
 	ArrayList<File> maps = new ArrayList<File>();
 	ArrayList<ImageIcon> images = new ArrayList<ImageIcon>();
 	SimulatieGUI _this = this;
+	
+	Linking linking;
 	
 	Font font = new Font("SANS_SERIF", Font.BOLD, 22);
 	
@@ -157,8 +161,13 @@ public class SimulatieGUI extends JPanel
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
+			//TODO linking stages 
+//			planner.tabbedPane.removeTabAt(2);
+//			linking = new Linking(planner); //linking of stages in the agenda to stages in the simulator
+//			planner.tabbedPane.addTab("Simulatie", linking);
+			
 			planner.tabbedPane.removeTabAt(2);
-			planner.tabbedPane.addTab("Simulatie", new Simulator(maps.get(number), planner));
+			planner.tabbedPane.addTab("Simulatie", new Simulator(maps.get(number), planner));//, linking.getLinkMap()));
 			planner.repaint();
 	        planner.revalidate();
 		}

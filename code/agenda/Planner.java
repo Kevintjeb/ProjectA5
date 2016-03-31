@@ -60,12 +60,10 @@ public class Planner extends JFrame {
 		JMenuItem load = new JMenuItem("load");
 		JMenuItem edit = new JMenuItem("Edit");
 		JMenuItem credit = new JMenuItem("Credits");
-		JMenuItem linker = new JMenuItem("Stage linking");
 
 		file.add(save);
 		file.add(load);
 		file.add(edit);
-		file.add(linker);
 		credits.add(credit);
 
 		save.addActionListener(new ActionListener() {
@@ -158,15 +156,6 @@ public class Planner extends JFrame {
 			public void actionPerformed(ActionEvent e) 
 			{
 				new EditorFrame(_this);
-			}
-		});
-		
-		linker.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				new Linking(_this);
 			}
 		});
 		
