@@ -43,6 +43,11 @@ public class Time implements Serializable
 		setMinutes(m);
 	}
 	
+	public Time(int m)
+	{
+		this(m/60, m%60);
+	}
+	
 	public void setHours(int hours)
 	{
 		if (hours < 0 || hours > 23)
@@ -90,6 +95,13 @@ public class Time implements Serializable
 		if (bStart.toMinutes() > aStart.toMinutes() && bStart.toMinutes() < aEnd.toMinutes())
 			return true;
 		return false;
+	}
+	
+	public static boolean contains(Time start, Time end, Time time)
+	{
+		if (time.toMinutes() < start.toMinutes() || time.toMinutes() > end.toMinutes())
+			return false;
+		return true;
 	}
 	
 	public int toMinutes()

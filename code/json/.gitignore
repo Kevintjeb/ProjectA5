@@ -3,5 +3,10 @@
 /JsonLoader.class
 /TileLayer.class
 /ContentPane$zoomMap.class
+<<<<<<< HEAD
 /Sprite.class
 /ContentPane$1.class
+=======
+/ContentPane$1.class
+/Sprite.class
+>>>>>>> e420b4189605af52d4f7f256903999219f2fb6a6

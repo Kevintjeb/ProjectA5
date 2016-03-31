@@ -10,3 +10,12 @@
 /World$1Node.class
 /World$1Position.class
 /__Main$1Foo.class
+/Stage.class
+/Service.class
+/Closable.class
+/TileLayer.class
+/TileMap.class
+/World$1TypeIdTilePair.class
+/World$Node.class
+/World$Position.class
+/Visitor.class
