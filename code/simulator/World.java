@@ -640,9 +640,9 @@ public class World {
 		}
 	}
 
-	public void inclusiveUpdate(Graphics2D g2) {
+	public void inclusiveUpdate(Graphics2D g2, AffineTransform t) {
 		update();
-		draw(g2);
+		draw(g2, t);
 		cleanUp();
 	}
 
@@ -678,8 +678,8 @@ public class World {
 		toRemove.clear();
 	}
 
-	public void draw(Graphics2D graphics) {
-		graphics.drawImage(mapImage, new AffineTransform(), null);
+	public void draw(Graphics2D graphics, AffineTransform t) {
+		graphics.drawImage(mapImage, t, null);
 
 		ListIterator<Drawable> iterator = drawables.listIterator();
 		while (iterator.hasNext())
