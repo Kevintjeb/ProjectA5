@@ -143,13 +143,14 @@ public class Planner extends JFrame {
 				
 				if(verification == JFileChooser.APPROVE_OPTION){
 					file = chooser.getSelectedFile();
+					agenda = new Agenda(file.getPath());
 				}
 				else if(verification == JFileChooser.CANCEL_OPTION){
 					JOptionPane.showMessageDialog(null, "The loading has been cancelled.");
 				}
 				
 				//System.out.print(file.exists());
-				agenda = new Agenda(file.getPath());
+				
 				
 				//agenda = new Agenda("agenda");
 				repaint();

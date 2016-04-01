@@ -9,14 +9,18 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class Linking extends JPanel {
 	Planner planner;
+	BufferedImage image;
 	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
 	HashMap<Stage, Integer> map = new HashMap<Stage, Integer>();
 
@@ -107,7 +111,7 @@ public class Linking extends JPanel {
 			int yPos = (int) 50 / 2 + stringHei / 4;
 
 			g2d.setColor(Color.BLACK);
-			g2d.drawString("" + i, xPos + 290, (yPos + y2));
+			g2d.drawString("" + count, xPos + 290, (yPos + y2));
 
 			y2 += 60;
 			g2d.setColor(new Color(225, 230, 150, 128));
@@ -141,7 +145,13 @@ public class Linking extends JPanel {
 			g2d.drawLine(lx, ly, rx, ry);
 		}
 		}
-
+		try {
+			image = ImageIO.read(new File("maps\\MapImage.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		g2d.drawImage(image, null, 500, 0);
 		//}
 	}
 

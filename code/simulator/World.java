@@ -166,6 +166,27 @@ public class World {
 				// JSON.
 				// eerste 4 layers tekenen -> standaard layers.
 
+				{
+					//shops + toilet
+					JSONObject currentlayer = (JSONObject) layers.get(30);
+					if (currentlayer.get("visible").equals(true)) {
+						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
+						layerslist.add(temp);
+					} else {
+						JSONArray data = (JSONArray) currentlayer.get("data");
+						ArrayList<Tile> entrance = new ArrayList<>();
+						for (int k = 0; k < data.size(); k++) {
+							int tileType = ((Long) data.get(k)).intValue();
+							switch (tileType) {
+							case windowshop:
+								entrance.add(tiles[k % width][k / width]);
+							//	buildings.add(new Cafetaria(entrance, 5));
+								break;
+							}
+
+						}
+					}
+				}
 				for (int i = 0; i < 5; i++) {
 					
 					JSONObject currentlayer = (JSONObject) layers.get(i);
