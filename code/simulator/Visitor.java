@@ -2,12 +2,14 @@ package simulator;
 
 import java.awt.Image;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 
 public class Visitor extends Agent {
+	static int i = 0;
 	
-	public Visitor(Image image, Tile tile, Point2D point, float speed) {
-		super(image, tile, point, speed);
-		setDestination(World.instance.getPathID(World.instance.agenda.getStages().get(1).getName()));
+	public Visitor(BufferedImage image, Tile tile, float speed) {
+		super(image, tile, new Point2D.Double(tile.X, -tile.Y), speed);
+		setDestination(i++%6);
 	}
 
 	@Override

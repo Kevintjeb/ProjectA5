@@ -40,8 +40,8 @@ public class World {
 										// with this number,
 	// and the ceiling of the product is taken is will give the time in
 	// simulation time in seconds
-	private int worldTime; // the current time in the simulation world
-	private int deltaTime; // the delta between the second to last update() and
+	private float worldTime; // the current time in the simulation world
+	private float deltaTime; // the delta between the second to last update() and
 							// the latest update()
 	private long lastRealTime = UNINITIALIZED; // the last time update was
 												// called is used to calculate
@@ -656,7 +656,7 @@ public class World {
 				timeRemainder = 0.0;
 				
 			double deltaTimeDouble = realTime - lastRealTime + timeRemainder;
-			deltaTime = (int) (deltaTimeDouble * realTimeToSimTime);
+			deltaTime = (float) (deltaTimeDouble * realTimeToSimTime);
 			timeRemainder = (deltaTimeDouble * realTimeToSimTime - deltaTime) / realTimeToSimTime;
 
 			worldTime += deltaTime;
@@ -679,11 +679,13 @@ public class World {
 	}
 
 	public void draw(Graphics2D graphics) {
+		
+		graphics.scale(0.25, 0.25);
 		graphics.drawImage(mapImage, new AffineTransform(), null);
 
 		ListIterator<Drawable> iterator = drawables.listIterator();
 		while (iterator.hasNext())
-			iterator.next().draw(graphics);
+			iterator.next().draw(graphics, new AffineTransform());
 	}
 
 	protected void regesterUpdateable(Updateable u) {
@@ -708,11 +710,11 @@ public class World {
 		return buildingMap.get(building);
 	}
 
-	protected int getWorldTime() {
+	protected float getWorldTime() {
 		return worldTime;
 	}
 
-	protected int getDeltaTime() {
+	protected float getDeltaTime() {
 		return deltaTime;
 	}
 

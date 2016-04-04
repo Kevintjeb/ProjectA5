@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
@@ -18,6 +19,7 @@ import agenda.Stage;
 
 // just for testing
 public class __Main extends JPanel{
+	World w;
 	
 	public __Main() throws Exception {
 
@@ -47,14 +49,23 @@ public class __Main extends JPanel{
 		map.put(agenda.getStages().get(7), 26);
 		
 		
-		World w = new World(agenda, map, new File("Endmap.json"), "Tiled2.png", true, false);
+		w = new World(agenda, map, new File("Endmap.json"), "Tiled2.png", false, false);
 		
-		
-		new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(8, 16), new Point2D.Double(8, 16), 1.0f);
 	}
+	
+	int i = 0;
 	
 	public void paintComponent(Graphics g)
 	{
+		if (i++%100 == 0)
+		{
+			try {
+				new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(8, 99), 0.01f);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		Graphics2D g2 = (Graphics2D)g;
 		//System.out.println("paintComponent");
 		World.instance.inclusiveUpdate(g2);
@@ -69,12 +80,13 @@ public class __Main extends JPanel{
 	public static void main(String[] args) throws Exception {
 		JFrame frame = new JFrame("simulator");
 		frame.setContentPane(new __Main());
-		frame.setSize(500, 500);
+		frame.setSize(850, 850);
 		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		while (true)
 		{
 			frame.repaint();
-			Thread.sleep(100);
+			Thread.sleep(16);
 		}
 	}
 }
