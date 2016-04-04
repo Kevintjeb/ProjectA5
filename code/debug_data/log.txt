@@ -1,0 +1,18 @@
+ tilemap laden gelukt!
+positionToNodeMap size 1433
+gaph size 1433
+pair<0, second, 3>
+tile(35, 67) node was found, there should be a node
+tile(35, 68) node was found, there should be a node
+tile(35, 69) node was found, there should be a node
+direction generation visitedNodeCount : 1433
+pair<1, main, 3>
+tile(8, 16) node was found, there should be a node
+tile(8, 17) node was found, there should be a node
+tile(8, 18) node was found, there should be a node
+direction generation visitedNodeCount : 1433
+pair<2, dixie, 3>
+tile(21, 34) node was found, there should be a node
+tile(22, 34) node was found, there should be a node
+tile(23, 34) node was found, there should be a node
+direction generation visitedNodeCount : 1433
