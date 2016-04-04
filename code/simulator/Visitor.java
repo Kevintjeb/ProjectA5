@@ -53,8 +53,6 @@ public class Visitor extends Agent {
 
 	@Override
 	void destenationReached() {
-<<<<<<< HEAD
-=======
 	}
 
 	public void bezoekFaciliteit() {
@@ -162,6 +160,5 @@ public class Visitor extends Agent {
 	public double randomWaarde(double min, double max) {
 		double randomInt = min + (double)(Math.random() * ((max - min) + 1));
 		return randomInt;
->>>>>>> 2db1cf386d91a9805f057eb41a218cb695f0f8d6
 	}
 }

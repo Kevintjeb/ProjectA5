@@ -138,14 +138,7 @@ public class Simulator extends JPanel
 			File mapmap = new File("maps");
 			fillArrayList(mapmap);
 			fillPlaatjes();
-<<<<<<< HEAD
-			clicked();	
-=======
 			clicked();
-			
-			
-			
->>>>>>> 2db1cf386d91a9805f057eb41a218cb695f0f8d6
 		}
 		
 		public void fillArrayList(File file)
@@ -368,12 +361,9 @@ public class Simulator extends JPanel
 		public void playSim()
 		{
 			world.setRealTimeToSimTime((Double.parseDouble(speedInvoer.getText())*60)/1000);
-<<<<<<< HEAD
-			//explaination formula linenumber 269
-=======
-			//explaination formule linenumber 269
+			
+			//An explanation given for the used formula is found in this class in line 269
 			updateT.start();
->>>>>>> 2db1cf386d91a9805f057eb41a218cb695f0f8d6
 		}
 		
 		public void pauseSim()
