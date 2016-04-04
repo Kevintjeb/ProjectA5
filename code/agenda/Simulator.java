@@ -466,7 +466,7 @@ public class Simulator extends JPanel
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 
-				double delta = -(0.05f * e.getPreciseWheelRotation());
+				double delta = -(0.05f * e.getPreciseWheelRotation()); 
 
 				scale += delta;
 				if (scale <= minScale) {

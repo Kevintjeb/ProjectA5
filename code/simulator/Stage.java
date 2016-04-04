@@ -4,6 +4,7 @@
 package simulator;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,51 +49,56 @@ class Stage extends Building implements Updateable, Drawable{
 	}
 
 	@Override
-	public void update() {
-		
-		
-		double x = danceFloor.get(0).X * 16;
-		double y = danceFloor.get(0).Y * 16;
-		
-		itr = firework.iterator();
-		while(itr.hasNext())
+	public void update() 
+	{
+		if(currentPerformance == null)
 		{
-			Particle p = itr.next();
-			if(p.getAlpha() < 1)
+		
+			double x = danceFloor.get(0).X * 16;
+			double y = danceFloor.get(0).Y * 16;
+			
+			itr = firework.iterator();
+			while(itr.hasNext())
 			{
-				itr.remove();
+				Particle p = itr.next();
+				if(p.getAlpha() < 1)
+				{
+					itr.remove();
+				}
+			}
+			
+			for(int i = 0; i < 25; i++)
+			{
+				double bool = Math.random();
+				double newX;
+				double newY;
+				
+				if(bool < 0.25)
+				{
+					newX = Math.random() * 5;
+					newY = Math.random() * 5;
+				}
+				else if(bool > 0.25 && bool < 0.5)
+				{
+					newX = Math.random() * -5;
+					newY = Math.random() * -5;
+				}
+				else if(bool > 0.5 && bool < 0.75)
+				{
+					newX = Math.random() * -5;
+					newY = Math.random() * 5;
+				}
+				else
+				{
+					newX = Math.random() * 5;
+					newY = Math.random() * -5;
+				}
+				
+				firework.add(new Particle(x, y, newX, newY));
 			}
 		}
 		
-		for(int i = 0; i < 25; i++)
-		{
-			double bool = Math.random();
-			double newX;
-			double newY;
-			
-			if(bool < 0.25)
-			{
-				newX = Math.random() * 5;
-				newY = Math.random() * 5;
-			}
-			else if(bool > 0.25 && bool < 0.5)
-			{
-				newX = Math.random() * -5;
-				newY = Math.random() * -5;
-			}
-			else if(bool > 0.5 && bool < 0.75)
-			{
-				newX = Math.random() * -5;
-				newY = Math.random() * 5;
-			}
-			else
-			{
-				newX = Math.random() * 5;
-				newY = Math.random() * -5;
-			}
-			
-			firework.add(new Particle(x, y, newX, newY));
-		}
+		
 		
 
 		
@@ -140,16 +146,19 @@ class Stage extends Building implements Updateable, Drawable{
 			int a = 0;
 		}*/
 	}
-	public void draw(Graphics2D graphics)
+	public void draw(Graphics2D graphics, AffineTransform t)
 	{
 		itr = firework.iterator();
 		while(itr.hasNext())
 		{
 			Particle p = itr.next();
 			
+			
+			
 			graphics.setColor(p.update());
 			Area a = new Area(p.updateDeeltje());
 			graphics.fill(a);
+			graphics.setTransform(t);
 		}
 	}
 }

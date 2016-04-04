@@ -700,10 +700,10 @@ public class World {
 
 	public void draw(Graphics2D graphics, AffineTransform t) {
 		graphics.drawImage(mapImage, t, null);
-
+		
 		ListIterator<Drawable> iterator = drawables.listIterator();
 		while (iterator.hasNext())
-			iterator.next().draw(graphics);
+			iterator.next().draw(graphics, t);
 	}
 
 	protected void regesterUpdateable(Updateable u) {

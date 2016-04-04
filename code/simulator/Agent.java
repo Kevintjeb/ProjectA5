@@ -2,6 +2,7 @@ package simulator;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 abstract class Agent implements Updateable, Drawable {
@@ -89,11 +90,13 @@ abstract class Agent implements Updateable, Drawable {
 	}
 
 	@Override
-	public void draw(Graphics2D graphics) {
+	public void draw(Graphics2D graphics, AffineTransform t) {
 
 		double theta = Math.atan2(nextPosition.getY() - currentPosition.getY(),
 				nextPosition.getX() - currentPosition.getX());
-
+		
+		graphics.setTransform(t);
+		
 		graphics.rotate(theta, (int) (currentPosition.getX() - image.getWidth(null) / 2),
 				(int) (currentPosition.getY() - image.getHeight(null) / 2));
 		graphics.drawImage(image, (int) (currentPosition.getX() - image.getWidth(null) / 2),

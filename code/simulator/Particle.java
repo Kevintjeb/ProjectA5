@@ -26,7 +26,6 @@ Color color;
 		xMove = x;
 		yMove = y;
 		
-		color = new Color(255, 255, 255, alpha);
 		setColor();
 		
 	}
