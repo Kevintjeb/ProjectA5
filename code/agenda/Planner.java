@@ -47,7 +47,6 @@ public class Planner extends JFrame {
 			| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 			}
-		//agenda = Agenda.debugSetup();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		tabbedPane = new JTabbedPane();
@@ -115,8 +114,6 @@ public class Planner extends JFrame {
 				else if(verification == JFileChooser.CANCEL_OPTION){
 					JOptionPane.showMessageDialog(null, "The saving has been cancelled.");
 				}
-				
-				//System.out.print(file.exists());
 			}
 		});
 
@@ -138,7 +135,6 @@ public class Planner extends JFrame {
 				}
 				
 				chooser.setFileFilter(filter);
-				//System.out.println(chooser.getFileFilter());
 				int verification = chooser.showOpenDialog(_this);
 				
 				if(verification == JFileChooser.APPROVE_OPTION){
@@ -148,13 +144,7 @@ public class Planner extends JFrame {
 				else if(verification == JFileChooser.CANCEL_OPTION){
 					JOptionPane.showMessageDialog(null, "The loading has been cancelled.");
 				}
-				
-				//System.out.print(file.exists());
-				
-				
-				//agenda = new Agenda("agenda");
 				repaint();
-
 			}
 		});
 

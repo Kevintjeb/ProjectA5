@@ -161,5 +161,4 @@ public class Visitor extends Agent {
 		double randomInt = min + (double)(Math.random() * ((max - min) + 1));
 		return randomInt;
 	}
-
 }

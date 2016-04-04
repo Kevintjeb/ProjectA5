@@ -56,7 +56,7 @@ public class Performance implements Serializable
 								performance + "\" during this performance");
 	}
 	
-	// a constuctor that alows you to pass just one artist
+	// a constructor that allows you to pass just one artist
 	public Performance(Stage stage, Artist artist, 
 			Time startTime, Time endTime,
 			int popularity, Agenda agenda) throws Exception
@@ -69,8 +69,7 @@ public class Performance implements Serializable
 	
 	public void setStage(Stage stage, boolean check) throws Exception
 	{
-		// TODO: posibly check if the stage exist in the agenda
-		
+	
 		// the stage can't be null so when it is 
 		// an error will be displayed
 		if (stage == null)
@@ -95,23 +94,6 @@ public class Performance implements Serializable
 			check();
 	}
 	
-	/*
-	public void addArtist(Artist artist)
-	{
-		// the artist can't be null so
-		// if it is an error is displayed
-		if (artist == null)
-			System.out.println("Performance::addArtist : ERROR: artist can't be a null refrence");
-		// if the artist is valid it ensures artists is as well
-		else
-		{
-			// if artists is null it constructs it
-			if (artists == null)
-				artists = new ArrayList<Artist>();
-			// it adds the artist
-			artists.add(artist);
-		}
-	}*/
 	
 	public void setStartTime(Time startTime, boolean check) throws Exception
 	{
