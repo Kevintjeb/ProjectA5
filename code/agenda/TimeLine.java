@@ -114,17 +114,6 @@ public class TimeLine extends JPanel {
 		g2d.setColor(textColor);
 		g2d.setStroke(new BasicStroke(3));
 
-		// eerste verticale lijn + laatste verticale + bovenste lijn witte blok
-		// g2d.drawLine(25, 25, 25, 460);
-
-		// g2d.drawLine(getWidth() / (planner.agenda.getStages().size() + 1) *
-		// (planner.agenda.getStages().size() + 1), 25,
-		// getWidth() / (planner.agenda.getStages().size() + 1) *
-		// (planner.agenda.getStages().size() + 1), 460);
-		//
-		// g2d.drawLine(25, 25, getWidth() / (planner.agenda.getStages().size()
-		// + 1) * (planner.agenda.getStages().size() + 1), 25);
-
 		// eerste verticale lijn na tijd.
 		g2d.drawLine(getWidth() / (planner.agenda.getStages().size() + 1), 0,
 				getWidth() / (planner.agenda.getStages().size() + 1), getHeight());
@@ -194,7 +183,6 @@ public class TimeLine extends JPanel {
 				double y = (((performance.getStartTime().getHours() * ((getHeight() + 35) / 16.0))
 						- (((getHeight() + 35) / 16.0) * 9) + 35)
 						+ ((performance.getStartTime().getMinutes() / 60.0f) * ((getHeight() + 35) / 16.0)));
-				// System.out.println("x: " + x + " y: " + y);
 
 				Rectangle2D rect = new Rectangle2D.Double(x, y, width, height);
 
@@ -214,14 +202,8 @@ public class TimeLine extends JPanel {
 				g2d.drawString(namen, xPos + (int) x, (yPos + (int) y));
 				g2d.setFont(new Font("Arial", Font.TRUETYPE_FONT, 10));
 				g2d.drawString(tijd, (int) x, (int) y + (int) height);
-
-				// System.out.println("naam : " + namen);
-
 			}
-			// Einde methode
-
 		}
-
 	}
 
 	public String checkNamen(Performance p) {

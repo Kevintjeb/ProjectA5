@@ -41,7 +41,6 @@ public class SimpleAgenda extends JPanel {
 			public void mouseClicked(MouseEvent e)
 			{
 				String name = table.getColumnName(table.columnAtPoint(e.getPoint()));
-				//System.out.println(name);
 				
 				PerformaceComparator.SortTypes sortType;
 				PerformaceComparator.SortOrder sortOrder;

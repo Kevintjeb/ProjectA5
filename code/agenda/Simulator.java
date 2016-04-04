@@ -139,9 +139,6 @@ public class Simulator extends JPanel
 			fillArrayList(mapmap);
 			fillPlaatjes();
 			clicked();
-			
-			
-			
 		}
 		
 		public void fillArrayList(File file)
@@ -364,7 +361,8 @@ public class Simulator extends JPanel
 		public void playSim()
 		{
 			world.setRealTimeToSimTime((Double.parseDouble(speedInvoer.getText())*60)/1000);
-			//explaination formule linenumber 269
+			
+			//An explanation given for the used formula is found in this class in line 269
 			updateT.start();
 		}
 		
@@ -482,20 +480,14 @@ public class Simulator extends JPanel
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
@@ -506,14 +498,10 @@ public class Simulator extends JPanel
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 	}
 	

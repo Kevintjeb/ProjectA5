@@ -8,7 +8,7 @@ abstract class Agent implements Updateable, Drawable {
 	private Point2D currentPosition, nextPosition;
 	private final Image image;
 	private Tile currentTile, nextTile;
-	private int destenation;
+	private int destination;
 	private float speed;
 	private float rotation;
 
@@ -18,7 +18,7 @@ abstract class Agent implements Updateable, Drawable {
 		this.image = image;
 		this.currentTile = tile;
 		this.nextTile = tile;
-		this.destenation = NO_DESTENATION;
+		this.destination = NO_DESTENATION;
 		this.speed = speed;
 		this.rotation = 0.0f;
 		this.currentPosition = point;
@@ -37,21 +37,21 @@ abstract class Agent implements Updateable, Drawable {
 	void setDestination(int destination) {
 		nextTile = null; // the next tile gets set to null so move() will
 							// recalculate the path
-		this.destenation = destination;
+		this.destination = destination;
 	}
 
 	void move() {
 		System.out.println("current location: " + currentPosition);
 
 		// we don't need to go anywhere so we can just return
-		if (destenation == NO_DESTENATION)
+		if (destination == NO_DESTENATION)
 			return;
 
 		// if the next time is null we have reset our destination so we need to
 		// get our nextTile from the currentTile
 		if (nextTile == null)
-			nextTile = currentTile.getDirection(destenation);
-
+			nextTile = currentTile.getDirection(destination);
+		
 		// if the nextTile is the currentTile we have reached our position
 		// NOTE: this is because Tile.getDirection will give us the tile itself
 		// if it is the destination
@@ -63,9 +63,8 @@ abstract class Agent implements Updateable, Drawable {
 		else if (currentPosition.distance(nextPosition) <= speed) {
 			currentPosition = nextPosition;
 			currentTile = nextTile;
-			nextTile = nextTile.getDirection(destenation); // we get the next
-															// tile from our
-															// currentTile
+			nextTile = nextTile.getDirection(destination); // we get the next tile from our currentTile
+
 			// the nextPosition gets generated
 			// TODO make the generated point be semi random so not all agents
 			// will move throu the same
