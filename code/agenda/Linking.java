@@ -171,7 +171,7 @@ public class Linking extends JPanel {
 
 				for (int i = 0; i < numbers.size(); i++) {
 					if (numbers.get(i).contains(e.getPoint())) {
-						selectedNumber = 6 + (i * 3);
+						selectedNumber = 5 + (i * 3);
 						rectNumSelected = numbers.get(i);
 						clickedNumber = i;
 						repaint();

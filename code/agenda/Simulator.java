@@ -45,6 +45,15 @@ public class Simulator extends JPanel
 	
 	World world;
 	
+	int uren = 9;
+	double minuten = 0;
+	
+	int updatetijd = 1000/30;
+	
+	ActionListener updateTime;
+	
+	Timer updateT;
+	
 	public Simulator(File json, Planner planner, Map<agenda.Stage, Integer> stageMap)
 	{
 		super(new BorderLayout());
@@ -89,6 +98,8 @@ public class Simulator extends JPanel
 			
 			this.planner = planner;
 			
+			updateTime();
+			
 			add(speed1);
 			add(speedInvoer);
 			add(speed2);
@@ -127,7 +138,14 @@ public class Simulator extends JPanel
 			File mapmap = new File("maps");
 			fillArrayList(mapmap);
 			fillPlaatjes();
+<<<<<<< HEAD
 			clicked();	
+=======
+			clicked();
+			
+			
+			
+>>>>>>> 2db1cf386d91a9805f057eb41a218cb695f0f8d6
 		}
 		
 		public void fillArrayList(File file)
@@ -260,7 +278,6 @@ public class Simulator extends JPanel
 					
 					if(speed != oldSpeed)
 					{
-						System.out.println("wijzig snelheid");
 						double realTimeToSimTime = (speed * 60)/1000;
 						world.setRealTimeToSimTime(realTimeToSimTime);
 						/*
@@ -280,13 +297,67 @@ public class Simulator extends JPanel
 				}
 			};
 			
-			Timer updateTime = new Timer(50, update);
-			updateTime.start();
+			Timer updateTimer = new Timer(50, update);
+			updateTimer.start();
+			
+			
+		}
+		
+		public void updateTime()
+		{
+			updateTime = new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					//TODO aanpassen met methode van flobo
+					minuten += Double.parseDouble(speedInvoer.getText())/30;
+					
+					if(minuten >= 60)
+					{
+						minuten = 0;
+						uren++;
+					}
+					
+					if(uren == 23 && minuten >= 59)
+					{
+						uren = 9;
+					}
+					
+					String urenS;
+					if(uren < 10)
+					{
+						urenS = "0" + uren;
+					}
+					else
+					{
+						urenS = "" + uren;
+					}
+					
+					String minutenS;
+					if(Math.round(minuten) < 10)
+					{
+						minutenS = "0" + Math.round(minuten);
+					}
+					else
+					{
+						minutenS = "" + Math.round(minuten);
+					}
+					
+					time.setText(urenS + ":" + minutenS);
+				}
+			};
+			
+			updateT = new Timer(updatetijd, updateTime);
 		}
 		
 		public void refreshSim()
 		{
-			
+			pauseSim();
+			planner.tabbedPane.removeTabAt(2);
+			planner.tabbedPane.addTab("Simulatie", new SimulatieGUI(planner));
+			planner.repaint();
+			planner.revalidate();
 		}
 		
 		public void backSim()
@@ -297,12 +368,18 @@ public class Simulator extends JPanel
 		public void playSim()
 		{
 			world.setRealTimeToSimTime((Double.parseDouble(speedInvoer.getText())*60)/1000);
+<<<<<<< HEAD
 			//explaination formula linenumber 269
+=======
+			//explaination formule linenumber 269
+			updateT.start();
+>>>>>>> 2db1cf386d91a9805f057eb41a218cb695f0f8d6
 		}
 		
 		public void pauseSim()
 		{
 			world.setRealTimeToSimTime(0.0);
+			updateT.stop();
 		}
 		
 		public void forwardSim()
@@ -475,10 +552,14 @@ public class Simulator extends JPanel
 				{
 					if(slider.getValue() != oldTime)
 					{
+						oldTime = slider.getValue();
 						
+						uren = oldTime;
+						minuten = 0;
+					
 					}
 					
-					oldTime = slider.getValue();
+					slider.setValue(uren);
 				}
 				
 			};
