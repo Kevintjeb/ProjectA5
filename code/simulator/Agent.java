@@ -10,7 +10,6 @@ abstract class Agent implements Updateable, Drawable {
 	private Tile currentTile, nextTile;
 	private int destenation;
 	private float speed;
-	private float rotation;
 
 	public static final int NO_DESTENATION = -1;
 
@@ -20,7 +19,6 @@ abstract class Agent implements Updateable, Drawable {
 		this.nextTile = tile;
 		this.destenation = NO_DESTENATION;
 		this.speed = speed;
-		this.rotation = 0.0f;
 		this.currentPosition = point;
 
 		World.instance.regesterDrawable(this);
