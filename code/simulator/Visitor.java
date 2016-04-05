@@ -58,7 +58,7 @@ public class Visitor extends Agent {
 
 	public Visitor(Tile tile, float speed) {
 		super(getImage(), tile, new Point2D.Double(tile.X, -tile.Y), speed);
-		setDestination(i++ % 10);
+		setDestination(i++ % 7);
 	}
 
 	@Override

@@ -48,10 +48,11 @@ public class World {
 												// called is used to calculate
 												// deltaTime
 	private double timeRemainder = 0;
-
+	
 	public final agenda.Agenda agenda;
 
-	private BufferedImage mapImage;
+	// TODO temp revert back to private
+	public BufferedImage mapImage;
 
 	protected static World instance;
 
@@ -526,7 +527,7 @@ public class World {
 							pairs.add(pair);
 						}
 					}
-
+					
 					for (TypeIdTilePair pair : pairs) {
 						System.out
 								.println("pair<" + pair.typeID + ", " + pair.name + ", " + pair.entances.size() + ">");
