@@ -56,14 +56,17 @@ public class __Main extends JPanel{
 	
 	public void paintComponent(Graphics g)
 	{
-		if (i++%5 == 0)
-		{
-			new Visitor(w.getTileAt(8, 99), 0.01f);
-		}
-		if (i++%3 == 0)
-		{
-			new Visitor(w.getTileAt(10, 99), 0.015f);
-		}
+//		if (i++%50 == 0)
+//		{
+//			new Visitor(w.getTileAt(8, 99), 0.01f);
+//		}
+//		if (i++%30 == 0)
+//		{
+//			new Visitor(w.getTileAt(10, 99), 0.015f);
+//		}
+		
+		Spawner spawn = new Spawner(100);
+		
 		Graphics2D g2 = (Graphics2D)g;
 		//System.out.println("paintComponent");
 		World.instance.inclusiveUpdate(g2, new AffineTransform());

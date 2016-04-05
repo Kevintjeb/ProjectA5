@@ -118,13 +118,13 @@ abstract class Agent implements Updateable, Drawable {
 
 	@Override
 	public void draw(Graphics2D graphics, AffineTransform t) {
-		AffineTransform oldTransform = graphics.getTransform();
 		double dy = nextPosition.getY() - currentPosition.getY();
 		double dx = nextPosition.getX() - currentPosition.getX();
 		double theta = Math.atan2(dy, dx);
 		
-		graphics.rotate(-theta, (currentPosition.getX() * 32), (currentPosition.getY()* -32));
-		graphics.drawImage(image, (int) (currentPosition.getX() * 32), (int) (currentPosition.getY() * -32), null);
-		graphics.setTransform(oldTransform);
+		AffineTransform tx = new AffineTransform();
+		tx.translate(currentPosition.getX()*32+16, currentPosition.getY() * -32+16);
+		tx.rotate(-theta, 16, 16);
+		graphics.drawImage(image, tx, null);
 	}
 }

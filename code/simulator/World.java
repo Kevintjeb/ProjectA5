@@ -35,13 +35,15 @@ public class World {
 	private HashMap<String, Integer> buildingMap; // maps between the building
 													// and it's corresponding id
 
-	private double realTimeToSimTime = 0.5; // when a real time in ms is multiplied
-										// with this number,
+	private double realTimeToSimTime = 0.5; // when a real time in ms is
+											// multiplied
+	// with this number,
 	// and the ceiling of the product is taken is will give the time in
 	// simulation time in seconds
 	private float worldTime; // the current time in the simulation world
-	private float deltaTime; // the delta between the second to last update() and
-							// the latest update()
+	private float deltaTime; // the delta between the second to last update()
+								// and
+								// the latest update()
 	private long lastRealTime = UNINITIALIZED; // the last time update was
 												// called is used to calculate
 												// deltaTime
@@ -54,26 +56,23 @@ public class World {
 	protected static World instance;
 
 	static int index = 0;
-	
-	private void drawBoolArray(boolean[][] info)
-	{
+
+	private void drawBoolArray(boolean[][] info) {
 		final int size = 1;
-		BufferedImage img = new BufferedImage(info.length*size, info[0].length*size,  BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = (Graphics2D)img.getGraphics();
-		
-		for (int x =0; x < info.length; x++)
-		{
-			for (int y = 0; y < info[0].length; y++)
-			{
+		BufferedImage img = new BufferedImage(info.length * size, info[0].length * size, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = (Graphics2D) img.getGraphics();
+
+		for (int x = 0; x < info.length; x++) {
+			for (int y = 0; y < info[0].length; y++) {
 				if (info[x][y])
 					g.setColor(Color.BLACK);
 				else
 					g.setColor(Color.WHITE);
-				
-				g.fillRect(x*size, y*size, size, size);
+
+				g.fillRect(x * size, y * size, size, size);
 			}
 		}
-		
+
 		try {
 			ImageIO.write(img, "png", new File("runtime_data/debug_data/boolean_print" + index++ + ".png"));
 		} catch (IOException e) {
@@ -81,24 +80,19 @@ public class World {
 			e.printStackTrace();
 		}
 	}
-	
-	public void close()
-	{
+
+	public void close() {
 		System.out.println("active agents : " + updateables.size());
 		System.out.println("last deltaTime : " + deltaTime);
 	}
-	
-	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath)
-	{
+
+	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath) {
 		this(agenda, stageMap, jsonPath, tileMapPath, false, false);
 	}
-	
-	private void clearDirectory(File file)
-	{
-		if (file.isDirectory())
-		{
-			for (File subFile : file.listFiles())
-			{
+
+	private void clearDirectory(File file) {
+		if (file.isDirectory()) {
+			for (File subFile : file.listFiles()) {
 				if (subFile.isDirectory())
 					clearDirectory(subFile);
 				else
@@ -107,8 +101,9 @@ public class World {
 			file.delete();
 		}
 	}
-	
-	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath, final boolean debug, final boolean numberOrText) {
+
+	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath,
+			final boolean debug, final boolean numberOrText) {
 		long constructorStart = System.currentTimeMillis();
 		instance = this;
 		this.agenda = agenda;
@@ -126,9 +121,9 @@ public class World {
 				realtimeData.mkdir();
 			else
 				clearDirectory(realtimeData);
-			
+
 			new File("runtime_data/debug_data/").mkdirs();
-			
+
 			try {
 				debugTxt = new PrintStream(new File("runtime_data/debug_data/log.txt"));
 			} catch (FileNotFoundException e) {
@@ -139,7 +134,7 @@ public class World {
 			oldStream = System.out;
 			System.setOut(debugTxt);
 		}
-		
+
 		boolean[][] collisionInfo = null;
 		{
 			// ATRIBUTEN, moeten worden aangemaakt boven constructor ofcourse..
@@ -170,7 +165,8 @@ public class World {
 				width = ((Long) json.get("width")).intValue();
 
 				collisionInfo = new boolean[width][height];
-				if (debug) drawBoolArray(collisionInfo);
+				if (debug)
+					drawBoolArray(collisionInfo);
 				mapImage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
 						BufferedImage.TYPE_INT_ARGB);
 				tiles = new Tile[width][height];
@@ -188,7 +184,7 @@ public class World {
 				// eerste 4 layers tekenen -> standaard layers.
 
 				{
-					//shops + toilet
+					// shops + toilet
 					JSONObject currentlayer = (JSONObject) layers.get(30);
 					if (currentlayer.get("visible").equals(true)) {
 						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
@@ -201,7 +197,7 @@ public class World {
 							switch (tileType) {
 							case windowshop:
 								entrance.add(tiles[k % width][k / width]);
-							//	buildings.add(new Cafetaria(entrance, 5));
+								// buildings.add(new Cafetaria(entrance, 5));
 								break;
 							}
 
@@ -209,7 +205,7 @@ public class World {
 					}
 				}
 				for (int i = 0; i < 5; i++) {
-					
+
 					JSONObject currentlayer = (JSONObject) layers.get(i);
 					if (currentlayer.get("visible").equals(true)) {
 						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
@@ -227,8 +223,9 @@ public class World {
 						}
 					}
 				}
-				
-				if(debug) drawBoolArray(collisionInfo);
+
+				if (debug)
+					drawBoolArray(collisionInfo);
 
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
 
@@ -261,8 +258,10 @@ public class World {
 								for (int i = 0; i < data.size(); i++) {
 									int tileType = ((Long) data.get(i)).intValue();
 									switch (tileType) {
-									//collision info false wanneer er geen collision is dus je mag wel lopen.
-									//collision info true wanneer er WEL collision is dus je mag NIET lopen.
+									// collision info false wanneer er geen
+									// collision is dus je mag wel lopen.
+									// collision info true wanneer er WEL
+									// collision is dus je mag NIET lopen.
 									case entranceExit:
 										collisionInfo[i % width][i / width] = false;
 										entrance.add(tiles[i % width][i / width]);
@@ -285,7 +284,8 @@ public class World {
 
 						}
 						buildings.add(new Stage("", entrance, entrance, maxAgents, stage, danceFloor));
-						if (debug) drawBoolArray(collisionInfo);
+						if (debug)
+							drawBoolArray(collisionInfo);
 					}
 
 				}
@@ -312,8 +312,7 @@ public class World {
 				}
 				layerslist.clear();
 				// saved de file naar het systeem.
-				if (debug)
-				{
+				if (debug) {
 					File outputfile = new File("runtime_data/debug_data/mapImage.png");
 					ImageIO.write(mapImage, "png", outputfile);
 				}
@@ -326,11 +325,10 @@ public class World {
 				e.printStackTrace();
 			}
 		}
-		
+
 		{
 			HashSet<Integer> typeContructed = new HashSet<>();
-			for (Building b : buildings)
-			{
+			for (Building b : buildings) {
 				if (typeContructed.contains(b.typeID))
 					continue;
 				typeContructed.add(b.typeID);
@@ -363,14 +361,16 @@ public class World {
 					graph = new ArrayList<>(nodeCount);
 
 					positionToNodeMap = new HashMap<>(nodeCount);
-					
+
 					for (int y = 0; y < collisionInfo.length; y++)
 						for (int x = 0; x < collisionInfo[0].length; x++)
 							if (collisionInfo[x][y] == false) {
 								Node n = new Node(x, y);
 								graph.add(n);
 								positionToNodeMap.put(new Position(x, y), n);
-								//System.out.println((positionToNodeMap.get(new Position(x,y)) == null) ? "node could not be reovered" : "node could be recovereded");
+								// System.out.println((positionToNodeMap.get(new
+								// Position(x,y)) == null) ? "node could not be
+								// reovered" : "node could be recovereded");
 							}
 
 					for (Node n : graph) { // adding the edges to the node TODO
@@ -428,29 +428,30 @@ public class World {
 						if (pushed == false)
 							nodeStack.pop();
 					}
-					
-					if (debug) {////////// Create a debug image /////////////////
+
+					if (debug) {////////// Create a debug image
+								////////// /////////////////
 						Color inGraph = new Color(0, 255, 0, 128);
 						Color outGraph = new Color(255, 0, 0, 128);
-						
-						BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-						Graphics2D graphics = (Graphics2D)debugImage.getGraphics();
+
+						BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(),
+								BufferedImage.TYPE_INT_ARGB);
+						Graphics2D graphics = (Graphics2D) debugImage.getGraphics();
 						graphics.drawImage(mapImage, 0, 0, null);
-						
-						
-						for (Node n : graph)
-						{
+
+						for (Node n : graph) {
 							Color c = inGraph;
-							
+
 							if (visitedNodes.contains(n) == false)
 								c = outGraph;
-							
+
 							graphics.setColor(c);
-							graphics.fillRect(n.X*32, n.Y*32, 32, 32);
+							graphics.fillRect(n.X * 32, n.Y * 32, 32, 32);
 						}
-						
+
 						try {
-							ImageIO.write(debugImage, "png", new File("runtime_data/debug_data/pathfinding_debug_image.png"));
+							ImageIO.write(debugImage, "png",
+									new File("runtime_data/debug_data/pathfinding_debug_image.png"));
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -500,21 +501,26 @@ public class World {
 					}
 
 					for (TypeIdTilePair pair : pairs) {
-						System.out.println("pair<" + pair.typeID + ", " + pair.name +", " + pair.entances.size() + ">");
-						
+						System.out
+								.println("pair<" + pair.typeID + ", " + pair.name + ", " + pair.entances.size() + ">");
+
 						Queue<Node> queue = new LinkedList<>();
 						HashSet<Node> visited = new HashSet<Node>();
 						HashMap<Position, Integer> nodeToDistanceMap = null;
-						if (debug) nodeToDistanceMap = new HashMap<>(graph.size());
-						
+						if (debug)
+							nodeToDistanceMap = new HashMap<>(graph.size());
+
 						for (Tile tile : pair.entances) {
 							Node n = positionToNodeMap.get(new Position(tile.X, tile.Y));
 							queue.add(n);
 							tiles[n.X][n.Y].directions.put(pair.typeID, tiles[n.X][n.Y]);
 							visited.add(n);
-							if (debug) nodeToDistanceMap.put(new Position(tile.X, tile.Y), -1);
-							System.out.println("tile(" + tile.X + ", " + tile.Y + ") " + ((n == null) ? "node is null" : "node was found")+
-									((collisionInfo[tile.X][tile.Y]) ? ", there should be no node" : ", there should be a node"));
+							if (debug)
+								nodeToDistanceMap.put(new Position(tile.X, tile.Y), -1);
+							System.out.println("tile(" + tile.X + ", " + tile.Y + ") "
+									+ ((n == null) ? "node is null" : "node was found")
+									+ ((collisionInfo[tile.X][tile.Y]) ? ", there should be no node"
+											: ", there should be a node"));
 						}
 
 						int visitedNodeCount = 0;
@@ -523,10 +529,12 @@ public class World {
 							Node node = queue.poll();
 							visitedNodeCount++;
 							int newNodeDistance = 0;
-							if (debug) newNodeDistance = nodeToDistanceMap.get(new Position(node.X, node.Y)) + 1;
+							if (debug)
+								newNodeDistance = nodeToDistanceMap.get(new Position(node.X, node.Y)) + 1;
 							if (newNodeDistance > highestDistance)
 								highestDistance = newNodeDistance;
-							//System.out.println(((node == null) ? "node is null" : "node was found"));
+							// System.out.println(((node == null) ? "node is
+							// null" : "node was found"));
 							if (node == null)
 								continue;
 							for (int i = 0; i < node.straitEdges.length; i++) {
@@ -535,63 +543,57 @@ public class World {
 								if (visited.contains(node.straitEdges[i]) == true)
 									continue;
 								visited.add(node.straitEdges[i]);
-								if (debug) nodeToDistanceMap.put(new Position(node.straitEdges[i].X, node.straitEdges[i].Y), newNodeDistance);
+								if (debug)
+									nodeToDistanceMap.put(new Position(node.straitEdges[i].X, node.straitEdges[i].Y),
+											newNodeDistance);
 								queue.add(node.straitEdges[i]);
 								tiles[node.straitEdges[i].X][node.straitEdges[i].Y].addDirection(pair.typeID,
 										tiles[node.X][node.Y]);
 							}
 						}
 						System.out.println("direction generation visitedNodeCount : " + visitedNodeCount);
-						if (debug){/// Creating a debug image
-							BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-							Graphics2D graphics = (Graphics2D)debugImage.getGraphics();
+						if (debug) {/// Creating a debug image
+							BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(),
+									BufferedImage.TYPE_INT_ARGB);
+							Graphics2D graphics = (Graphics2D) debugImage.getGraphics();
 							graphics.drawImage(mapImage, 0, 0, null);
-							
-							
-							for (Node n : graph)
-							{
-								int color = 255-(int)(255/(double)highestDistance*nodeToDistanceMap.get(new Position(n.X, n.Y)));
-								//System.out.println("("+n.X+", " + n.Y +") " + color);
-								if (color < 0 || color> 255)
+
+							for (Node n : graph) {
+								int color = 255 - (int) (255 / (double) highestDistance
+										* nodeToDistanceMap.get(new Position(n.X, n.Y)));
+								// System.out.println("("+n.X+", " + n.Y +") " +
+								// color);
+								if (color < 0 || color > 255)
 									color = 128;
 								graphics.setColor(new Color(color, color, color, 180));
-								graphics.fillRect(n.X*32, n.Y*32, 32, 32);
+								graphics.fillRect(n.X * 32, n.Y * 32, 32, 32);
 								graphics.setColor(Color.BLACK);
-								if (numberOrText)
-								{
-									graphics.drawString(nodeToDistanceMap.get(new Position(n.X, n.Y)).toString(), n.X*32+16, n.Y*32+16);
-								}
-								else
-								{
+								if (numberOrText) {
+									graphics.drawString(nodeToDistanceMap.get(new Position(n.X, n.Y)).toString(),
+											n.X * 32 + 16, n.Y * 32 + 16);
+								} else {
 									Tile direction = tiles[n.X][n.Y].getDirection(pair.typeID);
-									if (direction.X < n.X)
-									{
-										graphics.drawString("left", n.X*32+16, n.Y*32+16);
-									}
-									else if (direction.X > n.X)
-									{
-										graphics.drawString("right", n.X*32+16, n.Y*32+16);
-									}
-									else if (direction.Y < n.Y)
-									{
-										graphics.drawString("up", n.X*32+16, n.Y*32+16);
-									}
-									else if (direction.Y > n.Y)
-									{
-										graphics.drawString("down", n.X*32+16, n.Y*32+16);
-									}
-									else 
-									{
+									if (direction.X < n.X) {
+										graphics.drawString("left", n.X * 32 + 16, n.Y * 32 + 16);
+									} else if (direction.X > n.X) {
+										graphics.drawString("right", n.X * 32 + 16, n.Y * 32 + 16);
+									} else if (direction.Y < n.Y) {
+										graphics.drawString("up", n.X * 32 + 16, n.Y * 32 + 16);
+									} else if (direction.Y > n.Y) {
+										graphics.drawString("down", n.X * 32 + 16, n.Y * 32 + 16);
+									} else {
 										graphics.setColor(Color.ORANGE);
-										graphics.fillRect(n.X*32, n.Y*32, 32, 32);
+										graphics.fillRect(n.X * 32, n.Y * 32, 32, 32);
 										graphics.setColor(Color.BLACK);
-										graphics.drawString("dest", n.X*32+4, n.Y*32+16);
+										graphics.drawString("dest", n.X * 32 + 4, n.Y * 32 + 16);
 									}
 								}
 							}
-							
+
 							try {
-								ImageIO.write(debugImage, "png", new File("runtime_data/debug_data/pathfinding_debug_image" + pair.typeID + "_" + pair.name+".png"));
+								ImageIO.write(debugImage, "png",
+										new File("runtime_data/debug_data/pathfinding_debug_image" + pair.typeID + "_"
+												+ pair.name + ".png"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -601,17 +603,16 @@ public class World {
 				}
 			}
 		}
-		
+
 		{
 			long delta = System.currentTimeMillis() - constructorStart;
 			System.setOut(oldStream);
-			System.out.println("World was created in " + (double)delta/1000 + " seconds");
+			System.out.println("World was created in " + (double) delta / 1000 + " seconds");
 		}
 
 	}
 
-	public String setRealTimeToSimTime(double realTimeToSimTime)
-	{
+	public String setRealTimeToSimTime(double realTimeToSimTime) {
 		if (realTimeToSimTime < 0)
 			return "sim time can't be lower than 0";
 		this.realTimeToSimTime = realTimeToSimTime;
@@ -696,7 +697,7 @@ public class World {
 				lastRealTime = realTime;
 			if (Double.isNaN(timeRemainder))
 				timeRemainder = 0.0;
-				
+
 			double deltaTimeDouble = realTime - lastRealTime + timeRemainder;
 			deltaTime = (float) (deltaTimeDouble * realTimeToSimTime);
 			timeRemainder = (deltaTimeDouble * realTimeToSimTime - deltaTime) / realTimeToSimTime;
@@ -707,8 +708,12 @@ public class World {
 
 		{// update all updatables
 			ListIterator<Updateable> iterator = updateables.listIterator();
-			while (iterator.hasNext())
-				iterator.next().update();
+			while (iterator.hasNext()) {
+				Updateable next = iterator.next();
+				if (next != null) {
+					iterator.next().update();
+				}
+			}
 		}
 	}
 
