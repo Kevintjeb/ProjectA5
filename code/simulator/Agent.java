@@ -12,9 +12,14 @@ abstract class Agent implements Updateable, Drawable {
 	private Tile currentTile, nextTile;
 	private int destenation;
 	private float speed;
+	private static int currentTypeID = 0;
+
 	private static final int MOD = 8;
-	
 	public static final int NO_DESTENATION = -1;
+
+	static int generateNewTypeID() {
+		return currentTypeID++;
+	}
 
 	public Agent(Image image, Tile tile, Point2D point, float speed) {
 		this.image = image;
@@ -22,9 +27,7 @@ abstract class Agent implements Updateable, Drawable {
 		this.nextTile = tile;
 		this.destenation = NO_DESTENATION;
 		this.speed = speed;
-
 		this.currentPosition = point;
-
 		World.instance.regesterDrawable(this);
 		World.instance.regesterUpdateable(this);
 	}
@@ -42,7 +45,7 @@ abstract class Agent implements Updateable, Drawable {
 		nextTile = null; // the next tile gets set to null so move() will
 							// recalculate the path
 		if (destination >= MOD)
-			this.destenation = (destination+1)%MOD;
+			this.destenation = (destination + 1) % MOD;
 		else
 			this.destenation = destination;
 		if (state)
@@ -65,13 +68,12 @@ abstract class Agent implements Updateable, Drawable {
 		if (nextTile == null) {
 			// System.out.println("next tile is set");
 			nextTile = currentTile.getDirection(destenation);
-			try{
-			nextPosition = new Point2D.Double(nextTile.X, -nextTile.Y);
-			}catch (Exception e)
-			{
+			try {
+				nextPosition = new Point2D.Double(nextTile.X, -nextTile.Y);
+			} catch (Exception e) {
 				Graphics2D g2 = World.instance.mapImage.createGraphics();
 				g2.setColor(Color.BLACK);
-				g2.fillRect(currentTile.X*32, currentTile.Y*32, 32, 32);
+				g2.fillRect(currentTile.X * 32, currentTile.Y * 32, 32, 32);
 				return;
 			}
 		}
@@ -117,6 +119,38 @@ abstract class Agent implements Updateable, Drawable {
 
 				currentPosition.setLocation(currentPosition.getX() + tempX, currentPosition.getY() + tempY);
 			}
+		}
+
+		// collision : TODO collision! RIP?
+		boolean isCollision = false;
+		for (Agent v : World.instance.getVisitors()) {
+			for(Agent v2 : World.instance.getVisitors())
+			{
+				if(v == v2)
+				{
+					continue;
+				}
+				if(v.currentPosition.distance(v2.currentPosition) < 16)
+				{
+//						v.nextPosition = new Point2D.Double(v.currentPosition.getX() - 0.1, v.currentPosition.getY() + 0.1);
+//						v2.nextPosition = new Point2D.Double(v2.currentPosition.getX() + 0.1, v2.currentPosition.getY() + 0.1);
+//						
+				}
+			}
+//	 dit is een rip van johan, werkt natuurlijk niet helaas ;(((((		
+//			if (v == this)
+//				continue;
+//			if (v.currentPosition.distance(nextPosition) < 16) {
+//				isCollision = true;
+//				break;
+//			}
+//		}
+//		if(!isCollision)
+//		{
+//			currentPosition = nextPosition;
+//		}else
+//		{
+//			nextPosition = new Point2D.Double(currentPosition.getX() - 0.1, currentPosition.getY() - 0.1);
 		}
 	}
 

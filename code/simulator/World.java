@@ -12,6 +12,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
@@ -795,4 +796,20 @@ public class World {
 		return deltaTime;
 	}
 
+	protected ArrayList<Agent> getVisitors()
+	{
+		ArrayList<Agent> visitors = new ArrayList<>();
+		Iterator<Updateable> itr = updateables.iterator();
+		while(itr.hasNext())
+		{
+			Updateable b = itr.next();
+			if(b instanceof Agent)
+			{
+				visitors.add((Visitor) b);
+			}
+			
+		}
+		return visitors;
+		
+	}
 }

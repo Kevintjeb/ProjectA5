@@ -63,15 +63,15 @@ public class __Main extends JPanel {
 		}
 		if (i++ % 15 == 0) {
 			new Visitor(w.getTileAt(10, 99), 0.015f);
-		}		
-		Graphics2D g2 = (Graphics2D)g;
-		//System.out.println("paintComponent");
+		}
+		Graphics2D g2 = (Graphics2D) g;
+		// System.out.println("paintComponent");
 		World.instance.inclusiveUpdate(g2, new AffineTransform());
 		AffineTransform transform = new AffineTransform();
-		float scaleX = getWidth()/(float)(100*32);
-		float scaleY = getHeight()/(float)(100*32);
+		float scaleX = getWidth() / (float) (100 * 32);
+		float scaleY = getHeight() / (float) (100 * 32);
 		float scale = (scaleX > scaleY) ? scaleY : scaleX;
-		transform.scale(scale, scale*-1);
+		transform.scale(scale, scale * -1);
 		g2.transform(transform);
 	}
 
