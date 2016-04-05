@@ -1,4 +1,4 @@
 *.classpath
 *.project
 /bin/
-/debug_data/
+/runtime_data/

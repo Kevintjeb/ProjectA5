@@ -111,7 +111,7 @@ public class Simulator extends JPanel
 			layout.putConstraint(SpringLayout.WEST, time, 900, SpringLayout.WEST, this);
 			layout.putConstraint(SpringLayout.NORTH, time, 15, SpringLayout.NORTH, this);
 			
-			File mapmap = new File("maps");
+			File mapmap = new File("static_data/simulator_GUI/");
 			fillArrayList(mapmap);
 			fillPlaatjes();
 			clicked();
@@ -134,7 +134,7 @@ public class Simulator extends JPanel
 			    	  {
 			    		  try 
 			    			{
-			    			  File chooseImage = new File("maps" + "\\" + teller + "-" + ".png");
+			    			  File chooseImage = new File("static_data/simulator_GUI/" + teller + "-" + ".png");
 			    			  BufferedImage image = ImageIO.read(chooseImage);
 				    		  images.add(image);
 				    		  teller++;

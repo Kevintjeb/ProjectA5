@@ -48,7 +48,7 @@ public class __Main extends JPanel{
 		map.put(agenda.getStages().get(7), 26);
 		
 		
-		w = new World(agenda, map, new File("Endmap.json"), "Tiled2.png", false, false);
+		w = new World(agenda, map, new File("static_data/festival_grounds/Endmap.json"), "static_data/tile_maps/Tiled2.png", false, false);
 		
 	}
 	
@@ -56,11 +56,11 @@ public class __Main extends JPanel{
 	
 	public void paintComponent(Graphics g)
 	{
-		if (i++%50 == 0)
+		if (i++%5 == 0)
 		{
 			new Visitor(w.getTileAt(8, 99), 0.01f);
 		}
-		if (i++%30 == 0)
+		if (i++%3 == 0)
 		{
 			new Visitor(w.getTileAt(10, 99), 0.015f);
 		}
