@@ -50,7 +50,6 @@ public class __Main extends JPanel {
 		map.put(agenda.getStages().get(7), 26);
 
 		w = new World(agenda, map, new File("Endmap.json"), "Tiled2.png", false, false);
-
 		// punt waar de ingang is op de tilemap is : 350, 3090.
 
 	}
@@ -58,14 +57,9 @@ public class __Main extends JPanel {
 	int i = 0;
 
 	public void paintComponent(Graphics g) {
-		if (i++ % 10 == 0) {
-			try {
-				new Visitor(ImageIO.read(new File("code/agents/2.png")), w.getTileAt(8, 99), 0.01f);
-				System.out.println("gelukt!");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if (i++ % 50 == 0) {
+			new Visitor(w.getTileAt(8, 99), 0.01f);
+			System.out.println("gelukt!");
 		}
 
 		Graphics2D g2 = (Graphics2D) g;

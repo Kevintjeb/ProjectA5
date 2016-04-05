@@ -133,15 +133,17 @@ abstract class Agent implements Updateable, Drawable {
 
 	@Override
 	public void draw(Graphics2D graphics, AffineTransform t) {
-		AffineTransform tempTrans = new AffineTransform(t);
-		tempTrans.scale(imageScale, imageScale);
-	
-		double theta = Math.atan2(nextPosition.getY() - currentPosition.getY(),
-				nextPosition.getX() - currentPosition.getX());
-//		graphics.rotate(theta, (int) ((currentPosition.getX() - image.getWidth(null) / 2)),
-//				(int) ((currentPosition.getY() - image.getHeight(null) / 2)));
+//		AffineTransform tempTrans = new AffineTransform(t);
+//		tempTrans.scale(imageScale, imageScale);
 //	
-		graphics.drawImage(image, ((int) (currentPosition.getX() + image.getWidth(null) / 2)) * 32,
-				(int) ((currentPosition.getY() + image.getHeight(null) / 2)) * -32, null);
+//		double theta = Math.atan2(nextPosition.getY() - currentPosition.getY(),
+//				nextPosition.getX() - currentPosition.getX());
+////		graphics.rotate(theta, (int) ((currentPosition.getX() - image.getWidth(null) / 2)),
+////				(int) ((currentPosition.getY() - image.getHeight(null) / 2)));
+////	
+//		graphics.drawImage(image, ((int) (currentPosition.getX() + image.getWidth(null) / 2)) * 32,
+//				(int) ((currentPosition.getY() + image.getHeight(null) / 2)) * -32, null);
+//	}
+	graphics.drawImage(image, (int)(currentPosition.getX()*32), (int)(currentPosition.getY()*-32), null);
 	}
 }
