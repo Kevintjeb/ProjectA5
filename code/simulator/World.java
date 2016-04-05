@@ -82,6 +82,12 @@ public class World {
 		}
 	}
 	
+	public void close()
+	{
+		System.out.println("active agents : " + updateables.size());
+		System.out.println("last deltaTime : " + deltaTime);
+	}
+	
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath)
 	{
 		this(agenda, stageMap, jsonPath, tileMapPath, false, false);
@@ -699,7 +705,7 @@ public class World {
 	}
 
 	public void draw(Graphics2D graphics, AffineTransform t) {
-		graphics.scale(0.5, 0.5);
+		graphics.scale(0.25, 0.25);
 		graphics.drawImage(mapImage, t, null);
 		ListIterator<Drawable> iterator = drawables.listIterator();
 		while (iterator.hasNext())
