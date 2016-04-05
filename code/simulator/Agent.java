@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 
 abstract class Agent implements Updateable, Drawable {
 	private Point2D currentPosition, nextPosition;
-	private final BufferedImage image;
+	private final Image image;
 	private Tile currentTile, nextTile;
 	private int destenation;
 	private float speed;
@@ -18,7 +18,7 @@ abstract class Agent implements Updateable, Drawable {
 	
 	public static final int NO_DESTENATION = -1;
 	
-	public Agent(BufferedImage image, Tile tile, Point2D point, float speed)
+	public Agent(Image image, Tile tile, Point2D point, float speed)
 	{
 		this.image = image;
 		this.currentTile = tile;
@@ -45,11 +45,15 @@ abstract class Agent implements Updateable, Drawable {
 	}
 	
 	abstract void destenationReached();
-	
+	boolean state = true;
 	void setDestination(int destination)
 	{
 		nextTile = null; // the next tile gets set to null so move() will recalculate the path
 		this.destenation = destination;
+		if (state)
+			state = false;
+		//else
+			//System.out.println("destination " + destination);
 	}
 	
 	void move()
@@ -67,7 +71,7 @@ abstract class Agent implements Updateable, Drawable {
 		// get our nextTile from the currentTile
 		if (nextTile == null)
 		{
-			System.out.println("next tile is set");
+			//System.out.println("next tile is set");
 			nextTile = currentTile.getDirection(destenation);
 			nextPosition = new Point2D.Double(nextTile.X, -nextTile.Y);
 		}
@@ -79,25 +83,25 @@ abstract class Agent implements Updateable, Drawable {
 		{
 			if (nextTile == currentTile) // we are at our destination
 			{
-				System.out.println("destination reached");
-				destenationReached();
+				//System.out.println("AGENT destination reached");
 				destenation = NO_DESTENATION;
+				destenationReached();
 				return;
 			}
 			
 			if (nextPosition.distance(currentPosition) <= remainingMoveDistance)
 			{
-				System.out.println("we can move to the next tile");
+				//System.out.println("we can move to the next tile");
 				remainingMoveDistance -= nextPosition.distance(currentPosition);
 				currentPosition = nextPosition;
 				currentTile = nextTile;
 				nextTile = currentTile.getDirection(destenation);
 				nextPosition = new Point2D.Double(nextTile.X, -nextTile.Y);
-				System.out.println("next tile = (" + nextTile.X + ", " + nextTile.Y + ")");
+				//System.out.println("next tile = (" + nextTile.X + ", " + nextTile.Y + ")");
 			}
 			else
 			{
-				System.out.println("we move towards the next tile");
+				//System.out.println("we move towards the next tile");
 				float tempX = (float) (nextPosition.getX() - currentPosition.getX()),
 						tempY = (float) (nextPosition.getY() - currentPosition.getY());
 				
@@ -109,7 +113,7 @@ abstract class Agent implements Updateable, Drawable {
 				
 				tempX *= remainingMoveDistance;
 				tempY *= remainingMoveDistance;
-				System.out.println("move vector (" + tempX + "  " + tempY + ")");
+				//System.out.println("move vector (" + tempX + "  " + tempY + ")");
 				remainingMoveDistance = 0;
 				
 				currentPosition.setLocation(currentPosition.getX()+tempX, currentPosition.getY()+tempY);
@@ -120,17 +124,18 @@ abstract class Agent implements Updateable, Drawable {
 	@Override
 	public void draw(Graphics2D graphics, AffineTransform t)
 	{
-		AffineTransform tempTrans = new AffineTransform(t);
+		//graphics.scale(1/imageScale, 1/imageScale);
+		graphics.drawImage(image, (int)(currentPosition.getX()*32), (int)(currentPosition.getY()*-32), null);
+		/*AffineTransform tempTrans = new AffineTransform(t);
 		tempTrans.scale(imageScale, imageScale);
 		
 		double theta = Math.atan2(nextPosition.getY() - currentPosition.getY(), 
 		 	nextPosition.getX() - currentPosition.getX()); 
 		
-		graphics.drawRect(500, 1000, 40, 40); 
 		graphics.rotate(theta, (int) ((currentPosition.getX() - image.getWidth(null) / 2)), 
 		 				(int)( (currentPosition.getY() - image.getHeight(null) / 2))); 
-		graphics.drawRect(500, 500, 40, 40); 
-		graphics.drawImage(image, ((int) (currentPosition.getX() - image.getWidth(null) / 2))*32, 
-		 				(int) ((currentPosition.getY() - image.getHeight(null) / 2))*-32, null); 
+		graphics.drawImage(image, ((int) (currentPosition.getX() + image.getWidth(null) / 2))*32, 
+		 				(int) ((currentPosition.getY() + image.getHeight(null) / 2))*-32, null); 
+	*/
 	}
 }

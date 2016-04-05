@@ -2,6 +2,8 @@ package simulator;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.io.File;
@@ -57,14 +59,13 @@ public class __Main extends JPanel{
 	
 	public void paintComponent(Graphics g)
 	{
-		if (i++%100 == 0)
+		if (i++%50 == 0)
 		{
-			try {
-				new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(8, 99), 0.01f);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			new Visitor(w.getTileAt(8, 99), 0.03f);
+		}
+		if (i++%30 == 0)
+		{
+			new Visitor(w.getTileAt(10, 99), 0.02f);
 		}
 		Graphics2D g2 = (Graphics2D)g;
 		//System.out.println("paintComponent");
@@ -83,6 +84,52 @@ public class __Main extends JPanel{
 		frame.setSize(850, 850);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new WindowListener()
+		{
+
+			@Override
+			public void windowActivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+				
+				
+			}
+
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				World.instance.close();
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowIconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowOpened(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 		while (true)
 		{
 			frame.repaint();

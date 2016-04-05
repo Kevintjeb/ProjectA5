@@ -83,6 +83,12 @@ public class World {
 		}
 	}
 	
+	public void close()
+	{
+		System.out.println("active agents : " + updateables.size());
+		System.out.println("last deltaTime : " + deltaTime);
+	}
+	
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath)
 	{
 		this(agenda, stageMap, jsonPath, tileMapPath, false, false);
