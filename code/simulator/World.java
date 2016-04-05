@@ -300,7 +300,6 @@ public class World {
 								layerslist.add(temp);
 							} else {
 								JSONArray data = (JSONArray) layertemp.get("data");
-								int teller = 0;
 								for (int k = 0; k < data.size(); k++) {
 									ArrayList<Tile> entrancelijst = new ArrayList<>();
 									int tileType = ((Long) data.get(k)).intValue();
@@ -309,10 +308,9 @@ public class World {
 										collisionInfo[k % width][k / width] = false;
 										break;
 									case windowshop:
-										teller++;
 										entrancelijst.add(tiles[k % width][k / width]);
 										collisionInfo[k % width][k / width] = false;
-										buildings.add(new Cafetaria("Cafetaria " + teller, entrancelijst, 5));						
+										buildings.add(new Cafetaria("Cafetaria" , entrancelijst, 5));						
 										break;
 									}
 									

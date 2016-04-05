@@ -50,7 +50,7 @@ public class __Main extends JPanel {
 		map.put(agenda.getStages().get(7), 26);
 
 		w = new World(agenda, map, new File("static_data/festival_grounds/Endmap2.json"),
-				"static_data/tile_maps/Tiled2.png", false, false);
+				"static_data/tile_maps/Tiled2.png", true, true);
 
 	}
 
