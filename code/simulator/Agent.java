@@ -1,5 +1,6 @@
 package simulator;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
@@ -39,7 +40,10 @@ abstract class Agent implements Updateable, Drawable {
 	void setDestination(int destination) {
 		nextTile = null; // the next tile gets set to null so move() will
 							// recalculate the path
-		this.destenation = destination;
+		if (destination >= 7)
+			this.destenation = (destination+1)%7;
+		else
+			this.destenation = destination;
 		if (state)
 			state = false;
 		// else
@@ -60,7 +64,15 @@ abstract class Agent implements Updateable, Drawable {
 		if (nextTile == null) {
 			// System.out.println("next tile is set");
 			nextTile = currentTile.getDirection(destenation);
+			try{
 			nextPosition = new Point2D.Double(nextTile.X, -nextTile.Y);
+			}catch (Exception e)
+			{
+				Graphics2D g2 = World.instance.mapImage.createGraphics();
+				g2.setColor(Color.BLACK);
+				g2.fillRect(currentTile.X*32, currentTile.Y*32, 32, 32);
+				return;
+			}
 		}
 		// if the nextTile is the currentTile we have reached our position
 		// NOTE: this is because Tile.getDirection will give us the tile itself

@@ -48,10 +48,11 @@ public class World {
 												// called is used to calculate
 												// deltaTime
 	private double timeRemainder = 0;
-
+	
 	public final agenda.Agenda agenda;
 
-	private BufferedImage mapImage;
+	// TODO temp revert back to private
+	public BufferedImage mapImage;
 
 	protected static World instance;
 
@@ -301,8 +302,6 @@ public class World {
 								layerslist.add(temp);
 							} else {
 								JSONArray data = (JSONArray) layertemp.get("data");
-//								int teller = 0;
-//								int tellerToilet = 0;
 								for (int k = 0; k < data.size(); k++) {
 									ArrayList<Tile> entrancelijst = new ArrayList<>();
 									int tileType = ((Long) data.get(k)).intValue();
@@ -312,7 +311,6 @@ public class World {
 										collisionInfo[k % width][k / width] = false;
 										break;
 									case windowshop:
-//										teller++;
 										entrancelijst.add(tiles[k % width][k / width]);
 										collisionInfo[k % width][k / width] = false;
 										buildings.add(new Cafetaria("Cafetaria" , entrancelijst, 5));						
@@ -536,7 +534,7 @@ public class World {
 							pairs.add(pair);
 						}
 					}
-
+					
 					for (TypeIdTilePair pair : pairs) {
 						System.out
 								.println("pair<" + pair.typeID + ", " + pair.name + ", " + pair.entances.size() + ">");
