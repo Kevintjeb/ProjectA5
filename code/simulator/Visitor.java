@@ -57,7 +57,7 @@ public class Visitor extends Agent {
 	private static ArrayList<Image> images = new ArrayList<>();
 
 	public Visitor(Tile tile, float speed) {
-		super(getImage(new File("code/agents")), tile, new Point2D.Double(tile.X, -tile.Y), speed);
+		super(getImage(), tile, new Point2D.Double(tile.X, -tile.Y), speed);
 		setDestination(i++ % 6);
 	}
 
@@ -82,10 +82,10 @@ public class Visitor extends Agent {
 		//System.out.println("VISITOR destination reached");
 	}
 
-	public static Image getImage(File filepath) {
+	public static Image getImage() {
 		if (images.isEmpty()) {
 			int teller = 1;
-			File[] lijst = filepath.listFiles();
+			File[] lijst = new File("static_data/sprites/").listFiles();
 			for (File f : lijst) {		
 				try {
 					BufferedImage temp = (BufferedImage) ImageIO.read(f);
