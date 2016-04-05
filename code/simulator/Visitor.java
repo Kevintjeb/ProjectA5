@@ -30,7 +30,7 @@ import javax.imageio.ImageIO;
 public class Visitor extends Agent {
 	static int i = 0;
 	static int i2 = 0;
-
+	private static final int MOD = 8;
 	private int aantalDrankjes, aantalSnacks;
 
 	private double blaasInhoud = randomWaardeDouble(70, 100);
@@ -58,7 +58,7 @@ public class Visitor extends Agent {
 
 	public Visitor(Tile tile, float speed) {
 		super(getImage(), tile, new Point2D.Double(tile.X, -tile.Y), speed);
-		setDestination(i++ % 8);
+		setDestination(i++ % MOD);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class Visitor extends Agent {
 
 	@Override
 	void destenationReached() {
-		setDestination(i2++%8);
+		setDestination(i2++%MOD);
 		//System.out.println("VISITOR destination reached");
 	}
 

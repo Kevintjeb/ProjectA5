@@ -12,7 +12,8 @@ abstract class Agent implements Updateable, Drawable {
 	private Tile currentTile, nextTile;
 	private int destenation;
 	private float speed;
-
+	private static final int MOD = 8;
+	
 	public static final int NO_DESTENATION = -1;
 
 	public Agent(Image image, Tile tile, Point2D point, float speed) {
@@ -40,8 +41,8 @@ abstract class Agent implements Updateable, Drawable {
 	void setDestination(int destination) {
 		nextTile = null; // the next tile gets set to null so move() will
 							// recalculate the path
-		if (destination >= 7)
-			this.destenation = (destination+1)%7;
+		if (destination >= MOD)
+			this.destenation = (destination+1)%MOD;
 		else
 			this.destenation = destination;
 		if (state)

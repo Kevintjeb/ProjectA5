@@ -50,17 +50,17 @@ public class __Main extends JPanel {
 		map.put(agenda.getStages().get(7), 26);
 
 		w = new World(agenda, map, new File("static_data/festival_grounds/Endmap2.json"),
-				"static_data/tile_maps/Tiled2.png", true, true);
+				"static_data/tile_maps/Tiled2.png", false, false);
 
 	}
 
 	int i = 0;
 
 	public void paintComponent(Graphics g) {
-		if (i++ % 50 == 0) {
+		if (i++ % 25 == 0) {
 			new Visitor(w.getTileAt(8, 99), 0.01f);
 		}
-		if (i++ % 30 == 0) {
+		if (i++ % 15 == 0) {
 			new Visitor(w.getTileAt(10, 99), 0.015f);
 		}
 		Graphics2D g2 = (Graphics2D) g;
