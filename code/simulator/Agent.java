@@ -11,9 +11,6 @@ abstract class Agent implements Updateable, Drawable {
 	private Tile currentTile, nextTile;
 	private int destenation;
 	private float speed;
-	private float rotation;
-	private float imageScale;
-	private double direction = (Math.random() * 2 * Math.PI);
 
 	public static final int NO_DESTENATION = -1;
 
@@ -23,14 +20,8 @@ abstract class Agent implements Updateable, Drawable {
 		this.nextTile = tile;
 		this.destenation = NO_DESTENATION;
 		this.speed = speed;
-		this.rotation = 0.0f;
-		this.currentPosition = point;
 
-		{
-			float scaleX = 32 / image.getWidth(null);
-			float scaleY = 32 / image.getHeight(null);
-			imageScale = (scaleX < scaleY) ? scaleX : scaleY;
-		}
+		this.currentPosition = point;
 
 		World.instance.regesterDrawable(this);
 		World.instance.regesterUpdateable(this);
@@ -121,9 +112,9 @@ abstract class Agent implements Updateable, Drawable {
 		double dy = nextPosition.getY() - currentPosition.getY();
 		double dx = nextPosition.getX() - currentPosition.getX();
 		double theta = Math.atan2(dy, dx);
-		
+
 		AffineTransform tx = new AffineTransform();
-		tx.translate(currentPosition.getX()*32+16, currentPosition.getY() * -32+16);
+		tx.translate(currentPosition.getX() * 32 + 16, currentPosition.getY() * -32 + 16);
 		tx.rotate(-theta, 16, 16);
 		graphics.drawImage(image, tx, null);
 	}

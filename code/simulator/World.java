@@ -197,12 +197,14 @@ public class World {
 							switch (tileType) {
 							case windowshop:
 								entrance.add(tiles[k % width][k / width]);
-								// buildings.add(new Cafetaria(entrance, 5));
+								buildings.add(new Cafetaria(entrance, 5));
 								break;
 							}
 
 						}
 					}
+					drawBoolArray(collisionInfo);
+					System.out.println(buildings.size());
 				}
 				for (int i = 0; i < 5; i++) {
 
@@ -513,6 +515,7 @@ public class World {
 						for (Tile tile : pair.entances) {
 							Node n = positionToNodeMap.get(new Position(tile.X, tile.Y));
 							queue.add(n);
+							System.out.println("");
 							tiles[n.X][n.Y].directions.put(pair.typeID, tiles[n.X][n.Y]);
 							visited.add(n);
 							if (debug)
@@ -709,10 +712,7 @@ public class World {
 		{// update all updatables
 			ListIterator<Updateable> iterator = updateables.listIterator();
 			while (iterator.hasNext()) {
-				Updateable next = iterator.next();
-				if (next != null) {
-					iterator.next().update();
-				}
+				iterator.next().update();
 			}
 		}
 	}

@@ -16,7 +16,7 @@ public class Service extends Building {
 	
 	public Service(String name, String description,
 			ArrayList<Tile> entrances, int maxAgents, float visitCost) {
-		super(getTypeID(name), name, description, entrances, null, maxAgents);
+		super(getTypeID(name), name, description, entrances, entrances, maxAgents);
 		
 		this.visitCost = visitCost;
 	}

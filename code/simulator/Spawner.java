@@ -27,6 +27,7 @@ public class Spawner implements Updateable {
 			while (timeLeft <= 0) {
 				numberVisitors++;
 				new Visitor(tiles[(int) (Math.random() * 2)], 0.01f);
+				timeLeft = 0;
 				timeLeft += spawnTime;
 			}
 		}

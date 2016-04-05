@@ -84,15 +84,13 @@ public class Visitor extends Agent {
 
 	public static Image getImage() {
 		if (images.isEmpty()) {
-			int teller = 1;
 			File[] lijst = new File("static_data/sprites/").listFiles();
 			for (File f : lijst) {		
 				try {
 					BufferedImage temp = (BufferedImage) ImageIO.read(f);
 					images.add(temp.getScaledInstance(32, 32, BufferedImage.SCALE_FAST));
-					//images.add(temp);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+				
 					e.printStackTrace();
 				}
 			}
