@@ -20,7 +20,6 @@ import java.util.Queue;
 import java.util.Stack;
 
 import javax.imageio.ImageIO;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -172,6 +171,27 @@ public class World {
 				// JSON.
 				// eerste 4 layers tekenen -> standaard layers.
 
+				{
+					//shops + toilet
+					JSONObject currentlayer = (JSONObject) layers.get(30);
+					if (currentlayer.get("visible").equals(true)) {
+						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
+						layerslist.add(temp);
+					} else {
+						JSONArray data = (JSONArray) currentlayer.get("data");
+						ArrayList<Tile> entrance = new ArrayList<>();
+						for (int k = 0; k < data.size(); k++) {
+							int tileType = ((Long) data.get(k)).intValue();
+							switch (tileType) {
+							case windowshop:
+								entrance.add(tiles[k % width][k / width]);
+							//	buildings.add(new Cafetaria(entrance, 5));
+								break;
+							}
+
+						}
+					}
+				}
 				for (int i = 0; i < 5; i++) {
 					
 					JSONObject currentlayer = (JSONObject) layers.get(i);
@@ -583,7 +603,7 @@ public class World {
 	}
 
 	protected Tile getTileAt(int x, int y) {
-		if (x < 0 || y < 0 || x > tiles.length || y > tiles[0].length)
+		if (x < 0 || y < 0 || x >= tiles.length || y >= tiles[0].length)
 			return null;
 		return tiles[x][y];
 	}
@@ -646,9 +666,9 @@ public class World {
 		}
 	}
 
-	public void inclusiveUpdate(Graphics2D g2) {
+	public void inclusiveUpdate(Graphics2D g2, AffineTransform t) {
 		update();
-		draw(g2);
+		draw(g2, t);
 		cleanUp();
 	}
 
@@ -684,11 +704,9 @@ public class World {
 		toRemove.clear();
 	}
 
-	public void draw(Graphics2D graphics) {
-		
-		graphics.scale(0.25, 0.25);
-		graphics.drawImage(mapImage, new AffineTransform(), null);
-
+	public void draw(Graphics2D graphics, AffineTransform t) {
+		graphics.scale(0.5, 0.5);
+		graphics.drawImage(mapImage, t, null);
 		ListIterator<Drawable> iterator = drawables.listIterator();
 		while (iterator.hasNext())
 			iterator.next().draw(graphics, new AffineTransform());
