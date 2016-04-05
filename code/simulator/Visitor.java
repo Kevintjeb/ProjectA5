@@ -12,7 +12,6 @@ import javax.imageio.ImageIO;
 public class Visitor extends Agent {
 	static int i = 0;
 	static int i2 = 0;
-
 	private static ArrayList<Image> images = new ArrayList<>();
 
 	public Visitor(Tile tile, float speed) {
@@ -39,6 +38,7 @@ public class Visitor extends Agent {
 				try {
 					BufferedImage temp = (BufferedImage) ImageIO.read(f);
 					images.add(temp.getScaledInstance(32, 32, BufferedImage.SCALE_FAST));
+					//images.add(temp);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -5,12 +5,9 @@ import java.awt.Graphics2D;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -61,11 +58,11 @@ public class __Main extends JPanel{
 	{
 		if (i++%50 == 0)
 		{
-			new Visitor(w.getTileAt(8, 99), 0.03f);
+			new Visitor(w.getTileAt(8, 99), 0.01f);
 		}
 		if (i++%30 == 0)
 		{
-			new Visitor(w.getTileAt(10, 99), 0.02f);
+			new Visitor(w.getTileAt(10, 99), 0.015f);
 		}
 		Graphics2D g2 = (Graphics2D)g;
 		//System.out.println("paintComponent");
