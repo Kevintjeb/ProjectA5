@@ -143,6 +143,7 @@ public class World {
 			// ints moeten +1 omdat de eerste GID wordt opgeteld..
 			final int entranceExit = 117;
 			final int windowshop = 178;
+			final int toiletentrance = 225;
 			final int mainEntrance = 268;
 			final int collidableTrue = 90;
 			final int collidableFalse = 86;
@@ -304,6 +305,7 @@ public class World {
 								for (int k = 0; k < data.size(); k++) {
 									ArrayList<Tile> entrancelijst = new ArrayList<>();
 									int tileType = ((Long) data.get(k)).intValue();
+									
 									switch (tileType) {
 									case collidableFalse:
 										collisionInfo[k % width][k / width] = false;
@@ -313,6 +315,11 @@ public class World {
 										collisionInfo[k % width][k / width] = false;
 										buildings.add(new Cafetaria("Cafetaria" , entrancelijst, 5));						
 										break;
+									case toiletentrance:
+//										tellerToilet++;
+										entrancelijst.add(tiles[k % width][k / width]);
+										collisionInfo[k % width][k / width] = false;
+										buildings.add(new Toilet("Toilet", entrancelijst, 5));		
 									}
 									
 

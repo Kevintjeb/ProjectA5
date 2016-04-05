@@ -58,7 +58,7 @@ public class Visitor extends Agent {
 
 	public Visitor(Tile tile, float speed) {
 		super(getImage(), tile, new Point2D.Double(tile.X, -tile.Y), speed);
-		setDestination(i++ % 7);
+		setDestination(i++ % 8);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class Visitor extends Agent {
 
 	@Override
 	void destenationReached() {
-		setDestination(i2++%10);
+		setDestination(i2++%8);
 		//System.out.println("VISITOR destination reached");
 	}
 
