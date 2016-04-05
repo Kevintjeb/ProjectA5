@@ -10,7 +10,6 @@ abstract class Agent implements Updateable, Drawable {
 	private Tile currentTile, nextTile;
 	private int destenation;
 	private float speed;
-	private float rotation;
 	
 	public static final int NO_DESTENATION = -1;
 	
@@ -21,7 +20,6 @@ abstract class Agent implements Updateable, Drawable {
 		this.nextTile = tile;
 		this.destenation = NO_DESTENATION;
 		this.speed = speed;
-		this.rotation = 0.0f;
 		this.currentPosition = point;
 		
 		World.instance.regesterDrawable(this);
@@ -48,21 +46,29 @@ abstract class Agent implements Updateable, Drawable {
 		
 		// we don't need to go anywhere so we can just return
 		if (destenation == NO_DESTENATION)
+		{
+			System.out.println("no destination ");
 			return;
-		
+		}
 		// if the next time is null we have reset our destination so we need to
 		// get our nextTile from the currentTile
 		if (nextTile == null)
+			System.out.println("nexttile = null");
+		
 			nextTile = currentTile.getDirection(destenation);
 		
 		// if the nextTile is the currentTile we have reached our position
 		// NOTE: this is because Tile.getDirection will give us the tile itself if it is the destination
 		if (nextTile == currentTile) // we are at our destination
-			destenationReached();
+		{
+			System.out.println("destenation reached");
 		
+			destenationReached();
+		}
 		// if we can reach our nextPosition this move we should move there and look for our next tile
 		else if (currentPosition.distance(nextPosition) <= speed)
 		{
+			System.out.println("kleiner dan speed");
 			currentPosition = nextPosition; 
 			currentTile = nextTile;
 			nextTile = nextTile.getDirection(destenation); // we get the next tile from our currentTile
