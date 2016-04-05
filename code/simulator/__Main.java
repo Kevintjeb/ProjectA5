@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
@@ -20,6 +21,7 @@ import agenda.Stage;
 
 // just for testing
 public class __Main extends JPanel {
+	World w;
 
 	public __Main() throws Exception {
 
@@ -51,27 +53,37 @@ public class __Main extends JPanel {
 		World w = new World(agenda, map, new File("Endmap.json"), "Tiled2.png", false, false);
 
 		// punt waar de ingang is op de tilemap is : 350, 3090.
-		Visitor xxx = new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(100, 100),
-				new Point2D.Double(100, 100), 1.0f);
 
 	}
 
+	int i = 0;
+
 	public void paintComponent(Graphics g) {
+		if (i++ % 100 == 0) {
+			try {
+				new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(8, 99), 0.01f);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		Graphics2D g2 = (Graphics2D) g;
 		// System.out.println("paintComponent");
-		World.instance.inclusiveUpdate(g2, null);
 		AffineTransform transform = new AffineTransform();
 		float scaleX = getWidth() / (float) (100 * 32);
 		float scaleY = getHeight() / (float) (100 * 32);
 		float scale = (scaleX > scaleY) ? scaleY : scaleX;
 		transform.scale(scale, scale * -1);
+		World.instance.inclusiveUpdate(g2, transform);
+		
 		g2.transform(transform);
+		
 	}
 
 	public static void main(String[] args) throws Exception {
 		JFrame frame = new JFrame("simulator");
 		frame.setContentPane(new __Main());
-		frame.setSize(500, 500);
+		frame.setSize(850, 850);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		new Timer(1000 / 30, new ActionListener() {
@@ -88,7 +100,6 @@ public class __Main extends JPanel {
 
 			}
 		}).start();
-
 	}
 
 }
