@@ -73,7 +73,7 @@ public class Visitor extends Agent {
 		snackBehoefte();
 		setHongerPercentage();
 		move();
-		System.out.println("DERP"); //TROLOLOLOLOLOLOL
+		//System.out.println("DERP"); //TROLOLOLOLOLOLOL
 	}
 
 	@Override
