@@ -13,6 +13,10 @@ import javax.imageio.ImageIO;
  * Deze klasse kan later toegevoegd worden aan de Visitor klasse
  * Alle waarden betreffende verloop zijn per seconde
  * 
+ * TODO: Genre voorkeuren nader bepalen
+ * 			>> Wanneer voorkeur voor genre speelt, daar naartoe
+ * 			>> Wanneer voorkeur niet speelt, naar optreden met de hoogste populariteit
+ * 			>> Wanneer populairste vol, volgende in de lijst
  * TODO: Random genrevoorkeur meegeven, kan door middel 
  * 	  van performances uit te lezen
  * TODO: Implementeren, kan wanneer Pathfinding werkt
@@ -59,7 +63,17 @@ public class Visitor extends Agent {
 
 	@Override
 	public void update() {
+		bezoekFaciliteit();
+		toiletBehoefte();
+		setBlaasCapaciteit();
+		groteBehoefte();
+		setMaagCapaciteit();
+		drankBehoefte();
+		setDorstPercentage();
+		snackBehoefte();
+		setHongerPercentage();
 		move();
+		System.out.println("DERP"); //TROLOLOLOLOLOLOL
 	}
 
 	@Override
