@@ -705,7 +705,7 @@ public class World {
 	}
 
 	public void draw(Graphics2D graphics, AffineTransform t) {
-		graphics.scale(0.5, 0.5);
+		graphics.scale(0.25, 0.25);
 		graphics.drawImage(mapImage, t, null);
 		ListIterator<Drawable> iterator = drawables.listIterator();
 		while (iterator.hasNext())
