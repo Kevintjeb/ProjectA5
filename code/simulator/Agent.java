@@ -1,8 +1,6 @@
 package simulator;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
@@ -13,7 +11,6 @@ abstract class Agent implements Updateable, Drawable {
 	private Tile currentTile, nextTile;
 	private int destenation;
 	private float speed;
-	private float rotation;
 	private float imageScale;
 
 	public static final int NO_DESTENATION = -1;
@@ -138,15 +135,13 @@ abstract class Agent implements Updateable, Drawable {
 	public void draw(Graphics2D graphics, AffineTransform t) {
 		AffineTransform tempTrans = new AffineTransform(t);
 		tempTrans.scale(imageScale, imageScale);
-
+	
 		double theta = Math.atan2(nextPosition.getY() - currentPosition.getY(),
 				nextPosition.getX() - currentPosition.getX());
-
-		graphics.drawRect(500, 1000, 40, 40);
-		graphics.rotate(theta, (int) ((currentPosition.getX() - image.getWidth(null) / 2)),
-				(int) ((currentPosition.getY() - image.getHeight(null) / 2)));
-		graphics.drawRect(500, 500, 40, 40);
-		graphics.drawImage(image, ((int) (currentPosition.getX() - image.getWidth(null) / 2)) * 32,
-				(int) ((currentPosition.getY() - image.getHeight(null) / 2)) * -32, null);
+//		graphics.rotate(theta, (int) ((currentPosition.getX() - image.getWidth(null) / 2)),
+//				(int) ((currentPosition.getY() - image.getHeight(null) / 2)));
+//	
+		graphics.drawImage(image, ((int) (currentPosition.getX() + image.getWidth(null) / 2)) * 32,
+				(int) ((currentPosition.getY() + image.getHeight(null) / 2)) * -32, null);
 	}
 }

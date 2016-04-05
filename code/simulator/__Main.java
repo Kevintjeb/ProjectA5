@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,7 +49,7 @@ public class __Main extends JPanel {
 		map.put(agenda.getStages().get(6), 23);
 		map.put(agenda.getStages().get(7), 26);
 
-		World w = new World(agenda, map, new File("Endmap.json"), "Tiled2.png", false, false);
+		w = new World(agenda, map, new File("Endmap.json"), "Tiled2.png", false, false);
 
 		// punt waar de ingang is op de tilemap is : 350, 3090.
 
@@ -59,25 +58,19 @@ public class __Main extends JPanel {
 	int i = 0;
 
 	public void paintComponent(Graphics g) {
-		if (i++ % 100 == 0) {
+		if (i++ % 10 == 0) {
 			try {
-				new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(8, 99), 0.01f);
+				new Visitor(ImageIO.read(new File("code/agents/2.png")), w.getTileAt(8, 99), 0.01f);
+				System.out.println("gelukt!");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+
 		Graphics2D g2 = (Graphics2D) g;
-		// System.out.println("paintComponent");
 		AffineTransform transform = new AffineTransform();
-		float scaleX = getWidth() / (float) (100 * 32);
-		float scaleY = getHeight() / (float) (100 * 32);
-		float scale = (scaleX > scaleY) ? scaleY : scaleX;
-		transform.scale(scale, scale * -1);
 		World.instance.inclusiveUpdate(g2, transform);
-		
-		g2.transform(transform);
-		
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -91,13 +84,6 @@ public class __Main extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.repaint();
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
 			}
 		}).start();
 	}
