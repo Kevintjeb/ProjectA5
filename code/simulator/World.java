@@ -75,7 +75,7 @@ public class World {
 		}
 		
 		try {
-			ImageIO.write(img, "png", new File("debug_data/boolean_print" + index++ + ".png"));
+			ImageIO.write(img, "png", new File("runtime_data/debug_data/boolean_print" + index++ + ".png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -93,6 +93,21 @@ public class World {
 		this(agenda, stageMap, jsonPath, tileMapPath, false, false);
 	}
 	
+	private void clearDirectory(File file)
+	{
+		if (file.isDirectory())
+		{
+			for (File subFile : file.listFiles())
+			{
+				if (subFile.isDirectory())
+					clearDirectory(subFile);
+				else
+					subFile.delete();
+			}
+			file.delete();
+		}
+	}
+	
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath, final boolean debug, final boolean numberOrText) {
 		long constructorStart = System.currentTimeMillis();
 		instance = this;
@@ -106,15 +121,16 @@ public class World {
 		PrintStream oldStream;
 		{
 			PrintStream debugTxt;
-			File debugInfo = new File("debug_data/");
-			if (debugInfo.exists() == false)
-				debugInfo.mkdir();
+			File realtimeData = new File("runtime_data/");
+			if (realtimeData.exists() == false)
+				realtimeData.mkdir();
+			else
+				clearDirectory(realtimeData);
 			
-			for (File file : debugInfo.listFiles())
-				file.delete();
+			new File("runtime_data/debug_data/").mkdirs();
 			
 			try {
-				debugTxt = new PrintStream(new File("debug_data/log.txt"));
+				debugTxt = new PrintStream(new File("runtime_data/debug_data/log.txt"));
 			} catch (FileNotFoundException e) {
 				System.out.println("log could not be created");
 				return;
@@ -298,7 +314,7 @@ public class World {
 				// saved de file naar het systeem.
 				if (debug)
 				{
-					File outputfile = new File("debug_data/mapImage.png");
+					File outputfile = new File("runtime_data/debug_data/mapImage.png");
 					ImageIO.write(mapImage, "png", outputfile);
 				}
 				// Garbage collecter notification voor java, om die tering
@@ -434,7 +450,7 @@ public class World {
 						}
 						
 						try {
-							ImageIO.write(debugImage, "png", new File("debug_data/pathfinding_debug_image.png"));
+							ImageIO.write(debugImage, "png", new File("runtime_data/debug_data/pathfinding_debug_image.png"));
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -575,7 +591,7 @@ public class World {
 							}
 							
 							try {
-								ImageIO.write(debugImage, "png", new File("debug_data/pathfinding_debug_image" + pair.typeID + "_" + pair.name+".png"));
+								ImageIO.write(debugImage, "png", new File("runtime_data/debug_data/pathfinding_debug_image" + pair.typeID + "_" + pair.name+".png"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -705,7 +721,7 @@ public class World {
 	}
 
 	public void draw(Graphics2D graphics, AffineTransform t) {
-		graphics.scale(0.5, 0.5);
+		graphics.scale(0.25, 0.25);
 		graphics.drawImage(mapImage, t, null);
 		ListIterator<Drawable> iterator = drawables.listIterator();
 		while (iterator.hasNext())
