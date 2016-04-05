@@ -183,29 +183,8 @@ public class World {
 				// JSON.
 				// eerste 4 layers tekenen -> standaard layers.
 
-				{
-					// shops + toilet
-					JSONObject currentlayer = (JSONObject) layers.get(30);
-					if (currentlayer.get("visible").equals(true)) {
-						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
-						layerslist.add(temp);
-					} else {
-						JSONArray data = (JSONArray) currentlayer.get("data");
-						ArrayList<Tile> entrance = new ArrayList<>();
-						for (int k = 0; k < data.size(); k++) {
-							int tileType = ((Long) data.get(k)).intValue();
-							switch (tileType) {
-							case windowshop:
-								entrance.add(tiles[k % width][k / width]);
-								buildings.add(new Cafetaria(entrance, 5));
-								break;
-							}
-
-						}
-					}
-					drawBoolArray(collisionInfo);
-					System.out.println(buildings.size());
-				}
+				
+				
 				for (int i = 0; i < 5; i++) {
 
 					JSONObject currentlayer = (JSONObject) layers.get(i);
@@ -290,13 +269,61 @@ public class World {
 							drawBoolArray(collisionInfo);
 					}
 
+
+					// tileheight en width bepalen door uit de json te halen.
+					// width en tilewidth zijn verschillende waarde. width =
+					// groote
+					// van
+					// de map en tilewidth is puur de tilewidth (32 bij ons..)
+
 				}
 
-				// tileheight en width bepalen door uit de json te halen.
-				// width en tilewidth zijn verschillende waarde. width = groote
-				// van
-				// de map en tilewidth is puur de tilewidth (32 bij ons..)
+				{
+					// shops + toilet
+					JSONObject layernow = (JSONObject) layers.get(29);
+					TileLayer layerItem = new TileLayer((JSONArray) layernow.get("data"), map, height, width, true);						
+					layerslist.add(layerItem);
+					if (layernow.get("properties") != null) {
+						
+						System.out.println(layernow.get("properties"));
+						JSONObject properties = (JSONObject) layernow.get("properties");
+						String drawProperties = (String) properties.get("drawwith");
+						String[] bundel = drawProperties.split(",");						
+						
+						for (int j = 0; j < bundel.length; j++) {
+							JSONObject layertemp = (JSONObject) layers.get(Integer.parseInt(bundel[j]));
 
+							if (layertemp.get("visible").equals(true)) {
+								System.out.println("hier hoor jij niet in te gaan!!!");
+								TileLayer temp = new TileLayer((JSONArray) layernow.get("data"), map, height, width,
+										true);
+								layerslist.add(temp);
+							} else {
+								JSONArray data = (JSONArray) layertemp.get("data");
+								int teller = 0;
+								for (int k = 0; k < data.size(); k++) {
+									ArrayList<Tile> entrancelijst = new ArrayList<>();
+									int tileType = ((Long) data.get(k)).intValue();
+									switch (tileType) {
+									case collidableFalse:
+										collisionInfo[k % width][k / width] = false;
+										break;
+									case windowshop:
+										teller++;
+										entrancelijst.add(tiles[k % width][k / width]);
+										collisionInfo[k % width][k / width] = false;
+										buildings.add(new Cafetaria("Cafetaria " + teller, entrancelijst, 5));						
+										break;
+									}
+									
+
+								}
+								if (debug)
+									drawBoolArray(collisionInfo);
+							}
+						}
+					}
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 
@@ -515,7 +542,6 @@ public class World {
 						for (Tile tile : pair.entances) {
 							Node n = positionToNodeMap.get(new Position(tile.X, tile.Y));
 							queue.add(n);
-							System.out.println("");
 							tiles[n.X][n.Y].directions.put(pair.typeID, tiles[n.X][n.Y]);
 							visited.add(n);
 							if (debug)
