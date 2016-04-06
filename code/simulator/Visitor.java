@@ -30,7 +30,7 @@ import javax.imageio.ImageIO;
 public class Visitor extends Agent {
 	static int i = 0;
 	static int i2 = 0;
-	private static final int MOD = 8;
+	private static final int MOD = 7;
 	private int aantalDrankjes, aantalSnacks;
 
 	private double blaasInhoud = randomWaardeDouble(70, 100);
@@ -53,17 +53,25 @@ public class Visitor extends Agent {
 	private boolean grootToiletBezoek = false;
 	private boolean drankBezoek = false;
 	private boolean eetBezoek = false;
-
+	private int destination;
+	private int teller = 0;
+	private Point2D nextDancePosition;
+	private Point2D currentDancePosition;
+	private float remainingDanceDistance;
+	private boolean toDance = false;
 	private static ArrayList<Image> images = new ArrayList<>();
 
 	public Visitor(Tile tile, float speed) {
 		super(getImage(), tile, new Point2D.Double(tile.X, -tile.Y), speed);
-		setDestination(i++ % MOD);
+		int dest = i++ % MOD;
+		setDestination(dest);
+		destination = dest;
 	}
 
 	@Override
 	public void update() {
 		bezoekFaciliteit();
+		danceMethod();
 		toiletBehoefte();
 		setBlaasCapaciteit();
 		groteBehoefte();
@@ -72,14 +80,132 @@ public class Visitor extends Agent {
 		setDorstPercentage();
 		snackBehoefte();
 		setHongerPercentage();
+		if (toDance) {
+			teller++;
+		}
 		move();
-		// System.out.println("DERP"); //TROLOLOLOLOLOLOL
+	}
+
+	public Tile[] dance(String destenation) {
+		if (destenation.toLowerCase().endsWith("stage")) {
+			Stage stage = null;
+			for (Building b : World.instance.getBuildings()) {
+				if (b.name.equals(destenation)) {
+					stage = (Stage) b;
+				}
+			}
+
+			ArrayList<Tile> dancefloor = new ArrayList<>();
+			dancefloor.addAll(stage.getDanceFloor());
+
+			Tile punt1 = dancefloor.get((int) (Math.random() * dancefloor.size() - 1));
+			Tile punt2 = dancefloor.get((int) (Math.random() * dancefloor.size() - 1));
+			Tile punt3 = dancefloor.get((int) (Math.random() * dancefloor.size() - 1));
+
+			Tile[] tileArray = { punt1, punt2, punt3 };
+			return tileArray;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	void destenationReached() {
-		setDestination(i2++ % MOD);
-		// System.out.println("VISITOR destination reached");
+		// setDestination(i2++ % MOD);
+		if (World.instance.getBuildings().get(this.getDestinationOld()).toString().toLowerCase().endsWith("stage")) {
+			toDance = true;
+		} else {
+			System.out.println(World.instance.getBuildings().get(this.getDestinationOld()).toString());
+			toDance = false;
+			int dest = i++ % MOD;
+			setDestination(dest);
+			destination = dest;
+		}
+
+		// System.out.println("Destination reached! destination : " +
+		// destination + " stage ja nee? "
+		// +
+		// World.instance.getBuildings().get(this.getDestinationOld()).toString().toLowerCase().endsWith("stage")
+		// + " --- building : " +
+		// World.instance.getBuildings().get(this.getDestinationOld()).toString()
+		// + " --- dancing : " + toDance);
+
+	}
+
+	public void danceMethod() {
+
+		if (toDance) {
+			if (teller < 100) {
+				//STAAT STIL ATM.
+				int tellertje = 0;
+				Tile[] tiles = dance(World.instance.getBuildings().get(this.getDestinationOld()).toString());
+				remainingDanceDistance = 0;
+				if (nextDancePosition.distance(getCurrentPosition()) <= remainingDanceDistance) {
+					remainingDanceDistance -= nextDancePosition.distance(getCurrentPosition());
+					setCurrentPosition(nextDancePosition); 
+					nextDancePosition = new Point2D.Double(tiles[tellertje].X, -tiles[tellertje].Y);
+					tellertje++;
+				} else {
+
+					float tempX = (float) (nextDancePosition.getX() - getCurrentPosition().getX()),
+							tempY = (float) (nextDancePosition.getY() - getCurrentPosition().getY());
+
+					float magnitude = (float) Math.sqrt(tempX * tempX + tempY * tempY);
+					tempX /= magnitude;
+					tempY /= magnitude;
+
+					// now we have a unit vector
+
+					tempX *= remainingDanceDistance;
+					tempY *= remainingDanceDistance;
+
+					remainingDanceDistance = 0;
+
+					setCurrentPosition(new Point2D.Double(getCurrentPosition().getX() + tempX , getCurrentPosition().getY() + tempY));
+				}
+				
+				
+				// currentDancePosition = this.getCurrentPosition();
+				// nextDancePosition = currentDancePosition;
+				// float tempX = (float) (nextDancePosition.getX() -
+				// currentDancePosition.getX()),
+				// tempY = (float) (nextDancePosition.getY() -
+				// currentDancePosition.getY());
+				//
+				// float magnitude = (float) Math.sqrt(tempX * tempX + tempY *
+				// tempY);
+				// tempX /= magnitude;
+				// tempY /= magnitude;
+				//
+				// // now we have a unit vector
+				// tempX *= remainingDanceDistance;
+				// tempY *= remainingDanceDistance;
+				//
+				// remainingDanceDistance = 0;
+				//
+				// currentDancePosition.setLocation(currentDancePosition.getX()
+				// +
+				// tempX, currentDancePosition.getY() + tempY);
+				//
+				// System.out.println(World.instance.getBuildings().get(destination).name);
+				// Tile[] tiles =
+				// dance(World.instance.getBuildings().get(destination).name);
+				// int teller = 0;
+
+				// System.out.println("dancing");
+
+			} else {
+				toDance = false;
+				if (!toDance) {// System.out.println("dance voorbij");
+					teller = 0;
+					int dest = i++ % MOD;
+					setDestination(dest);
+					// System.out.println("dest set " + dest);
+					destination = dest;
+				}
+			}
+		}
+
 	}
 
 	public static Image getImage() {

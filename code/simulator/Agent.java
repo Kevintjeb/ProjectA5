@@ -1,13 +1,9 @@
 package simulator;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-
-import com.sun.javafx.geom.Vec2f;
 
 abstract class Agent implements Updateable, Drawable {
 	private Point2D currentPosition, nextPosition;
@@ -16,7 +12,7 @@ abstract class Agent implements Updateable, Drawable {
 	private int destination;
 	private float speed;
 	private static int currentTypeID = 0;
-
+	private int destinationOld = 0;
 	private static final int MOD = 8;
 	public static final int NO_DESTINATION = -1;
 
@@ -40,7 +36,7 @@ abstract class Agent implements Updateable, Drawable {
 		World.instance.unregesterUpdatable(this);
 	}
 
-	 abstract void destenationReached();
+	abstract void destenationReached();
 
 	boolean state = true;
 
@@ -74,7 +70,7 @@ abstract class Agent implements Updateable, Drawable {
 				return;
 			}
 		}
-		
+
 		float remainingMoveDistance = World.instance.getDeltaTime() * speed;
 		while (remainingMoveDistance > 0) {
 			// we don't need to go anywhere so we can just return
@@ -82,7 +78,8 @@ abstract class Agent implements Updateable, Drawable {
 				return;
 			}
 
-			// if the next time is null we have reset our destination so we need to
+			// if the next time is null we have reset our destination so we need
+			// to
 			// get our nextTile from the currentTile
 			if (nextTile == null) {
 				// System.out.println("next tile is set");
@@ -93,13 +90,11 @@ abstract class Agent implements Updateable, Drawable {
 					return;
 				}
 			}
-			
+
 			if (nextTile == currentTile) // we are at our destination
 			{
-				int destinationOld = destination;
+				destinationOld = destination;
 				destination = NO_DESTINATION;
-				// System.out.println(World.instance.getBuildings().get(destinationOld).toString());
-				//destenationReached(World.instance.getBuildings().get(destinationOld).toString());
 				destenationReached();
 				return;
 			}
@@ -132,78 +127,75 @@ abstract class Agent implements Updateable, Drawable {
 		}
 
 		// collision : TODO collision! RIP?
-		boolean isCollision = false;
-		Agent v = this;
-		for (Agent v2 : World.instance.getVisitors()) {
-			if (v == v2) {
-				continue;
-			}
-			Vec2f A = new Vec2f((float)v.currentPosition.getX(), (float)v.currentPosition.getY());
-			Vec2f B = new Vec2f((float)v2.currentPosition.getX(), (float)v2.currentPosition.getY());
-			Vec2f C = new Vec2f(B.x-A.x, B.y-A.y);
-			final float r = 0.5f;
-			final float cm = C.distance(new Vec2f()); // manitude of c
-			if (cm > r*2)
-				continue;
-			float mod = ((r*2-cm)/2);
-			Vec2f M = new Vec2f(C.x/cm*mod, C.y/cm*mod);
-			Vec2f A2 = new Vec2f((float)(A.x-M.x-M.y*0.5),(float)( A.y-M.y-M.x*0.5));
-			Vec2f B2 = new Vec2f((float)(A.x+M.x+M.y*0.5),(float)( A.y+M.y+M.x*0.5));
-			
-			v.currentPosition = new Point2D.Double(A2.x, A2.y);
-			if (A.distance(A2) > 1)
-			{
-				Tile tile = World.instance.getTileAt((int)A2.x, (int)A2.y);
-				if (tile.getDirection(v.destination) != null) // it is a tile with pathfinding
-				{
-					v.currentTile = tile;
-					v.nextTile = null; // v's move will fix this
-				}
-			}
-			
-			v2.currentPosition = new Point2D.Double(B2.x, B2.y);
-			if (B.distance(B2) > 1)
-			{
-				Tile tile = World.instance.getTileAt((int)B2.x, (int)B2.y);
-				if (tile.getDirection(v2.destination) != null) // it is a tile with pathfinding
-				{
-					v2.currentTile = tile;
-					v2.nextTile = null; // v's move will fix this
-				}
-			}
-			
-		}
+//		boolean isCollision = false;
+//		Agent v = this;
+//		for (Agent v2 : World.instance.getVisitors()) {
+//			if (v == v2) {
+//				continue;
+//			}
+//			Vec2f A = new Vec2f((float) v.currentPosition.getX(), (float) v.currentPosition.getY());
+//			Vec2f B = new Vec2f((float) v2.currentPosition.getX(), (float) v2.currentPosition.getY());
+//			Vec2f C = new Vec2f(B.x - A.x, B.y - A.y);
+//			final float r = 0.5f;
+//			final float cm = C.distance(new Vec2f()); // manitude of c
+//			if (cm > r * 2)
+//				continue;
+//			float mod = ((r * 2 - cm) / 2);
+//			Vec2f M = new Vec2f(C.x / cm * mod, C.y / cm * mod);
+//			Vec2f A2 = new Vec2f((float) (A.x - M.x - M.y * 0.5), (float) (A.y - M.y - M.x * 0.5));
+//			Vec2f B2 = new Vec2f((float) (A.x + M.x + M.y * 0.5), (float) (A.y + M.y + M.x * 0.5));
+//
+//			v.currentPosition = new Point2D.Double(A2.x, A2.y);
+//			if (A.distance(A2) > 1) {
+//				Tile tile = World.instance.getTileAt((int) A2.x, (int) A2.y);
+//				if (tile.getDirection(v.destination) != null) // it is a tile
+//																// with
+//																// pathfinding
+//				{
+//					v.currentTile = tile;
+//					v.nextTile = null; // v's move will fix this
+//				}
+//			}
+//
+//			v2.currentPosition = new Point2D.Double(B2.x, B2.y);
+//			if (B.distance(B2) > 1) {
+//				Tile tile = World.instance.getTileAt((int) B2.x, (int) B2.y);
+//				if (tile.getDirection(v2.destination) != null) // it is a tile
+//																// with
+//																// pathfinding
+//				{
+//					v2.currentTile = tile;
+//					v2.nextTile = null; // v's move will fix this
+//				}
+//			}
+//
+//		}
 	}
 
-	public void destenationReached(String destination) {
-		int teller = 0;
-		Tile[] tileArray = dance(destination);
-		while (teller < 200) {
-			nextPosition = new Point2D.Double(tileArray[teller % 3].X, tileArray[teller % 3].Y);
-			teller++;
-		}
-		// setDestination(i2++ % MOD);
-		// System.out.println("VISITOR destination reached");
+	public void setCurrentPosition(Point2D destination)
+	{
+		this.currentPosition = destination; 
 	}
-
-	public Tile[] dance(String destenation) {
-		if (destenation.toLowerCase().endsWith("stage")) {
-			int locatie = World.instance.getPathID(destenation);
-			Stage g = (Stage) World.instance.getBuildings().get(locatie);
-			ArrayList<Tile> dancefloor = new ArrayList<>();
-			dancefloor.addAll(g.getDanceFloor());
-
-			Tile punt1 = dancefloor.get((int) (Math.random() * dancefloor.size() - 1));
-			Tile punt2 = dancefloor.get((int) (Math.random() * dancefloor.size() - 1));
-			Tile punt3 = dancefloor.get((int) (Math.random() * dancefloor.size() - 1));
-
-			Tile[] tileArray = { punt1, punt2, punt3 };
-			// System.out.println("geluk! stage : " + g);
-			return tileArray;
-		} else {
-			return null;
-		}
+	
+	public Point2D getCurrentPosition()
+	{
+		return this.currentPosition;
 	}
+	
+	public int getDestinationOld()
+	{
+		return this.destinationOld;
+	}
+//	public void destenationReached(String destination) {
+//		int teller = 0;
+//		Tile[] tileArray = dance(destination);
+//		while (teller < 200) {
+//			nextPosition = new Point2D.Double(tileArray[teller % 3].X, tileArray[teller % 3].Y);
+//			teller++;
+//		}
+//		// setDestination(i2++ % MOD);
+//		// System.out.println("VISITOR destination reached");
+//	}
 
 	@Override
 	public void draw(Graphics2D graphics, AffineTransform t) {

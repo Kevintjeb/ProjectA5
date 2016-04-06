@@ -59,7 +59,7 @@ public class __Main extends JPanel {
 	public void paintComponent(Graphics g) {
 		
 		if (i++ % 50 == 0) {
-			new Visitor(w.getTileAt(8, 99), 0.01f);
+			new Visitor(w.getTileAt(8, 99), 0.1f);
 			teller++;
 		}
 		if (i++ % 30 == 0) {
