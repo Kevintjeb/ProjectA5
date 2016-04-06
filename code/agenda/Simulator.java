@@ -320,14 +320,14 @@ public class Simulator extends JPanel
 					minuten = tijd.getMinutes();
 					uren = tijd.getHours();
 					
-					if(world.noVisitors() || uren > 26) // wanneer alle bezoekers wegzijn stopt de simulatie of wanneer 3 uur nachts is bereikt
-					{
-						pauseSim();
-						world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false);
-						tijd = world.getTime();
-						minuten = tijd.getMinutes();
-						uren = tijd.getHours();
-					}
+//					if(world.noVisitors() || uren > 26) // wanneer alle bezoekers wegzijn stopt de simulatie of wanneer 3 uur nachts is bereikt
+//					{
+//						pauseSim();
+//						world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false);
+//						tijd = world.getTime();
+//						minuten = tijd.getMinutes();
+//						uren = tijd.getHours();
+//					}
 						
 					if(uren > 23)
 					{
@@ -373,7 +373,15 @@ public class Simulator extends JPanel
 		
 		public void backSim()
 		{
-			//TODO implementatie
+			tijd = world.getTime();
+			int h = 9;
+			int m = tijd.getMinutes();
+			
+			if(tijd.getHours() != 9)
+			{
+				h = tijd.getHours() - 1;
+			}
+			world.setTime(h, m);
 		}
 		
 		public void playSim()
