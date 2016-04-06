@@ -7,6 +7,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+import com.sun.javafx.geom.Vec2f;
+
 abstract class Agent implements Updateable, Drawable {
 	private Point2D currentPosition, nextPosition;
 	private final Image image;
@@ -57,12 +59,9 @@ abstract class Agent implements Updateable, Drawable {
 
 	void move() {
 		// System.out.println("current location: " + currentPosition);
-
-		// we don't need to go anywhere so we can just return
-		if (destination == NO_DESTINATION) {
-			System.out.println("no destination");
-			return;
-		}
+		// if the nextTile is the currentTile we have reached our position
+		// NOTE: this is because Tile.getDirection will give us the tile itself
+		// if it is the destination
 
 		// if the next time is null we have reset our destination so we need to
 		// get our nextTile from the currentTile
@@ -72,18 +71,29 @@ abstract class Agent implements Updateable, Drawable {
 			try {
 				nextPosition = new Point2D.Double(nextTile.X, -nextTile.Y);
 			} catch (Exception e) {
-				Graphics2D g2 = World.instance.mapImage.createGraphics();
-				g2.setColor(Color.BLACK);
-				g2.fillRect(currentTile.X * 32, currentTile.Y * 32, 32, 32);
 				return;
 			}
 		}
-		// if the nextTile is the currentTile we have reached our position
-		// NOTE: this is because Tile.getDirection will give us the tile itself
-		// if it is the destination
-
+		
 		float remainingMoveDistance = World.instance.getDeltaTime() * speed;
 		while (remainingMoveDistance > 0) {
+			// we don't need to go anywhere so we can just return
+			if (destination == NO_DESTINATION) {
+				return;
+			}
+
+			// if the next time is null we have reset our destination so we need to
+			// get our nextTile from the currentTile
+			if (nextTile == null) {
+				// System.out.println("next tile is set");
+				nextTile = currentTile.getDirection(destination);
+				try {
+					nextPosition = new Point2D.Double(nextTile.X, -nextTile.Y);
+				} catch (Exception e) {
+					return;
+				}
+			}
+			
 			if (nextTile == currentTile) // we are at our destination
 			{
 				int destinationOld = destination;
@@ -123,19 +133,45 @@ abstract class Agent implements Updateable, Drawable {
 
 		// collision : TODO collision! RIP?
 		boolean isCollision = false;
-		for (Agent v : World.instance.getVisitors()) {
-			for (Agent v2 : World.instance.getVisitors()) {
-				if (v == v2) {
-					continue;
-				}
-				if (v.currentPosition.distance(v2.currentPosition) < 1) {
-
-					v.nextPosition = new Point2D.Double(v.currentPosition.getX(), v.currentPosition.getY());
-					v2.nextPosition = new Point2D.Double(v2.currentPosition.getX() + .25,
-							v2.currentPosition.getY() - .25);
-
+		Agent v = this;
+		for (Agent v2 : World.instance.getVisitors()) {
+			if (v == v2) {
+				continue;
+			}
+			Vec2f A = new Vec2f((float)v.currentPosition.getX(), (float)v.currentPosition.getY());
+			Vec2f B = new Vec2f((float)v2.currentPosition.getX(), (float)v2.currentPosition.getY());
+			Vec2f C = new Vec2f(B.x-A.x, B.y-A.y);
+			final float r = 0.5f;
+			final float cm = C.distance(new Vec2f()); // manitude of c
+			if (cm > r*2)
+				continue;
+			float mod = ((r*2-cm)/2);
+			Vec2f M = new Vec2f(C.x/cm*mod, C.y/cm*mod);
+			Vec2f A2 = new Vec2f((float)(A.x-M.x-M.y*0.5),(float)( A.y-M.y-M.x*0.5));
+			Vec2f B2 = new Vec2f((float)(A.x+M.x+M.y*0.5),(float)( A.y+M.y+M.x*0.5));
+			
+			v.currentPosition = new Point2D.Double(A2.x, A2.y);
+			if (A.distance(A2) > 1)
+			{
+				Tile tile = World.instance.getTileAt((int)A2.x, (int)A2.y);
+				if (tile.getDirection(v.destination) != null) // it is a tile with pathfinding
+				{
+					v.currentTile = tile;
+					v.nextTile = null; // v's move will fix this
 				}
 			}
+			
+			v2.currentPosition = new Point2D.Double(B2.x, B2.y);
+			if (B.distance(B2) > 1)
+			{
+				Tile tile = World.instance.getTileAt((int)B2.x, (int)B2.y);
+				if (tile.getDirection(v2.destination) != null) // it is a tile with pathfinding
+				{
+					v2.currentTile = tile;
+					v2.nextTile = null; // v's move will fix this
+				}
+			}
+			
 		}
 	}
 

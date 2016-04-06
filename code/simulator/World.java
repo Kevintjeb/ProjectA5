@@ -52,8 +52,7 @@ public class World {
 	
 	public final agenda.Agenda agenda;
 
-	// TODO temp revert back to private
-	public BufferedImage mapImage;
+	private BufferedImage mapImage;
 
 	protected static World instance;
 

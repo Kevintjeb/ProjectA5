@@ -58,8 +58,6 @@ public class __Main extends JPanel {
 	int teller = 0;
 	public void paintComponent(Graphics g) {
 		
-		if(teller < 50)
-		{
 		if (i++ % 50 == 0) {
 			new Visitor(w.getTileAt(8, 99), 0.01f);
 			teller++;
@@ -67,7 +65,6 @@ public class __Main extends JPanel {
 		if (i++ % 30 == 0) {
 			new Visitor(w.getTileAt(12, 99), 0.015f);
 			teller++;
-		}
 		}
 		Graphics2D g2 = (Graphics2D) g;
 		// System.out.println("paintComponent");
