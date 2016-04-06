@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -410,12 +411,15 @@ public class Simulator extends JPanel
 		float scale = 1;
 		AffineTransform transform = new AffineTransform();
 		
+		boolean nightView = false;
+		int overlayAlpha = 0;
+		
 		public SimulatiePanel(Planner planner)
 		{
 			super(null);
 			setPreferredSize(new Dimension(1200, 500));
 			this.planner = planner;
-			
+			setForeground(Color.BLACK);
 			addMouseMotionListener(this);
 			addMouseListener(this);
 			addMouseWheelListener(new zoomMap());
@@ -436,7 +440,6 @@ public class Simulator extends JPanel
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D) g;
-
 			AffineTransform oldtransform = g2d.getTransform();
 			
 			transform = new AffineTransform();
@@ -444,6 +447,16 @@ public class Simulator extends JPanel
 			transform.translate(x, y);
 
 			world.inclusiveUpdate(g2d, transform, oldtransform);
+			
+			if(world.getTime().getHours() >= 20 || world.getTime().getHours() <= 6)
+				nightView = true;
+			
+			if(nightView && overlayAlpha < 190)
+				overlayAlpha++;
+			
+			Rectangle overlayer = new Rectangle(0, 0, getWidth(), getHeight());
+			g2d.setColor(new Color(0, 0, 0, overlayAlpha));
+			g2d.fill(overlayer);			
 		}
 
 		public void mouseDragged(MouseEvent e) {
