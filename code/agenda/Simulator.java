@@ -62,7 +62,7 @@ public class Simulator extends JPanel
 		this.planner = planner;
 		this.stageMap = stageMap;
 		
-		world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", true, true);
+		world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false);
 		
 		add(new ButtonPanel(planner), BorderLayout.NORTH);
 		add(new SimulatiePanel(planner), BorderLayout.CENTER);

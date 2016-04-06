@@ -58,13 +58,13 @@ class Stage extends Building implements Updateable, Drawable{
 			
 			if(Math.random() > 0.5)
 			{
-				x = danceFloor.get(4).X * 16;
-				y = (danceFloor.get(5).Y + 2) * 16;
+				x = danceFloor.get(0).X * 32; 
+				y = danceFloor.get(0).Y * 32; 
 			}
 			else
 			{
-				x = (7 + danceFloor.get(7).X) * 16;
-				y = (danceFloor.get(5).Y + 2) * 16;
+				x = danceFloor.get(danceFloor.size()-1).X * 32;
+				y = danceFloor.get(0).Y * 32; 
 			}
 			
 			itr = firework.iterator();
