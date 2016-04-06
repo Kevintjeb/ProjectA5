@@ -41,7 +41,7 @@ abstract class Agent implements Updateable, Drawable {
 		nextTile = null; // the next tile gets set to null so move() will
 							// recalculate the path
 		if (destination >= 7)
-			this.destenation = (destination+1)%7;
+			this.destenation = (destination+1)%8;
 		else
 			this.destenation = destination;
 		if (state)
