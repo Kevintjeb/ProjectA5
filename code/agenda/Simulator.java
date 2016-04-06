@@ -396,14 +396,22 @@ public class Simulator extends JPanel
 		
 		public void backSim()
 		{
+			tijd = world.getTime();
+			int h = 9;
+			int m = tijd.getMinutes();
 			
+			if(tijd.getHours() != 9)
+			{
+				h = tijd.getHours() - 1;
+			}
+			world.setTime(h, m);
 		}
 		
 		public void playSim()
 		{
 			world.setRealTimeToSimTime((Double.parseDouble(speedInvoer.getText())*60)/1000);
 			
-			//An explanation given for the used formula is found in this class in line 269
+			//An explanation given for the used formule can be found in this class at line 269
 			updateT.start();
 			plays = true;
 		}
@@ -417,7 +425,7 @@ public class Simulator extends JPanel
 		
 		public void forwardSim()
 		{
-			
+			world.setRealTimeToSimTime((90*60)/1000);
 		}
 		
 		public void paintComponent(Graphics g)
