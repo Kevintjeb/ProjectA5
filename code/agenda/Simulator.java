@@ -109,6 +109,7 @@ public class Simulator extends JPanel
 		{
 			super(null);
 			setPreferredSize(new Dimension(1200, 80));
+			setBackground(Color.WHITE);
 			SpringLayout layout = new SpringLayout();
 			setLayout(layout);
 			
@@ -243,6 +244,13 @@ public class Simulator extends JPanel
 							switch (i)
 							{
 							case 0:
+								musicOn = false;
+								synchronized(this) {
+						            if(player != null) {
+						                player.stop();
+						                player = null;
+						            }
+						        }
 								refreshSim();
 								break;
 							case 1:
@@ -501,6 +509,7 @@ public class Simulator extends JPanel
 		{
 			super(null);
 			setPreferredSize(new Dimension(1200, 500));
+			setBackground(Color.WHITE);
 			this.planner = planner;
 			setForeground(Color.BLACK);
 			addMouseMotionListener(this);
@@ -601,10 +610,12 @@ public class Simulator extends JPanel
 			setLayout(layout);
 			
 			setPreferredSize(new Dimension(1200, 80));
+			setBackground(Color.WHITE);
 			this.planner = planner;
 			
 			JSlider slider = new JSlider(JSlider.HORIZONTAL, 9, 24, 9);
-
+			
+			slider.setBackground(Color.WHITE);
 		    slider.setMinorTickSpacing(1);
 		    slider.setMajorTickSpacing(1);
 		    slider.setPaintTicks(true);
