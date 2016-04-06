@@ -38,19 +38,13 @@ public class __Main extends JPanel{
 		HashMap<agenda.Stage, Integer> map = new HashMap<>();
 		//test voor meer stages tekenen.
 		map.put(agenda.getStages().get(0), 5);
-		//map.put(agenda.getStages().get(1), 8);
-		//map.put(agenda.getStages().get(2), 11);
 		map.put(agenda.getStages().get(3), 14);
 		map.put(agenda.getStages().get(4), 17);
 		map.put(agenda.getStages().get(5), 20);
 		map.put(agenda.getStages().get(6), 23);
 		map.put(agenda.getStages().get(7), 26);
 		
-		
 		World w = new World(agenda, map, new File("Endmap.json"), "Tiled2.png", true, true);
-		
-		
-		new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(50, 50), new Point2D.Double(50, 50), 1.0f);
 	}
 	
 	public void paintComponent(Graphics g)

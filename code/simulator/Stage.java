@@ -3,13 +3,19 @@
  */
 package simulator;
 
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-class Stage extends Building implements Updateable{
+class Stage extends Building implements Updateable, Drawable{
 	private agenda.Stage stage;
 	private ArrayList<Tile> danceFloor;
 	private ArrayList<agenda.Performance> performances;
 	private agenda.Performance currentPerformance = null;
+	ArrayList<Particle> firework = new ArrayList<>();
+	Iterator<Particle> itr = firework.iterator();
 	
 	Stage(String description, ArrayList<Tile> entrances,
 			ArrayList<Tile> exits, int maxAgents, agenda.Stage stage, ArrayList<Tile> danceFloor) {
@@ -18,6 +24,7 @@ class Stage extends Building implements Updateable{
 		this.stage = stage;
 		this.danceFloor = danceFloor;
 		World.instance.regesterUpdateable(this);
+		World.instance.regesterDrawable(this);
 		performances = World.instance.agenda.getStagesPerformances(stage);
 	}
 	
@@ -25,6 +32,7 @@ class Stage extends Building implements Updateable{
 	@Override
 	public void close() {
 		World.instance.unregesterUpdatable(this);
+		World.instance.unregesterDrawable(this);
 	}
 	
 	agenda.Performance getCurrentPerformance()
@@ -41,7 +49,59 @@ class Stage extends Building implements Updateable{
 	}
 
 	@Override
-	public void update() {
+	public void update() 
+	{
+		if(currentPerformance == null)
+		{
+		
+			double x = danceFloor.get(0).X * 16;
+			double y = danceFloor.get(0).Y * 16;
+			
+			itr = firework.iterator();
+			while(itr.hasNext())
+			{
+				Particle p = itr.next();
+				if(p.getAlpha() < 1)
+				{
+					itr.remove();
+				}
+			}
+			
+			for(int i = 0; i < 25; i++)
+			{
+				double bool = Math.random();
+				double newX;
+				double newY;
+				
+				if(bool < 0.25)
+				{
+					newX = Math.random() * 5;
+					newY = Math.random() * 5;
+				}
+				else if(bool > 0.25 && bool < 0.5)
+				{
+					newX = Math.random() * -5;
+					newY = Math.random() * -5;
+				}
+				else if(bool > 0.5 && bool < 0.75)
+				{
+					newX = Math.random() * -5;
+					newY = Math.random() * 5;
+				}
+				else
+				{
+					newX = Math.random() * 5;
+					newY = Math.random() * -5;
+				}
+				
+				firework.add(new Particle(x, y, newX, newY));
+			}
+		}
+		
+		
+		
+
+		
 		/*final int NO_PERFORMANCE = -1;
 		int lastPerformance = NO_PERFORMANCE, currentPerformance = NO_PERFORMANCE;
 		
@@ -86,5 +146,19 @@ class Stage extends Building implements Updateable{
 			int a = 0;
 		}*/
 	}
-
+	public void draw(Graphics2D graphics, AffineTransform t)
+	{
+		itr = firework.iterator();
+		while(itr.hasNext())
+		{
+			Particle p = itr.next();
+			
+			
+			
+			graphics.setColor(p.update());
+			Area a = new Area(p.updateDeeltje());
+			graphics.fill(a);
+			graphics.setTransform(t);
+		}
+	}
 }

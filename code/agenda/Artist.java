@@ -94,7 +94,7 @@ public class Artist implements Serializable
 	{
 		if (genre != null)
 			genre = genre.trim();
-		// cheks if the genre is null and if it
+		// checks if the genre is null and if it
 		// is displays an error
 		if (genre == null)
 			throw new Exception("genre can't be a null refrence");

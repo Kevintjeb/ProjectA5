@@ -23,7 +23,6 @@ public class AddGUI extends JPanel
 
 	JButton okeButton = new JButton("OK");
 	JButton cancelButton = new JButton("Cancel");
-	//JPanel buttonPanel = new JPanel(new GridLayout(2,1));
 	
 	public AddGUI(Planner planner)
 	{
@@ -38,18 +37,6 @@ public class AddGUI extends JPanel
 		tabbedPane.addTab("Optreden", new AddPerformance(false));
 		
 		add(okeButton, BorderLayout.SOUTH);
-		//buttonPanel.add(okeButton);
-		//buttonPanel.add(cancelButton);
-		
-		/*cancelButton.addActionListener(new ActionListener() 
-		{
-			@Override
-			public void actionPerformed(ActionEvent e) 
-			{
-				
-
-			}
-		});*/
 		
 		ChangeListener changeListner = new ChangeListener()
 		{

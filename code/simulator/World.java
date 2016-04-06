@@ -78,7 +78,6 @@ public class World {
 		try {
 			ImageIO.write(img, "png", new File("debug_data/boolean_print" + index++ + ".png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -701,10 +700,10 @@ public class World {
 
 	public void draw(Graphics2D graphics, AffineTransform t) {
 		graphics.drawImage(mapImage, t, null);
-
+		
 		ListIterator<Drawable> iterator = drawables.listIterator();
 		while (iterator.hasNext())
-			iterator.next().draw(graphics);
+			iterator.next().draw(graphics, t);
 	}
 
 	protected void regesterUpdateable(Updateable u) {
