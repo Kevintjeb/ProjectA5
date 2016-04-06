@@ -133,24 +133,23 @@ abstract class Agent implements Updateable, Drawable {
 //			if (v == v2) {
 //				continue;
 //			}
-//			Vec2f A = new Vec2f((float) v.currentPosition.getX(), (float) v.currentPosition.getY());
-//			Vec2f B = new Vec2f((float) v2.currentPosition.getX(), (float) v2.currentPosition.getY());
-//			Vec2f C = new Vec2f(B.x - A.x, B.y - A.y);
+//			Vec2f A = new Vec2f((float)v.currentPosition.getX(), (float)v.currentPosition.getY());
+//			Vec2f B = new Vec2f((float)v2.currentPosition.getX(), (float)v2.currentPosition.getY());
+//			Vec2f C = new Vec2f(B.x-A.x, B.y-A.y);
 //			final float r = 0.5f;
 //			final float cm = C.distance(new Vec2f()); // manitude of c
-//			if (cm > r * 2)
+//			if (cm > r*2)
 //				continue;
-//			float mod = ((r * 2 - cm) / 2);
-//			Vec2f M = new Vec2f(C.x / cm * mod, C.y / cm * mod);
-//			Vec2f A2 = new Vec2f((float) (A.x - M.x - M.y * 0.5), (float) (A.y - M.y - M.x * 0.5));
-//			Vec2f B2 = new Vec2f((float) (A.x + M.x + M.y * 0.5), (float) (A.y + M.y + M.x * 0.5));
-//
+//			float mod = ((r*2-cm)/2);
+//			Vec2f M = new Vec2f(C.x/cm*mod, C.y/cm*mod);
+//			Vec2f A2 = new Vec2f((float)(A.x-M.x-M.y*0.5),(float)( A.y-M.y-M.x*0.5));
+//			Vec2f B2 = new Vec2f((float)(A.x+M.x+M.y*0.5),(float)( A.y+M.y+M.x*0.5));
+//			
 //			v.currentPosition = new Point2D.Double(A2.x, A2.y);
-//			if (A.distance(A2) > 1) {
-//				Tile tile = World.instance.getTileAt((int) A2.x, (int) A2.y);
-//				if (tile.getDirection(v.destination) != null) // it is a tile
-//																// with
-//																// pathfinding
+//			if (A.distance(A2) > 1)
+//			{
+//				Tile tile = World.instance.getTileAt((int)A2.x, (int)A2.y);
+//				if (tile.getDirection(v.destination) != null) // it is a tile with pathfinding
 //				{
 //					v.currentTile = tile;
 //					v.nextTile = null; // v's move will fix this
@@ -163,13 +162,6 @@ abstract class Agent implements Updateable, Drawable {
 //				if (tile.getDirection(v2.destination) != null) // it is a tile
 //																// with
 //																// pathfinding
-//				{
-//					v2.currentTile = tile;
-//					v2.nextTile = null; // v's move will fix this
-//				}
-//			}
-//
-//		}
 	}
 
 	public void setCurrentPosition(Point2D destination)

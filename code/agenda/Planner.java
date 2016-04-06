@@ -98,19 +98,11 @@ public class Planner extends JFrame {
 				
 				if(verification == JFileChooser.APPROVE_OPTION){
 					String fileName = saver.getSelectedFile().getName();
-					if(!fileName.endsWith(".agenda")){
-						fileName += ".agenda";
-					}
-					
-					try{
-						FileWriter writer = new FileWriter(fileName);
+					if(fileName.endsWith(".agenda"))
+						Agenda.save(agenda, saver.getSelectedFile().getAbsolutePath());
+					else
 						Agenda.save(agenda, saver.getSelectedFile().getAbsolutePath() + ".agenda");
-					
-						writer.close();
-					}
-					catch(IOException y){
-						y.printStackTrace();
-					}
+
 				}
 				else if(verification == JFileChooser.CANCEL_OPTION){
 					JOptionPane.showMessageDialog(null, "The saving has been cancelled.");

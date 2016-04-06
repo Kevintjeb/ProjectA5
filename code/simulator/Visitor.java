@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import agenda.Performance;
+
 /* 
  * Deze klasse kan later toegevoegd worden aan de Visitor klasse
  * Alle waarden betreffende verloop zijn per seconde
@@ -17,12 +19,7 @@ import javax.imageio.ImageIO;
  * 			>> Wanneer voorkeur voor genre speelt, daar naartoe
  * 			>> Wanneer voorkeur niet speelt, naar optreden met de hoogste populariteit
  * 			>> Wanneer populairste vol, volgende in de lijst
- * TODO: Random genrevoorkeur meegeven, kan door middel 
- * 	  van performances uit te lezen
- * TODO: Implementeren, kan wanneer Pathfinding werkt
- * TODO: Zakgeld toevoegen
- * TODO: Static array maken met agent images erin, geheugen friendly alles
- * Optional TODO: Omdraainen waarden van oplopend naar aflopend
+ * TODO: Waarden voor gedrag natuurlijker maken
  * 
  * -- Thijs
  */
@@ -33,6 +30,8 @@ public class Visitor extends Agent {
 	private static final int MOD = 7;
 	private int aantalDrankjes, aantalSnacks;
 
+	private String genreVoorkeur;
+
 	private double blaasInhoud = randomWaardeDouble(70, 100);
 	private double drankHandling = randomWaardeDouble(10, 20);
 	private double blaasToleratie = randomWaardeDouble(20, 50);
@@ -41,13 +40,13 @@ public class Visitor extends Agent {
 	private double snackHandling = randomWaardeDouble(10, 20);
 	private double maagToleratie = randomWaardeDouble(20, 50);
 
-	private double dorst = randomWaardeDouble(70, 100);
-	private double verloopDorst = randomWaardeDouble(0.002, 0.005);
-	private double dorstToleratie = randomWaardeDouble(20, 40);
+	private double dorst = randomWaardeDouble(700, 1000);
+	private double verloopDorst = randomWaardeDouble(0.5, 1.5);
+	private double dorstToleratie = randomWaardeDouble(200, 400);
 
-	private double honger = randomWaardeDouble(70, 100);
-	private double verloopHonger = randomWaardeDouble(0.002, 0.005);
-	private double hongerToleratie = randomWaardeDouble(20, 40);
+	private double honger = randomWaardeDouble(700, 1000);
+	private double verloopHonger = randomWaardeDouble(0.5, 1.5);
+	private double hongerToleratie = randomWaardeDouble(200, 400);
 
 	private boolean toiletBezoek = false;
 	private boolean grootToiletBezoek = false;
@@ -59,6 +58,9 @@ public class Visitor extends Agent {
 	private Point2D currentDancePosition;
 	private float remainingDanceDistance;
 	private boolean toDance = false;
+
+	private boolean reached = false;
+
 	private static ArrayList<Image> images = new ArrayList<>();
 
 	public Visitor(Tile tile, float speed) {
@@ -66,10 +68,12 @@ public class Visitor extends Agent {
 		int dest = i++ % MOD;
 		setDestination(dest);
 		destination = dest;
+		setGenreVoorkeur();
 	}
 
 	@Override
 	public void update() {
+		bezoekPerformance();
 		bezoekFaciliteit();
 		danceMethod();
 		toiletBehoefte();
@@ -117,9 +121,11 @@ public class Visitor extends Agent {
 		} else {
 			System.out.println(World.instance.getBuildings().get(this.getDestinationOld()).toString());
 			toDance = false;
-			int dest = i++ % MOD;
-			setDestination(dest);
+			int dest = i2++ % MOD;
 			destination = dest;
+			setDestination(dest);
+			if (!reached)
+				reached = true;
 		}
 
 		// System.out.println("Destination reached! destination : " +
@@ -129,7 +135,7 @@ public class Visitor extends Agent {
 		// + " --- building : " +
 		// World.instance.getBuildings().get(this.getDestinationOld()).toString()
 		// + " --- dancing : " + toDance);
-
+		
 	}
 
 	public void danceMethod() {
@@ -137,32 +143,32 @@ public class Visitor extends Agent {
 		if (toDance) {
 			if (teller < 100) {
 				//STAAT STIL ATM.
-				int tellertje = 0;
-				Tile[] tiles = dance(World.instance.getBuildings().get(this.getDestinationOld()).toString());
-				remainingDanceDistance = 0;
-				if (nextDancePosition.distance(getCurrentPosition()) <= remainingDanceDistance) {
-					remainingDanceDistance -= nextDancePosition.distance(getCurrentPosition());
-					setCurrentPosition(nextDancePosition); 
-					nextDancePosition = new Point2D.Double(tiles[tellertje].X, -tiles[tellertje].Y);
-					tellertje++;
-				} else {
-
-					float tempX = (float) (nextDancePosition.getX() - getCurrentPosition().getX()),
-							tempY = (float) (nextDancePosition.getY() - getCurrentPosition().getY());
-
-					float magnitude = (float) Math.sqrt(tempX * tempX + tempY * tempY);
-					tempX /= magnitude;
-					tempY /= magnitude;
-
-					// now we have a unit vector
-
-					tempX *= remainingDanceDistance;
-					tempY *= remainingDanceDistance;
-
-					remainingDanceDistance = 0;
-
-					setCurrentPosition(new Point2D.Double(getCurrentPosition().getX() + tempX , getCurrentPosition().getY() + tempY));
-				}
+//				int tellertje = 0;
+//				Tile[] tiles = dance(World.instance.getBuildings().get(this.getDestinationOld()).toString());
+//				remainingDanceDistance = 0;
+//				if (nextDancePosition.distance(getCurrentPosition()) <= remainingDanceDistance) {
+//					remainingDanceDistance -= nextDancePosition.distance(getCurrentPosition());
+//					setCurrentPosition(nextDancePosition); 
+//					nextDancePosition = new Point2D.Double(tiles[tellertje].X, -tiles[tellertje].Y);
+//					tellertje++;
+//				} else {
+//
+//					float tempX = (float) (nextDancePosition.getX() - getCurrentPosition().getX()),
+//							tempY = (float) (nextDancePosition.getY() - getCurrentPosition().getY());
+//
+//					float magnitude = (float) Math.sqrt(tempX * tempX + tempY * tempY);
+//					tempX /= magnitude;
+//					tempY /= magnitude;
+//
+//					// now we have a unit vector
+//
+//					tempX *= remainingDanceDistance;
+//					tempY *= remainingDanceDistance;
+//
+//					remainingDanceDistance = 0;
+//
+//					setCurrentPosition(new Point2D.Double(getCurrentPosition().getX() + tempX , getCurrentPosition().getY() + tempY));
+//				}
 				
 				
 				// currentDancePosition = this.getCurrentPosition();
@@ -205,7 +211,6 @@ public class Visitor extends Agent {
 				}
 			}
 		}
-
 	}
 
 	public static Image getImage() {
@@ -224,40 +229,62 @@ public class Visitor extends Agent {
 		int getal = (int) (1 + Math.random() * 16);
 		return images.get(getal);
 	}
+	
+	// TODO: afmaken
+	public void bezoekPerformance() {
+		ArrayList<String> genres = new ArrayList<String>();
+		//genres.add(World.instance.agenda.getPerformances().get(0).getArtists().get(0).getGenre().(genreVoorkeur));
+		if (World.instance.agenda.getPerformances().get(0).getArtists().get(0).getGenre().contains(genreVoorkeur)) {
+			setDestination(
+					World.instance.getPathID(World.instance.agenda.getPerformances().get(0).getStage().getName()));
+		}
+		else {
+		//TODO	setDestination(World.instance.agenda.getPerformances());
+		}
+	}
 
 	public void bezoekFaciliteit() {
-		if (toiletBezoek == true) {
-			// Wandel naar dichtsbijzijnde toilet
-			// Interactie met toiletgebouw, if-looppie interactie
-			aantalDrankjes = 0;
-			blaasInhoud = 100;
-			toiletBezoek = false;
-		}
-		if (grootToiletBezoek == true) {
-			// Wandel naar dichtsbijzijnde toilet
-			// Interactie met toiletgebouw, if-looppie interactie
-			aantalSnacks = 0;
-			aantalDrankjes = 0;
-			maagInhoud = 100;
-			blaasInhoud = 100;
-			grootToiletBezoek = false;
-		}
-		if (drankBezoek == true) {
-			// Wandel naar dichtsbijzijnde drankkraam
-			// Interactie met drankkraam, if-looppie interactie
-			aantalDrankjes++;
-			dorst = 100;
-			drankBezoek = false;
-		}
-		if (eetBezoek == true) {
-			// Wandel naar dichtsbijzijnde eetkraam
-			// Interactie met eetkraam, if-looppie interactie
-			aantalSnacks++;
-			honger = 100;
-			eetBezoek = false;
+		if (toiletBezoek == true || grootToiletBezoek == true) {
+			if (toiletBezoek == true) {
+				setDestination(World.instance.getPathID("Toilet"));
+				if (reached) {
+					aantalDrankjes = 0;
+					blaasInhoud = 100;
+					toiletBezoek = false;
+				}
+			}
+			if (grootToiletBezoek == true) {
+				setDestination(World.instance.getPathID("Toilet"));
+				if (reached) {
+					aantalSnacks = 0;
+					aantalDrankjes = 0;
+					maagInhoud = 100;
+					blaasInhoud = 100;
+					grootToiletBezoek = false;
+				}
+			}
 		} else {
-			// Doe helemaal niks jonguh
+			if (drankBezoek == true) {
+				setDestination(World.instance.getPathID("Cafetaria"));
+				if (reached) {
+					aantalDrankjes++;
+					dorst = 1000;
+					drankBezoek = false;
+					state = false;
+				}
+			}
+
+			if (eetBezoek == true) {
+				setDestination(World.instance.getPathID("Cafetaria"));
+				if (reached) {
+					aantalSnacks++;
+					honger = 1000;
+					eetBezoek = false;
+				}
+
+			}
 		}
+		reached = false;
 	}
 
 	/*
@@ -340,6 +367,33 @@ public class Visitor extends Agent {
 
 	public void setHongerPercentage() {
 		honger = honger - verloopHonger;
+	}
+
+	public String getGenreVoorkeur() {
+		return genreVoorkeur;
+	}
+
+	public void setGenreVoorkeur() {
+		ArrayList<String> genres = new ArrayList<String>() {
+			{
+				add("Rock");
+				add("Schlager");
+				add("Pop");
+				add("Funk");
+				add("Metal");
+				add("Techno");
+				add("Hiphop");
+				add("R&B");
+				add("Klassiek");
+				add("Volksmuziek");
+				add("Jazz");
+				add("Soul");
+				add("Religieus");
+				add("Disco");
+				add("Blues");
+			}
+		};
+		genreVoorkeur = genres.get(randomWaardeInt(0, 14));
 	}
 
 	/*
