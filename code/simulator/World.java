@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -207,9 +206,9 @@ public class World {
 				}
 				
 				if(debug) drawBoolArray(collisionInfo);
-
+				
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
-
+					System.out.println("euhmmm json" );
 					agenda.Stage stage = entry.getKey();
 					int stageIndex = entry.getValue();
 					ArrayList<Tile> entrance = new ArrayList<>();
@@ -242,17 +241,21 @@ public class World {
 									//collision info false wanneer er geen collision is dus je mag wel lopen.
 									//collision info true wanneer er WEL collision is dus je mag NIET lopen.
 									case entranceExit:
+										System.out.println("entrance " );
 										collisionInfo[i % width][i / width] = false;
 										entrance.add(tiles[i % width][i / width]);
 										break;
 									case collidableFalse:
+										System.out.println("coltrue " );
 										collisionInfo[i % width][i / width] = false;
 										break;
 									case collidableTrue:
+										System.out.println("colfalse " );
 										collisionInfo[i % width][i / width] = true;
 										break;
 
 									case danceFloorTrue:
+										System.out.println("dancefloor " );
 										collisionInfo[i % width][i / width] = false;
 										danceFloor.add(tiles[i % width][i / width]);
 										break;
@@ -262,6 +265,7 @@ public class World {
 							}
 
 						}
+						System.out.println("Dance floor : " + danceFloor);
 						buildings.add(new Stage("", entrance, entrance, maxAgents, stage, danceFloor));
 						if (debug) drawBoolArray(collisionInfo);
 					}
@@ -660,9 +664,9 @@ public class World {
 		}
 	}
 
-	public void inclusiveUpdate(Graphics2D g2, AffineTransform t) {
+	public void inclusiveUpdate(Graphics2D g2, AffineTransform t, AffineTransform oldtransform) {
 		update();
-		draw(g2, t);
+		draw(g2, t, oldtransform);
 		cleanUp();
 	}
 
@@ -698,12 +702,17 @@ public class World {
 		toRemove.clear();
 	}
 
-	public void draw(Graphics2D graphics, AffineTransform t) {
+	public void draw(Graphics2D graphics, AffineTransform t, AffineTransform oldtransform) {
+		
 		graphics.drawImage(mapImage, t, null);
 		
 		ListIterator<Drawable> iterator = drawables.listIterator();
 		while (iterator.hasNext())
+		{
 			iterator.next().draw(graphics, t);
+		}
+		
+		graphics.setTransform(oldtransform);
 	}
 
 	protected void regesterUpdateable(Updateable u) {

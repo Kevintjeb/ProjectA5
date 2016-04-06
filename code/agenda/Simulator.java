@@ -62,7 +62,7 @@ public class Simulator extends JPanel
 		this.planner = planner;
 		this.stageMap = stageMap;
 		
-		world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png");
+		world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", true, true);
 		
 		add(new ButtonPanel(planner), BorderLayout.NORTH);
 		add(new SimulatiePanel(planner), BorderLayout.CENTER);
@@ -443,11 +443,7 @@ public class Simulator extends JPanel
 			transform.scale(scale, scale);
 			transform.translate(x, y);
 
-			g2d.setTransform(transform);
-
-			world.inclusiveUpdate(g2d, transform);
-
-			g2d.setTransform(oldtransform);
+			world.inclusiveUpdate(g2d, transform, oldtransform);
 		}
 
 		public void mouseDragged(MouseEvent e) {

@@ -53,9 +53,19 @@ class Stage extends Building implements Updateable, Drawable{
 	{
 		if(currentPerformance == null)
 		{
-		
-			double x = danceFloor.get(0).X * 16;
-			double y = danceFloor.get(0).Y * 16;
+			double x;
+			double y;
+			
+			if(Math.random() > 0.5)
+			{
+				x = danceFloor.get(4).X * 16;
+				y = (danceFloor.get(5).Y + 2) * 16;
+			}
+			else
+			{
+				x = (7 + danceFloor.get(7).X) * 16;
+				y = (danceFloor.get(5).Y + 2) * 16;
+			}
 			
 			itr = firework.iterator();
 			while(itr.hasNext())
@@ -153,12 +163,11 @@ class Stage extends Building implements Updateable, Drawable{
 		{
 			Particle p = itr.next();
 			
-			
-			
 			graphics.setColor(p.update());
 			Area a = new Area(p.updateDeeltje());
-			graphics.fill(a);
 			graphics.setTransform(t);
+			graphics.fill(a);
+			
 		}
 	}
 }
