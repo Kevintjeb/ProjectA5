@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,8 +19,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +36,13 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.Timer;
 
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.FactoryRegistry;
+import javazoom.jl.player.advanced.AdvancedPlayer;
 import simulator.World;
 
 public class Simulator extends JPanel
-{
+{	
 	File json;
 	Planner planner;
 	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
@@ -58,6 +63,8 @@ public class Simulator extends JPanel
 	
 	Timer updateT;
 	
+	private AdvancedPlayer player;
+	
 	public Simulator(File json, Planner planner, Map<agenda.Stage, Integer> stageMap)
 	{
 		super(new BorderLayout());
@@ -68,12 +75,14 @@ public class Simulator extends JPanel
 		
 		world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false);
 		
-		add(new ButtonPanel(planner), BorderLayout.NORTH);
+		ButtonPanel buttonPanel = new ButtonPanel(planner);
+		
+		add(buttonPanel, BorderLayout.NORTH);
 		add(new SimulatiePanel(planner), BorderLayout.CENTER);
 		add(new TimePanel(planner), BorderLayout.SOUTH);
+		
+		buttonPanel.playMusic("static_data\\music\\music.mp3");
 	}
-	
-	
 	
 	class ButtonPanel extends JPanel
 	{
@@ -91,6 +100,7 @@ public class Simulator extends JPanel
 		JLabel visitors2 = new JLabel(" aantal/min");
 		
 		boolean plays = false;
+		boolean musicOn = true;
 		
 		double oldSpeed = 0.0;
 		int oldVisitors = 0;
@@ -195,28 +205,28 @@ public class Simulator extends JPanel
 			Rectangle2D play2D = new Rectangle2D.Double(500 , 10, 50, 50);
 			Rectangle2D pause2D = new Rectangle2D.Double(600 , 10, 50, 50);
 			Rectangle2D forward2D = new Rectangle2D.Double(700 , 10, 50, 50);
-			Rectangle2D power2D = new Rectangle2D.Double(1100 , 10, 50, 50);
+			Rectangle2D music2D = new Rectangle2D.Double(1100 , 10, 50, 50);
 			
 			Area refresh = new Area(refresh2D);
 			Area back = new Area(back2D);
 			Area play = new Area(play2D);
 			Area pause = new Area(pause2D);
 			Area forward = new Area(forward2D);
-			Area power = new Area(power2D);
+			Area music = new Area(music2D);
 			
 			rechthoek.add(refresh2D);
 			rechthoek.add(back2D);
 			rechthoek.add(play2D);
 			rechthoek.add(pause2D);
 			rechthoek.add(forward2D);
-			rechthoek.add(power2D);
+			rechthoek.add(music2D);
 			
 			plaatjes.add(refresh);
 			plaatjes.add(back);
 			plaatjes.add(play);
 			plaatjes.add(pause);
 			plaatjes.add(forward);
-			plaatjes.add(power);
+			plaatjes.add(music);
 			
 		}
 		
@@ -248,7 +258,20 @@ public class Simulator extends JPanel
 								forwardSim();
 								break;
 							case 5:
-								System.exit(0);
+								if(musicOn){
+									musicOn = false;
+								synchronized(this) {
+						            if(player != null) {
+						                player.stop();
+						                player = null;
+						            }
+						        }								
+								}
+								else{
+									playMusic("static_data\\music\\music.mp3");
+									musicOn = true;
+								}
+								repaint();
 								break;
 							default:
 								break;
@@ -320,7 +343,7 @@ public class Simulator extends JPanel
 					minuten = tijd.getMinutes();
 					uren = tijd.getHours();
 					
-					if(world.noVisitors() || uren > 26) // wanneer alle bezoekers wegzijn stopt de simulatie of wanneer 3 uur nachts is bereikt
+					if(uren > 26) // wanneer alle bezoekers wegzijn stopt de simulatie of wanneer 3 uur nachts is bereikt
 					{
 						pauseSim();
 						world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false);
@@ -409,11 +432,45 @@ public class Simulator extends JPanel
 			int teller = 0;
 			for(Rectangle2D image : rechthoek)
 			{
-				TexturePaint tp = new TexturePaint(images.get(teller), image);
+				TexturePaint tp;
+				if(teller == 5 && musicOn)
+					tp = new TexturePaint(images.get(teller+1), image);
+				else
+					tp = new TexturePaint(images.get(teller), image);
+
 				g2.setPaint(tp);
 				g2.fill(plaatjes.get(teller));
 				teller++;
 			}
+		}
+		
+		public void playMusic(String filename) {
+			try {
+				try {
+					InputStream is = new BufferedInputStream(new FileInputStream(filename));
+					player = new AdvancedPlayer(is, FactoryRegistry.systemRegistry().createAudioDevice());
+				} catch (IOException e) {
+					System.out.println("ERROR - Play music");
+				} catch (JavaLayerException e) {
+					System.out.println("ERROR - Play music");
+				}
+				Thread playerThread = new Thread() {
+					public void run() {
+						try {
+							player.play(5000);
+						} catch (JavaLayerException e) {
+							System.out.println("ERROR - Play music");
+						} finally {
+							if(musicOn)
+								playMusic("static_data\\music\\music.mp3");
+						}
+					}
+				};
+				playerThread.start();
+			} catch (Exception ex) {
+				System.out.println("ERROR - Play music");
+			}
+
 		}
 	}
 	
