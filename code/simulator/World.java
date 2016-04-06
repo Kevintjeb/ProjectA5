@@ -99,6 +99,8 @@ public class World
 		drawables = new LinkedList<>();
 		toRemove = new LinkedList<>();
 		buildingMap = new HashMap<>();
+		
+		NightView night = new NightView();
 
 		PrintStream oldStream;
 		{
@@ -825,6 +827,11 @@ public class World
 	public agenda.Time getTime()
 	{
 		return new agenda.Time(worldTime/60);
+	}
+	
+	public void setTime(int hours, int minuten)
+	{
+		worldTime = (hours*3600) + (minuten * 60);
 	}
 
 }

@@ -411,8 +411,7 @@ public class Simulator extends JPanel
 		float scale = 1;
 		AffineTransform transform = new AffineTransform();
 		
-		boolean nightView = false;
-		int overlayAlpha = 0;
+		
 		
 		public SimulatiePanel(Planner planner)
 		{
@@ -447,16 +446,6 @@ public class Simulator extends JPanel
 			transform.translate(x, y);
 
 			world.inclusiveUpdate(g2d, transform, oldtransform);
-			
-			if(world.getTime().getHours() >= 20 || world.getTime().getHours() <= 6)
-				nightView = true;
-			
-			if(nightView && overlayAlpha < 190)
-				overlayAlpha++;
-			
-			Rectangle overlayer = new Rectangle(0, 0, getWidth(), getHeight());
-			g2d.setColor(new Color(0, 0, 0, overlayAlpha));
-			g2d.fill(overlayer);			
 		}
 
 		public void mouseDragged(MouseEvent e) {
@@ -555,6 +544,8 @@ public class Simulator extends JPanel
 						
 						uren = oldTime;
 						minuten = 0;
+						world.setTime(uren, minuten);
+						
 					
 					}
 					

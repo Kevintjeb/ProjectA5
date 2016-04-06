@@ -18,6 +18,9 @@ class Stage extends Building implements Updateable, Drawable{
 	Iterator<Particle> itr = firework.iterator();
 	Iterator<agenda.Performance> itrPerformance;
 	
+	int alpha = 50;
+	int verdwijnt = 1;
+	
 	Stage(String description, ArrayList<Tile> entrances,
 			ArrayList<Tile> exits, int maxAgents, agenda.Stage stage, ArrayList<Tile> danceFloor) {
 		super(generateNewTypeID(), stage.getName(), description, entrances, exits, maxAgents);
@@ -36,7 +39,6 @@ class Stage extends Building implements Updateable, Drawable{
 		while(itrPerformance.hasNext())
 		{
 			agenda.Performance p = itrPerformance.next();
-			System.out.println(p.getStartTime().getHours() + " : " + World.instance.getTime().getHours());
 			if(agenda.Time.contains(p.getStartTime(), p.getEndTime(), World.instance.getTime()))
 			{
 				currentPerformance = p;
@@ -89,6 +91,15 @@ class Stage extends Building implements Updateable, Drawable{
 				y = danceFloor.get(0).Y * 32; 
 			}
 			
+			if(World.instance.getTime().getHours() >= 20 || World.instance.getTime().getHours() <= 6)
+			{
+				if(alpha < 255)
+				{
+					alpha++;
+					verdwijnt++;
+				}
+			}
+			
 			for(int i = 0; i < 25; i++)
 			{
 				double bool = Math.random();
@@ -116,7 +127,7 @@ class Stage extends Building implements Updateable, Drawable{
 					newY = Math.random() * -5;
 				}
 				
-				firework.add(new Particle(x, y, newX, newY));
+				firework.add(new Particle(x, y, newX, newY, alpha));
 			}
 		}
 		
@@ -124,7 +135,7 @@ class Stage extends Building implements Updateable, Drawable{
 		while(itr.hasNext())
 		{
 			Particle p = itr.next();
-			if(p.getAlpha() < 1)
+			if(p.getAlpha() < verdwijnt)
 			{
 				itr.remove();
 			}

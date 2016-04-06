@@ -6,11 +6,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 
-public class Particle //implements Drawable
+public class Particle 
 {
 Color color;
 	
-	int alpha = 50;
+	int alpha;
 	
 	double x;
 	double y;
@@ -20,7 +20,7 @@ Color color;
 	double xMove;
 	double yMove;
 	
-	public Particle(double x, double y, double newX, double newY)
+	public Particle(double x, double y, double newX, double newY, int alpha)
 	{
 		this.x = x;
 		this.y = y;
@@ -28,9 +28,9 @@ Color color;
 		this.newY = newY;
 		xMove = x;
 		yMove = y;
+		this.alpha = alpha;
 		
 		setColor();
-		//World.instance.regesterDrawable(this);
 		
 	}
 	
@@ -92,63 +92,6 @@ Color color;
 				color = new Color(255, 255, 255, alpha); //wit 
 			}
 	}
-
-//	@Override
-//	public void close()
-//	{
-//		World.instance.unregesterDrawable(this);
-//		
-//	}
-//
-//	@Override
-//	public void draw(Graphics2D graphics, AffineTransform t)
-//	{
-//		
-//			double x = 10 * 16;
-//			double y = 10 * 16;
-//			
-//			if(xMove == x)
-//			{
-//				double bool = Math.random();
-//				double newX;
-//				double newY;
-//				
-//				if(bool < 0.25)
-//				{
-//					newX = Math.random() * 5;
-//					newY = Math.random() * 5;
-//				}
-//				else if(bool > 0.25 && bool < 0.5)
-//				{
-//					newX = Math.random() * -5;
-//					newY = Math.random() * -5;
-//				}
-//				else if(bool > 0.5 && bool < 0.75)
-//				{
-//					newX = Math.random() * -5;
-//					newY = Math.random() * 5;
-//				}
-//				else
-//				{
-//					newX = Math.random() * 5;
-//					newY = Math.random() * -5;
-//				}
-//			}
-//			
-//			
-//			if(getAlpha() < 1)
-//			{
-//				new Ellipse2D.Double(x, y, 5, 5);
-//				xMove = x;
-//				yMove = y;
-//				alpha = 50;
-//			}
-//	
-//			graphics.setColor(update());
-//			Area a = new Area(updateDeeltje());
-//			graphics.setTransform(t);
-//			graphics.fill(a);
-//	}
 }
 			
 			
