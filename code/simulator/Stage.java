@@ -16,6 +16,7 @@ class Stage extends Building implements Updateable, Drawable{
 	private agenda.Performance currentPerformance = null;
 	ArrayList<Particle> firework = new ArrayList<>();
 	Iterator<Particle> itr = firework.iterator();
+	Iterator<agenda.Performance> itrPerformance;
 	
 	Stage(String description, ArrayList<Tile> entrances,
 			ArrayList<Tile> exits, int maxAgents, agenda.Stage stage, ArrayList<Tile> danceFloor) {
@@ -26,8 +27,29 @@ class Stage extends Building implements Updateable, Drawable{
 		World.instance.regesterUpdateable(this);
 		World.instance.regesterDrawable(this);
 		performances = World.instance.agenda.getStagesPerformances(stage);
+		itrPerformance = performances.iterator();
 	}
 	
+	public agenda.Performance getPerformance()
+	{
+		itrPerformance = performances.iterator();
+		while(itrPerformance.hasNext())
+		{
+			agenda.Performance p = itrPerformance.next();
+			System.out.println(p.getStartTime().getHours() + " : " + World.instance.getTime().getHours());
+			if(agenda.Time.contains(p.getStartTime(), p.getEndTime(), World.instance.getTime()))
+			{
+				currentPerformance = p;
+				break;
+			}
+			else
+			{
+				currentPerformance = null;
+			}
+		}
+		
+		return currentPerformance;
+	}
 
 	@Override
 	public void close() {
@@ -51,7 +73,7 @@ class Stage extends Building implements Updateable, Drawable{
 	@Override
 	public void update() 
 	{
-		if(currentPerformance == null)
+		if(getPerformance() != null)
 		{
 			double x;
 			double y;
@@ -65,16 +87,6 @@ class Stage extends Building implements Updateable, Drawable{
 			{
 				x = danceFloor.get(danceFloor.size()-1).X * 32;
 				y = danceFloor.get(0).Y * 32; 
-			}
-			
-			itr = firework.iterator();
-			while(itr.hasNext())
-			{
-				Particle p = itr.next();
-				if(p.getAlpha() < 1)
-				{
-					itr.remove();
-				}
 			}
 			
 			for(int i = 0; i < 25; i++)
@@ -105,6 +117,16 @@ class Stage extends Building implements Updateable, Drawable{
 				}
 				
 				firework.add(new Particle(x, y, newX, newY));
+			}
+		}
+		
+		itr = firework.iterator();
+		while(itr.hasNext())
+		{
+			Particle p = itr.next();
+			if(p.getAlpha() < 1)
+			{
+				itr.remove();
 			}
 		}
 		
