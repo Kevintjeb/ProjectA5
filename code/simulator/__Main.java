@@ -41,8 +41,8 @@ public class __Main extends JPanel {
 		HashMap<agenda.Stage, Integer> map = new HashMap<>();
 		// test voor meer stages tekenen.
 		map.put(agenda.getStages().get(0), 5);
-		// map.put(agenda.getStages().get(1), 8);
-		// map.put(agenda.getStages().get(2), 11);
+		//map.put(agenda.getStages().get(1), 8);
+		//map.put(agenda.getStages().get(2), 11);
 		map.put(agenda.getStages().get(3), 14);
 		map.put(agenda.getStages().get(4), 17);
 		map.put(agenda.getStages().get(5), 20);
@@ -52,20 +52,20 @@ public class __Main extends JPanel {
 		w = new World(agenda, map, new File("static_data/festival_grounds/Endmap2.json"),
 				"static_data/tile_maps/Tiled2.png", false, false);
 
+		new Visitor(w.getTileAt(8, 99), 0.01f);
 	}
 
 	int i = 0;
 	int teller = 0;
 	public void paintComponent(Graphics g) {
-		
-		if (i++ % 50 == 0) {
-			new Visitor(w.getTileAt(8, 99), 0.01f);
-			teller++;
-		}
-		if (i++ % 30 == 0) {
-			new Visitor(w.getTileAt(12, 99), 0.015f);
-			teller++;
-		}
+//		if (i++ % 50 == 0) {
+//			new Visitor(w.getTileAt(8, 99), 0.01f);
+//			teller++;
+//		}
+//		if (i++ % 30 == 0) {
+//			new Visitor(w.getTileAt(12, 99), 0.015f);
+//			teller++;
+//		}
 		Graphics2D g2 = (Graphics2D) g;
 		// System.out.println("paintComponent");
 		World.instance.inclusiveUpdate(g2, new AffineTransform());
