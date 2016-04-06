@@ -316,7 +316,14 @@ public class Simulator extends JPanel
 					minuten = tijd.getMinutes();
 					uren = tijd.getHours();
 					
-					String urenS;
+					if(uren == 23 && minuten >= 45)
+					{
+						updateT.stop();
+						tijd.setHours(0);
+						tijd.setMinutes(0);
+					}
+					
+					String urenS;								
 					if(uren < 10)
 					{
 						urenS = "0" + uren;

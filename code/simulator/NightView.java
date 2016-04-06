@@ -42,7 +42,7 @@ public class NightView implements Updateable, Drawable
 	@Override
 	public void draw(Graphics2D graphics, AffineTransform t)
 	{
-		Rectangle overlayer = new Rectangle(0, 0, 1200, 500);
+		Rectangle overlayer = new Rectangle(-1600, -1600, 6400, 6400);
 		graphics.setTransform(t);
 		graphics.setColor(new Color(0, 0, 0, overlayAlpha));
 		Area a = new Area(overlayer);
