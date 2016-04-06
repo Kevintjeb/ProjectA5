@@ -1,0 +1,33 @@
+ tilemap laden gelukt!
+positionToNodeMap size 1685
+gaph size 1685
+pair<0, MAIN STAGE, 3>
+tile(8, 16) node was found, there should be a node
+tile(8, 17) node was found, there should be a node
+tile(8, 18) node was found, there should be a node
+direction generation visitedNodeCount : 1685
+pair<1, lol STAGE, 3>
+tile(77, 21) node was found, there should be a node
+tile(78, 21) node was found, there should be a node
+tile(79, 21) node was found, there should be a node
+direction generation visitedNodeCount : 1685
+pair<2, dixie STAGE, 3>
+tile(73, 91) node was found, there should be a node
+tile(73, 92) node was found, there should be a node
+tile(73, 93) node was found, there should be a node
+direction generation visitedNodeCount : 1685
+pair<3, mixie STAGE, 3>
+tile(84, 62) node was found, there should be a node
+tile(85, 62) node was found, there should be a node
+tile(86, 62) node was found, there should be a node
+direction generation visitedNodeCount : 1685
+pair<4, bixie STAGE, 3>
+tile(39, 93) node was found, there should be a node
+tile(39, 94) node was found, there should be a node
+tile(39, 95) node was found, there should be a node
+direction generation visitedNodeCount : 1685
+pair<5, Kevin STAGE, 3>
+tile(48, 14) node was found, there should be a node
+tile(49, 14) node was found, there should be a node
+tile(50, 14) node was found, there should be a node
+direction generation visitedNodeCount : 1685

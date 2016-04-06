@@ -45,8 +45,6 @@ public class __Main extends JPanel{
 		map.put(agenda.getStages().get(7), 26);
 		
 		World w = new World(agenda, map, new File("Endmap.json"), "Tiled2.png", true, true);
-		
-		new Visitor(ImageIO.read(new File("code/agents/1.png")), w.getTileAt(8, 16), new Point2D.Double(8, 16), 1.0f);
 	}
 	
 	public void paintComponent(Graphics g)
