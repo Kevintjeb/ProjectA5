@@ -50,7 +50,7 @@ public class Time implements Serializable
 	
 	public void setHours(int hours)
 	{
-		if (hours < 0 || hours > 23)
+		if (hours < 0 || hours > 28)
 			System.out.println("Time::setHours(hours) : ERROR: hours is out of range");
 		else
 			this.hours = hours;

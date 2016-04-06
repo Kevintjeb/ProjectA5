@@ -291,7 +291,11 @@ public class Simulator extends JPanel
 					}
 					if(newVisitors != oldVisitors)
 					{
-						System.out.println("wijzig bezoekers");
+						int aantalBezoekers = (int) (newVisitors * speed); //aantal bezoeker per minuut die erbij komen. nodig is het aantal bezoeker per update dus moet gekeken worden hoeveel minuten er in een seconde om gaan
+						if(plays)
+						{
+							//TODO doorgeven aantal bezoeker per minuut
+						}
 					}
 					
 					oldSpeed = speed;
@@ -316,11 +320,19 @@ public class Simulator extends JPanel
 					minuten = tijd.getMinutes();
 					uren = tijd.getHours();
 					
-					if(uren == 23 && minuten >= 45)
+					if(world.noVisitors() || uren > 26) // wanneer alle bezoekers wegzijn stopt de simulatie of wanneer 3 uur nachts is bereikt
 					{
-						updateT.stop();
-						tijd.setHours(0);
-						tijd.setMinutes(0);
+						pauseSim();
+						world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false);
+						tijd = world.getTime();
+						minuten = tijd.getMinutes();
+						uren = tijd.getHours();
+					}
+						
+					if(uren > 23)
+					{
+						minuten = tijd.getMinutes();
+						uren = (tijd.getHours() - 24);
 					}
 					
 					String urenS;								
@@ -551,12 +563,20 @@ public class Simulator extends JPanel
 						
 						uren = oldTime;
 						minuten = 0;
-						world.setTime(uren, minuten);
-						
-					
+						if(uren != 24)
+						{
+							world.setTime(uren, minuten);
+						}
 					}
 					
-					slider.setValue(uren);
+					if(uren < 9)
+					{
+						slider.setValue(24);
+					}
+					else
+					{
+						slider.setValue(uren);
+					}
 				}
 				
 			};
