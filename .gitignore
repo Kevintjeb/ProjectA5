@@ -1,4 +1,6 @@
 *.classpath
 *.project
 /bin/
-/debug_data/
+/runtime_data/
+.csync_journal.db
+.csync_journal.db-wal

@@ -161,4 +161,9 @@ class Stage extends Building implements Updateable, Drawable{
 			graphics.setTransform(t);
 		}
 	}
+
+	public ArrayList<Tile> getDanceFloor() {
+		return danceFloor;
+	}
+
 }

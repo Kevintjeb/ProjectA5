@@ -97,13 +97,11 @@ public class Planner extends JFrame {
 				
 				if(verification == JFileChooser.APPROVE_OPTION){
 					String fileName = saver.getSelectedFile().getName();
-					
-					if(fileName.endsWith(".agenda")){
+
+					if(fileName.endsWith(".agenda"))
 						Agenda.save(agenda, saver.getSelectedFile().getAbsolutePath());
-					}
-					else{
-						Agenda.save(agenda, saver.getSelectedFile().getAbsolutePath()+".agenda");
-					}
+					else
+						Agenda.save(agenda, saver.getSelectedFile().getAbsolutePath() + ".agenda");
 				}
 					
 				else if(verification == JFileChooser.CANCEL_OPTION){
