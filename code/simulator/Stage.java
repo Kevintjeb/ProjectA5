@@ -16,6 +16,10 @@ class Stage extends Building implements Updateable, Drawable{
 	private agenda.Performance currentPerformance = null;
 	ArrayList<Particle> firework = new ArrayList<>();
 	Iterator<Particle> itr = firework.iterator();
+	Iterator<agenda.Performance> itrPerformance;
+	
+	int alpha = 50;
+	int verdwijnt = 1;
 	
 	Stage(String description, ArrayList<Tile> entrances,
 			ArrayList<Tile> exits, int maxAgents, agenda.Stage stage, ArrayList<Tile> danceFloor) {
@@ -26,8 +30,28 @@ class Stage extends Building implements Updateable, Drawable{
 		World.instance.regesterUpdateable(this);
 		World.instance.regesterDrawable(this);
 		performances = World.instance.agenda.getStagesPerformances(stage);
+		itrPerformance = performances.iterator();
 	}
 	
+	public agenda.Performance getPerformance()
+	{
+		itrPerformance = performances.iterator();
+		while(itrPerformance.hasNext())
+		{
+			agenda.Performance p = itrPerformance.next();
+			if(agenda.Time.contains(p.getStartTime(), p.getEndTime(), World.instance.getTime()))
+			{
+				currentPerformance = p;
+				break;
+			}
+			else
+			{
+				currentPerformance = null;
+			}
+		}
+		
+		return currentPerformance;
+	}
 
 	@Override
 	public void close() {
@@ -51,19 +75,28 @@ class Stage extends Building implements Updateable, Drawable{
 	@Override
 	public void update() 
 	{
-		if(currentPerformance == null)
+		if(getPerformance() != null)
 		{
-		
-			double x = danceFloor.get(0).X * 16;
-			double y = danceFloor.get(0).Y * 16;
+			double x;
+			double y;
 			
-			itr = firework.iterator();
-			while(itr.hasNext())
+			if(Math.random() > 0.5)
 			{
-				Particle p = itr.next();
-				if(p.getAlpha() < 1)
+				x = danceFloor.get(0).X * 32; 
+				y = danceFloor.get(0).Y * 32; 
+			}
+			else
+			{
+				x = danceFloor.get(danceFloor.size()-1).X * 32;
+				y = danceFloor.get(0).Y * 32; 
+			}
+			
+			if(World.instance.getTime().getHours() >= 20 || World.instance.getTime().getHours() <= 6)
+			{
+				if(alpha < 255)
 				{
-					itr.remove();
+					alpha++;
+					verdwijnt++;
 				}
 			}
 			
@@ -94,7 +127,17 @@ class Stage extends Building implements Updateable, Drawable{
 					newY = Math.random() * -5;
 				}
 				
-				firework.add(new Particle(x, y, newX, newY));
+				firework.add(new Particle(x, y, newX, newY, alpha));
+			}
+		}
+		
+		itr = firework.iterator();
+		while(itr.hasNext())
+		{
+			Particle p = itr.next();
+			if(p.getAlpha() < verdwijnt)
+			{
+				itr.remove();
 			}
 		}
 		
@@ -153,12 +196,11 @@ class Stage extends Building implements Updateable, Drawable{
 		{
 			Particle p = itr.next();
 			
-			
-			
 			graphics.setColor(p.update());
 			Area a = new Area(p.updateDeeltje());
-			graphics.fill(a);
 			graphics.setTransform(t);
+			graphics.fill(a);
+			
 		}
 	}
 

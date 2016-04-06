@@ -1,8 +1,15 @@
  tilemap laden gelukt!
-positionToNodeMap size 1180
-gaph size 1180
-pair<0, m, 3>
-tile(21, 34) node was found, there should be a node
-tile(22, 34) node was found, there should be a node
-tile(23, 34) node was found, there should be a node
-direction generation visitedNodeCount : 1180
+euhmmm json
+euhmmm json
+positionToNodeMap size 1290
+gaph size 1290
+pair<4, second, 3>
+tile(39, 93) node was found, there should be a node
+tile(39, 94) node was found, there should be a node
+tile(39, 95) node was found, there should be a node
+direction generation visitedNodeCount : 1290
+pair<5, main, 3>
+tile(48, 14) node was found, there should be a node
+tile(49, 14) node was found, there should be a node
+tile(50, 14) node was found, there should be a node
+direction generation visitedNodeCount : 1290

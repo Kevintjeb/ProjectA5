@@ -1,13 +1,16 @@
 package simulator;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 
-public class Particle
+public class Particle 
 {
 Color color;
 	
-	int alpha = 50;
+	int alpha;
 	
 	double x;
 	double y;
@@ -17,7 +20,7 @@ Color color;
 	double xMove;
 	double yMove;
 	
-	public Particle(double x, double y, double newX, double newY)
+	public Particle(double x, double y, double newX, double newY, int alpha)
 	{
 		this.x = x;
 		this.y = y;
@@ -25,6 +28,7 @@ Color color;
 		this.newY = newY;
 		xMove = x;
 		yMove = y;
+		this.alpha = alpha;
 		
 		setColor();
 		

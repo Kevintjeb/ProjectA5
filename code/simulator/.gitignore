@@ -19,5 +19,12 @@
 /World$Node.class
 /World$Position.class
 /Visitor.class
+<<<<<<< HEAD
 /__Main$1.class
 /__Main$2.class
+=======
+/Cafetaria.class
+/Toilet.class
+/Firework.class
+/Particle.class
+>>>>>>> 034f6be3c07d579bbb85023abb7ef89a8ff21cce
