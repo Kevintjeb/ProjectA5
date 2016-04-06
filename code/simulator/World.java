@@ -12,6 +12,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
@@ -266,7 +267,7 @@ public class World {
 							}
 
 						}
-						buildings.add(new Stage("", entrance, entrance, maxAgents, stage, danceFloor));
+						getBuildings().add(new Stage("", entrance, entrance, maxAgents, stage, danceFloor));
 						if (debug)
 							drawBoolArray(collisionInfo);
 					}
@@ -313,13 +314,13 @@ public class World {
 									case windowshop:
 										entrancelijst.add(tiles[k % width][k / width]);
 										collisionInfo[k % width][k / width] = false;
-										buildings.add(new Cafetaria("Cafetaria" , entrancelijst, 5));						
+										getBuildings().add(new Cafetaria("Cafetaria" , entrancelijst, 5));						
 										break;
 									case toiletentrance:
 //										tellerToilet++;
 										entrancelijst.add(tiles[k % width][k / width]);
 										collisionInfo[k % width][k / width] = false;
-										buildings.add(new Toilet("Toilet", entrancelijst, 5));		
+										getBuildings().add(new Toilet("Toilet", entrancelijst, 5));		
 									}
 									
 
@@ -363,7 +364,7 @@ public class World {
 
 		{
 			HashSet<Integer> typeContructed = new HashSet<>();
-			for (Building b : buildings) {
+			for (Building b : getBuildings()) {
 				if (typeContructed.contains(b.typeID))
 					continue;
 				typeContructed.add(b.typeID);
@@ -514,7 +515,7 @@ public class World {
 					}
 
 					ArrayList<TypeIdTilePair> pairs = new ArrayList<TypeIdTilePair>();
-					for (Building b : buildings) {
+					for (Building b : getBuildings()) {
 						boolean found = false;
 
 						for (TypeIdTilePair pair : pairs) {
@@ -793,6 +794,27 @@ public class World {
 
 	protected float getDeltaTime() {
 		return deltaTime;
+	}
+
+	protected ArrayList<Agent> getVisitors()
+	{
+		ArrayList<Agent> visitors = new ArrayList<>();
+		Iterator<Updateable> itr = updateables.iterator();
+		while(itr.hasNext())
+		{
+			Updateable b = itr.next();
+			if(b instanceof Agent)
+			{
+				visitors.add((Visitor) b);
+			}
+			
+		}
+		return visitors;
+		
+	}
+
+	protected ArrayList<Building> getBuildings() {
+		return buildings;
 	}
 
 }

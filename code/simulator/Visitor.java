@@ -30,7 +30,7 @@ import javax.imageio.ImageIO;
 public class Visitor extends Agent {
 	static int i = 0;
 	static int i2 = 0;
-
+	private static final int MOD = 8;
 	private int aantalDrankjes, aantalSnacks;
 
 	private double blaasInhoud = randomWaardeDouble(70, 100);
@@ -53,12 +53,12 @@ public class Visitor extends Agent {
 	private boolean grootToiletBezoek = false;
 	private boolean drankBezoek = false;
 	private boolean eetBezoek = false;
-	
+
 	private static ArrayList<Image> images = new ArrayList<>();
 
 	public Visitor(Tile tile, float speed) {
 		super(getImage(), tile, new Point2D.Double(tile.X, -tile.Y), speed);
-		setDestination(i++ % 8);
+		setDestination(i++ % MOD);
 	}
 
 	@Override
@@ -73,32 +73,32 @@ public class Visitor extends Agent {
 		snackBehoefte();
 		setHongerPercentage();
 		move();
-		//System.out.println("DERP"); //TROLOLOLOLOLOLOL
+		// System.out.println("DERP"); //TROLOLOLOLOLOLOL
 	}
 
 	@Override
 	void destenationReached() {
-		setDestination(i2++%8);
-		//System.out.println("VISITOR destination reached");
+		setDestination(i2++ % MOD);
+		// System.out.println("VISITOR destination reached");
 	}
 
 	public static Image getImage() {
 		if (images.isEmpty()) {
 			File[] lijst = new File("static_data/sprites/").listFiles();
-			for (File f : lijst) {		
+			for (File f : lijst) {
 				try {
 					BufferedImage temp = (BufferedImage) ImageIO.read(f);
 					images.add(temp.getScaledInstance(32, 32, BufferedImage.SCALE_FAST));
 				} catch (IOException e) {
-				
+
 					e.printStackTrace();
 				}
 			}
 		}
-		int getal = (int) (1 + Math.random()*16);
+		int getal = (int) (1 + Math.random() * 16);
 		return images.get(getal);
 	}
-	
+
 	public void bezoekFaciliteit() {
 		if (toiletBezoek == true) {
 			// Wandel naar dichtsbijzijnde toilet
@@ -228,5 +228,5 @@ public class Visitor extends Agent {
 		double randomDouble = min + (double) (Math.random() * ((max - min) + 1));
 		return randomDouble;
 	}
-	
+
 }

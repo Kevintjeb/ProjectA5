@@ -55,24 +55,28 @@ public class __Main extends JPanel {
 	}
 
 	int i = 0;
-
+	int teller = 0;
 	public void paintComponent(Graphics g) {
-		if (i++%5 == 0)
+		
+		if(teller < 50)
 		{
-			new Visitor(w.getTileAt(8, 99), 0.1f);
+		if (i++ % 50 == 0) {
+			new Visitor(w.getTileAt(8, 99), 0.01f);
+			teller++;
 		}
-		if (i++%3 == 0)
-		{
-			new Visitor(w.getTileAt(10, 99), 0.15f);
-		}		
-		Graphics2D g2 = (Graphics2D)g;
-		//System.out.println("paintComponent");
+		if (i++ % 30 == 0) {
+			new Visitor(w.getTileAt(12, 99), 0.015f);
+			teller++;
+		}
+		}
+		Graphics2D g2 = (Graphics2D) g;
+		// System.out.println("paintComponent");
 		World.instance.inclusiveUpdate(g2, new AffineTransform());
 		AffineTransform transform = new AffineTransform();
-		float scaleX = getWidth()/(float)(100*32);
-		float scaleY = getHeight()/(float)(100*32);
+		float scaleX = getWidth() / (float) (100 * 32);
+		float scaleY = getHeight() / (float) (100 * 32);
 		float scale = (scaleX > scaleY) ? scaleY : scaleX;
-		transform.scale(scale, scale*-1);
+		transform.scale(scale, scale * -1);
 		g2.transform(transform);
 	}
 
