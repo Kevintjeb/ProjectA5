@@ -48,6 +48,6 @@ public abstract class Building {
 	}
 
 	public String toString() {
-		return name + "\n" + description;
+		return name;
 	}
 }

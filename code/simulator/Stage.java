@@ -87,4 +87,10 @@ class Stage extends Building implements Updateable{
 		}*/
 	}
 
+
+	public ArrayList<Tile> getDanceFloor() {
+		return danceFloor;
+	}
+
+
 }
