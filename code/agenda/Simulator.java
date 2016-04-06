@@ -45,8 +45,10 @@ public class Simulator extends JPanel
 	
 	World world;
 	
-	int uren = 9;
-	double minuten = 0;
+	Time tijd;
+	
+	int uren;
+	int minuten;
 	
 	int updatetijd = 1000/30;
 	
@@ -85,6 +87,8 @@ public class Simulator extends JPanel
 		JLabel visitors = new JLabel("Bezoekers:");
 		JTextField visitorsField = new JTextField("0", 2);
 		JLabel visitors2 = new JLabel(" aantal/min");
+		
+		boolean plays = false;
 		
 		double oldSpeed = 0.0;
 		int oldVisitors = 0;
@@ -272,7 +276,10 @@ public class Simulator extends JPanel
 					if(speed != oldSpeed)
 					{
 						double realTimeToSimTime = (speed * 60)/1000;
-						world.setRealTimeToSimTime(realTimeToSimTime);
+						if(plays)
+						{
+							world.setRealTimeToSimTime(realTimeToSimTime);
+						}
 						/*
 						 * min         /sec
 						 * 60*sec	   /sec
@@ -303,19 +310,9 @@ public class Simulator extends JPanel
 				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
-					//TODO aanpassen met methode van flobo
-					minuten += Double.parseDouble(speedInvoer.getText())/30;
-					
-					if(minuten >= 60)
-					{
-						minuten = 0;
-						uren++;
-					}
-					
-					if(uren == 23 && minuten >= 59)
-					{
-						uren = 9;
-					}
+					tijd = world.getTime();
+					minuten = tijd.getMinutes();
+					uren = tijd.getHours();
 					
 					String urenS;
 					if(uren < 10)
@@ -328,13 +325,13 @@ public class Simulator extends JPanel
 					}
 					
 					String minutenS;
-					if(Math.round(minuten) < 10)
+					if(minuten < 10)
 					{
-						minutenS = "0" + Math.round(minuten);
+						minutenS = "0" + minuten;
 					}
 					else
 					{
-						minutenS = "" + Math.round(minuten);
+						minutenS = "" + minuten;
 					}
 					
 					time.setText(urenS + ":" + minutenS);
@@ -364,12 +361,14 @@ public class Simulator extends JPanel
 			
 			//An explanation given for the used formula is found in this class in line 269
 			updateT.start();
+			plays = true;
 		}
 		
 		public void pauseSim()
 		{
 			world.setRealTimeToSimTime(0.0);
 			updateT.stop();
+			plays = false;
 		}
 		
 		public void forwardSim()

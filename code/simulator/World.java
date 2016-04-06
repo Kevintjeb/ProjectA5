@@ -36,12 +36,12 @@ public class World
 	private HashMap<String, Integer> buildingMap; // maps between the building
 													// and it's corresponding id
 
-	private double realTimeToSimTime = 0.5; // when a real time in ms is
+	private double realTimeToSimTime = 0.0; // when a real time in ms is
 											// multiplied
 	// with this number,
 	// and the ceiling of the product is taken is will give the time in
 	// simulation time in seconds
-	private int worldTime; // the current time in the simulation world
+	private int worldTime = 32400; // the current time in the simulation world
 	private int deltaTime; // the delta between the second to last update() and
 							// the latest update()
 	private long lastRealTime = UNINITIALIZED; // the last time update was
@@ -820,6 +820,11 @@ public class World
 	protected int getDeltaTime()
 	{
 		return deltaTime;
+	}
+	
+	public agenda.Time getTime()
+	{
+		return new agenda.Time(worldTime/60);
 	}
 
 }
