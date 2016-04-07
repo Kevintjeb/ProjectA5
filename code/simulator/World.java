@@ -56,6 +56,8 @@ public class World {
 	protected static World instance;
 
 	static int index = 0;
+	
+	int visPerMin = 1;
 
 	Spawner p = null;
 	private int bezoekers;
@@ -894,6 +896,16 @@ public class World {
 
 		}
 		return stages;
+	}
+	
+	public int visPerMin()
+	{
+		return visPerMin;
+	}
+	
+	public void setVisPerMin(int v)
+	{
+		visPerMin = v;
 	}
 
 }

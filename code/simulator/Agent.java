@@ -128,20 +128,20 @@ abstract class Agent implements Updateable, Drawable {
 			}
 			//collision
 			{
-				for (Agent v : World.instance.getVisitors()) {
-					for (Agent v2 : World.instance.getVisitors()) {
-						if (v == v2) {
-							continue;
-						}
-						if (v.currentPosition.distance(v2.currentPosition) < 1) {
-
-							v.nextPosition = new Point2D.Double(v.currentPosition.getX() - .25, v.currentPosition.getY() + .25);
-							v2.nextPosition = new Point2D.Double(v2.currentPosition.getX() + .25,
-									v2.currentPosition.getY() - .25);
-
-						}
-					}
-				}
+//				for (Agent v : World.instance.getVisitors()) {
+//					for (Agent v2 : World.instance.getVisitors()) {
+//						if (v == v2) {
+//							continue;
+//						}
+//						if (v.currentPosition.distance(v2.currentPosition) < 1) {
+//
+//							v.nextPosition = new Point2D.Double(v.currentPosition.getX(), v.currentPosition.getY());
+//							v2.nextPosition = new Point2D.Double(v2.currentPosition.getX() + .125,
+//									v2.currentPosition.getY() - .125);
+//
+//						}
+//					}
+//				}
 			}
 		}
 

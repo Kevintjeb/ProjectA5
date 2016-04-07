@@ -96,7 +96,7 @@ public class Simulator extends JPanel
 		JLabel time = new JLabel("09:00");
 		JTextField speedInvoer = new JTextField("0.0", 3);
 		JLabel visitors = new JLabel("Bezoekers:");
-		JTextField visitorsField = new JTextField("0", 2);
+		JTextField visitorsField = new JTextField("1", 2);
 		JLabel visitors2 = new JLabel(" aantal/min");
 		
 		boolean plays = false;
@@ -326,10 +326,9 @@ public class Simulator extends JPanel
 					}
 					if(newVisitors != oldVisitors)
 					{
-						int aantalBezoekers = (int) (newVisitors * speed); //aantal bezoeker per minuut die erbij komen. nodig is het aantal bezoeker per update dus moet gekeken worden hoeveel minuten er in een seconde om gaan
 						if(plays)
 						{
-							//TODO doorgeven aantal bezoeker per minuut
+							world.setVisPerMin(newVisitors);
 						}
 					}
 					
@@ -674,7 +673,7 @@ public class Simulator extends JPanel
 			layout.putConstraint(SpringLayout.NORTH, slider, 25, SpringLayout.NORTH, this);
 		}
 		
-		public void paintComponent(Graphics g)
+		public void paintComponent(Graphics g) 
 		{
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
