@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,6 +33,7 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.Timer;
 
+import simulator.Spawner;
 import simulator.World;
 
 public class Simulator extends JPanel
@@ -42,7 +42,7 @@ public class Simulator extends JPanel
 	Planner planner;
 	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
 	Font timeFont = new Font("SANS_SERIF", Font.BOLD, 36);
-	
+	Spawner p;
 	Map<agenda.Stage, Integer> stageMap = new HashMap<>();
 	
 	World world;
@@ -51,22 +51,23 @@ public class Simulator extends JPanel
 	
 	int uren;
 	int minuten;
-	
+	private int bezoekers;
 	int updatetijd = 1000/30;
 	
 	ActionListener updateTime;
 	
 	Timer updateT;
 	
-	public Simulator(File json, Planner planner, Map<agenda.Stage, Integer> stageMap)
+	public Simulator(File json, Planner planner, Map<agenda.Stage, Integer> stageMap, int bezoekers)
 	{
 		super(new BorderLayout());
 		
 		this.json = json;
 		this.planner = planner;
 		this.stageMap = stageMap;
-		
+		this.bezoekers = bezoekers;
 		world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false);
+		
 		
 		add(new ButtonPanel(planner), BorderLayout.NORTH);
 		add(new SimulatiePanel(planner), BorderLayout.CENTER);
@@ -240,9 +241,21 @@ public class Simulator extends JPanel
 								break;
 							case 2:
 								playSim();
+								if(p == null)
+								{
+								p = new Spawner(bezoekers, world);
+								}else if(!p.getTimer().isRunning())
+								{
+									p.continueTimer();
+								}
+								
 								break;
 							case 3:
 								pauseSim();
+								if(p != null)
+								{
+									p.stopTimer();
+								}
 								break;
 							case 4:
 								forwardSim();

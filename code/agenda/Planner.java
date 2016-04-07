@@ -92,7 +92,7 @@ public class Planner extends JFrame {
 				}
 				
 				saver.setFileFilter(filter);
-				//System.out.println(saver.getFileFilter());
+				
 				int verification = saver.showSaveDialog(_this);
 				
 				if(verification == JFileChooser.APPROVE_OPTION){

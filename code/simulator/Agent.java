@@ -13,7 +13,7 @@ abstract class Agent implements Updateable, Drawable {
 	private float speed;
 	private static int currentTypeID = 0;
 	private int destinationOld = 0;
-	private static final int MOD = 8;
+	private int mod = 0;
 	public static final int NO_DESTINATION = -1;
 
 	static int generateNewTypeID() {
@@ -23,7 +23,7 @@ abstract class Agent implements Updateable, Drawable {
 		this.image = image;
 		this.currentTile = tile;
 		this.nextTile = tile;
-
+		mod = World.instance.getSizeBuildingID();
 		this.destination = NO_DESTINATION;
 		this.speed = speed;
 		this.currentPosition = point;
@@ -43,8 +43,8 @@ abstract class Agent implements Updateable, Drawable {
 	void setDestination(int destination) {
 		nextTile = null; // the next tile gets set to null so move() will
 							// recalculate the path
-		if (destination >= MOD)
-			this.destination = (destination + 1) % MOD;
+		if (destination >= mod)
+			this.destination = (destination + 1) % mod;
 		else
 			this.destination = destination;
 		if (state)

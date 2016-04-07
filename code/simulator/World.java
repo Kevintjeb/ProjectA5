@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Queue;
@@ -25,6 +26,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import agenda.Time;
+
 public class World {
 	private final int UNINITIALIZED = -1;
 
@@ -34,7 +37,8 @@ public class World {
 	private LinkedList<Drawable> drawables;
 	private LinkedList<Closable> toRemove;
 	private HashMap<String, Integer> buildingMap; // maps between the building
-													// and it's corresponding id
+	private HashMap<agenda.Stage, Integer> stageMap; // and it's corresponding
+														// id
 
 	private double realTimeToSimTime = 0.0; // when a real time in ms is
 											// multiplied
@@ -47,11 +51,8 @@ public class World {
 												// called is used to calculate
 												// deltaTime
 	private double timeRemainder = 0;
-
 	public final agenda.Agenda agenda;
-
 	private BufferedImage mapImage;
-
 	protected static World instance;
 
 	static int index = 0;
@@ -110,7 +111,7 @@ public class World {
 		drawables = new LinkedList<>();
 		toRemove = new LinkedList<>();
 		buildingMap = new HashMap<>();
-		
+		this.stageMap = (HashMap<agenda.Stage, Integer>) stageMap;
 		NightView night = new NightView();
 		PrintStream oldStream;
 		{
@@ -118,10 +119,10 @@ public class World {
 			File debugInfo = new File("debug_data/");
 			if (debugInfo.exists() == false)
 				debugInfo.mkdir();
-			
+
 			for (File file : debugInfo.listFiles())
 				file.delete();
-			
+
 			try {
 				debugTxt = new PrintStream(new File("debug_data/log.txt"));
 			} catch (FileNotFoundException e) {
@@ -132,7 +133,7 @@ public class World {
 			oldStream = System.out;
 			System.setOut(debugTxt);
 		}
-		
+
 		boolean[][] collisionInfo = null;
 		{
 			// ATRIBUTEN, moeten worden aangemaakt boven constructor ofcourse..
@@ -164,7 +165,8 @@ public class World {
 				width = ((Long) json.get("width")).intValue();
 
 				collisionInfo = new boolean[width][height];
-				if (debug) drawBoolArray(collisionInfo);
+				if (debug)
+					drawBoolArray(collisionInfo);
 				mapImage = new BufferedImage(width * map.getTileWidth(), height * map.getTileHeight(),
 						BufferedImage.TYPE_INT_ARGB);
 				tiles = new Tile[width][height];
@@ -181,9 +183,8 @@ public class World {
 				// JSON.
 				// eerste 4 layers tekenen -> standaard layers.
 
-				
 				for (int i = 0; i < 5; i++) {
-					
+
 					JSONObject currentlayer = (JSONObject) layers.get(i);
 					if (currentlayer.get("visible").equals(true)) {
 						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
@@ -201,8 +202,9 @@ public class World {
 						}
 					}
 				}
-				
-				if(debug) drawBoolArray(collisionInfo);
+
+				if (debug)
+					drawBoolArray(collisionInfo);
 
 				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
 
@@ -235,8 +237,10 @@ public class World {
 								for (int i = 0; i < data.size(); i++) {
 									int tileType = ((Long) data.get(i)).intValue();
 									switch (tileType) {
-									//collision info false wanneer er geen collision is dus je mag wel lopen.
-									//collision info true wanneer er WEL collision is dus je mag NIET lopen.
+									// collision info false wanneer er geen
+									// collision is dus je mag wel lopen.
+									// collision info true wanneer er WEL
+									// collision is dus je mag NIET lopen.
 									case entranceExit:
 										collisionInfo[i % width][i / width] = false;
 										entrance.add(tiles[i % width][i / width]);
@@ -259,7 +263,8 @@ public class World {
 
 						}
 						buildings.add(new Stage("", entrance, entrance, maxAgents, stage, danceFloor));
-						if (debug) drawBoolArray(collisionInfo);
+						if (debug)
+							drawBoolArray(collisionInfo);
 					}
 
 				}
@@ -267,15 +272,14 @@ public class World {
 				{
 					// shops + toilet
 					JSONObject layernow = (JSONObject) layers.get(29);
-					TileLayer layerItem = new TileLayer((JSONArray) layernow.get("data"), map, height, width, true);						
+					TileLayer layerItem = new TileLayer((JSONArray) layernow.get("data"), map, height, width, true);
 					layerslist.add(layerItem);
 					if (layernow.get("properties") != null) {
-						
 						System.out.println(layernow.get("properties"));
 						JSONObject properties = (JSONObject) layernow.get("properties");
 						String drawProperties = (String) properties.get("drawwith");
-						String[] bundel = drawProperties.split(",");						
-						
+						String[] bundel = drawProperties.split(",");
+
 						for (int j = 0; j < bundel.length; j++) {
 							JSONObject layertemp = (JSONObject) layers.get(Integer.parseInt(bundel[j]));
 
@@ -289,7 +293,7 @@ public class World {
 								for (int k = 0; k < data.size(); k++) {
 									ArrayList<Tile> entrancelijst = new ArrayList<>();
 									int tileType = ((Long) data.get(k)).intValue();
-									
+
 									switch (tileType) {
 									case collidableFalse:
 										collisionInfo[k % width][k / width] = false;
@@ -297,15 +301,13 @@ public class World {
 									case windowshop:
 										entrancelijst.add(tiles[k % width][k / width]);
 										collisionInfo[k % width][k / width] = false;
-										getBuildings().add(new Cafetaria("Cafetaria" , entrancelijst, 5));						
+										getBuildings().add(new Cafetaria("Cafetaria", entrancelijst, 5));
 										break;
 									case toiletEntrance:
-//										tellerToilet++;
 										entrancelijst.add(tiles[k % width][k / width]);
 										collisionInfo[k % width][k / width] = false;
-										getBuildings().add(new Toilet("Toilet", entrancelijst, 5));		
+										getBuildings().add(new Toilet("Toilet", entrancelijst, 5));
 									}
-									
 
 								}
 								if (debug)
@@ -337,8 +339,7 @@ public class World {
 				}
 				layerslist.clear();
 				// saved de file naar het systeem.
-				if (debug)
-				{
+				if (debug) {
 					File outputfile = new File("debug_data/mapImage.png");
 					ImageIO.write(mapImage, "png", outputfile);
 				}
@@ -351,11 +352,10 @@ public class World {
 				e.printStackTrace();
 			}
 		}
-		
+
 		{
 			HashSet<Integer> typeContructed = new HashSet<>();
-			for (Building b : buildings)
-			{
+			for (Building b : buildings) {
 				if (typeContructed.contains(b.typeID))
 					continue;
 				typeContructed.add(b.typeID);
@@ -388,14 +388,16 @@ public class World {
 					graph = new ArrayList<>(nodeCount);
 
 					positionToNodeMap = new HashMap<>(nodeCount);
-					
+
 					for (int y = 0; y < collisionInfo.length; y++)
 						for (int x = 0; x < collisionInfo[0].length; x++)
 							if (collisionInfo[x][y] == false) {
 								Node n = new Node(x, y);
 								graph.add(n);
 								positionToNodeMap.put(new Position(x, y), n);
-								//System.out.println((positionToNodeMap.get(new Position(x,y)) == null) ? "node could not be reovered" : "node could be recovereded");
+								// System.out.println((positionToNodeMap.get(new
+								// Position(x,y)) == null) ? "node could not be
+								// reovered" : "node could be recovereded");
 							}
 
 					for (Node n : graph) { // adding the edges to the node TODO
@@ -453,27 +455,27 @@ public class World {
 						if (pushed == false)
 							nodeStack.pop();
 					}
-					
-					if (debug) {////////// Create a debug image /////////////////
+
+					if (debug) {////////// Create a debug image
+								////////// /////////////////
 						Color inGraph = new Color(0, 255, 0, 128);
 						Color outGraph = new Color(255, 0, 0, 128);
-						
-						BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-						Graphics2D graphics = (Graphics2D)debugImage.getGraphics();
+
+						BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(),
+								BufferedImage.TYPE_INT_ARGB);
+						Graphics2D graphics = (Graphics2D) debugImage.getGraphics();
 						graphics.drawImage(mapImage, 0, 0, null);
-						
-						
-						for (Node n : graph)
-						{
+
+						for (Node n : graph) {
 							Color c = inGraph;
-							
+
 							if (visitedNodes.contains(n) == false)
 								c = outGraph;
-							
+
 							graphics.setColor(c);
-							graphics.fillRect(n.X*32, n.Y*32, 32, 32);
+							graphics.fillRect(n.X * 32, n.Y * 32, 32, 32);
 						}
-						
+
 						try {
 							ImageIO.write(debugImage, "png", new File("debug_data/pathfinding_debug_image.png"));
 						} catch (IOException e) {
@@ -490,6 +492,9 @@ public class World {
 				} ////////// end of graph test //////////////////////////
 
 				{ ////////// generating directions /////////////////////
+					//ingang/uitgang
+					
+					
 					class TypeIdTilePair {
 						int typeID;
 						String name;
@@ -525,21 +530,26 @@ public class World {
 					}
 
 					for (TypeIdTilePair pair : pairs) {
-						System.out.println("pair<" + pair.typeID + ", " + pair.name +", " + pair.entances.size() + ">");
-						
+						System.out
+								.println("pair<" + pair.typeID + ", " + pair.name + ", " + pair.entances.size() + ">");
+
 						Queue<Node> queue = new LinkedList<>();
 						HashSet<Node> visited = new HashSet<Node>();
 						HashMap<Position, Integer> nodeToDistanceMap = null;
-						if (debug) nodeToDistanceMap = new HashMap<>(graph.size());
-						
+						if (debug)
+							nodeToDistanceMap = new HashMap<>(graph.size());
+
 						for (Tile tile : pair.entances) {
 							Node n = positionToNodeMap.get(new Position(tile.X, tile.Y));
 							queue.add(n);
 							tiles[n.X][n.Y].directions.put(pair.typeID, tiles[n.X][n.Y]);
 							visited.add(n);
-							if (debug) nodeToDistanceMap.put(new Position(tile.X, tile.Y), -1);
-							System.out.println("tile(" + tile.X + ", " + tile.Y + ") " + ((n == null) ? "node is null" : "node was found")+
-									((collisionInfo[tile.X][tile.Y]) ? ", there should be no node" : ", there should be a node"));
+							if (debug)
+								nodeToDistanceMap.put(new Position(tile.X, tile.Y), -1);
+							System.out.println("tile(" + tile.X + ", " + tile.Y + ") "
+									+ ((n == null) ? "node is null" : "node was found")
+									+ ((collisionInfo[tile.X][tile.Y]) ? ", there should be no node"
+											: ", there should be a node"));
 						}
 
 						int visitedNodeCount = 0;
@@ -548,10 +558,12 @@ public class World {
 							Node node = queue.poll();
 							visitedNodeCount++;
 							int newNodeDistance = 0;
-							if (debug) newNodeDistance = nodeToDistanceMap.get(new Position(node.X, node.Y)) + 1;
+							if (debug)
+								newNodeDistance = nodeToDistanceMap.get(new Position(node.X, node.Y)) + 1;
 							if (newNodeDistance > highestDistance)
 								highestDistance = newNodeDistance;
-							//System.out.println(((node == null) ? "node is null" : "node was found"));
+							// System.out.println(((node == null) ? "node is
+							// null" : "node was found"));
 							if (node == null)
 								continue;
 							for (int i = 0; i < node.straitEdges.length; i++) {
@@ -560,63 +572,56 @@ public class World {
 								if (visited.contains(node.straitEdges[i]) == true)
 									continue;
 								visited.add(node.straitEdges[i]);
-								if (debug) nodeToDistanceMap.put(new Position(node.straitEdges[i].X, node.straitEdges[i].Y), newNodeDistance);
+								if (debug)
+									nodeToDistanceMap.put(new Position(node.straitEdges[i].X, node.straitEdges[i].Y),
+											newNodeDistance);
 								queue.add(node.straitEdges[i]);
 								tiles[node.straitEdges[i].X][node.straitEdges[i].Y].addDirection(pair.typeID,
 										tiles[node.X][node.Y]);
 							}
 						}
 						System.out.println("direction generation visitedNodeCount : " + visitedNodeCount);
-						if (debug){/// Creating a debug image
-							BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
-							Graphics2D graphics = (Graphics2D)debugImage.getGraphics();
+						if (debug) {/// Creating a debug image
+							BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(),
+									BufferedImage.TYPE_INT_ARGB);
+							Graphics2D graphics = (Graphics2D) debugImage.getGraphics();
 							graphics.drawImage(mapImage, 0, 0, null);
-							
-							
-							for (Node n : graph)
-							{
-								int color = 255-(int)(255/(double)highestDistance*nodeToDistanceMap.get(new Position(n.X, n.Y)));
-								//System.out.println("("+n.X+", " + n.Y +") " + color);
-								if (color < 0 || color> 255)
+
+							for (Node n : graph) {
+								int color = 255 - (int) (255 / (double) highestDistance
+										* nodeToDistanceMap.get(new Position(n.X, n.Y)));
+								// System.out.println("("+n.X+", " + n.Y +") " +
+								// color);
+								if (color < 0 || color > 255)
 									color = 128;
 								graphics.setColor(new Color(color, color, color, 180));
-								graphics.fillRect(n.X*32, n.Y*32, 32, 32);
+								graphics.fillRect(n.X * 32, n.Y * 32, 32, 32);
 								graphics.setColor(Color.BLACK);
-								if (numberOrText)
-								{
-									graphics.drawString(nodeToDistanceMap.get(new Position(n.X, n.Y)).toString(), n.X*32+16, n.Y*32+16);
-								}
-								else
-								{
+								if (numberOrText) {
+									graphics.drawString(nodeToDistanceMap.get(new Position(n.X, n.Y)).toString(),
+											n.X * 32 + 16, n.Y * 32 + 16);
+								} else {
 									Tile direction = tiles[n.X][n.Y].getDirection(pair.typeID);
-									if (direction.X < n.X)
-									{
-										graphics.drawString("left", n.X*32+16, n.Y*32+16);
-									}
-									else if (direction.X > n.X)
-									{
-										graphics.drawString("right", n.X*32+16, n.Y*32+16);
-									}
-									else if (direction.Y < n.Y)
-									{
-										graphics.drawString("up", n.X*32+16, n.Y*32+16);
-									}
-									else if (direction.Y > n.Y)
-									{
-										graphics.drawString("down", n.X*32+16, n.Y*32+16);
-									}
-									else 
-									{
+									if (direction.X < n.X) {
+										graphics.drawString("left", n.X * 32 + 16, n.Y * 32 + 16);
+									} else if (direction.X > n.X) {
+										graphics.drawString("right", n.X * 32 + 16, n.Y * 32 + 16);
+									} else if (direction.Y < n.Y) {
+										graphics.drawString("up", n.X * 32 + 16, n.Y * 32 + 16);
+									} else if (direction.Y > n.Y) {
+										graphics.drawString("down", n.X * 32 + 16, n.Y * 32 + 16);
+									} else {
 										graphics.setColor(Color.ORANGE);
-										graphics.fillRect(n.X*32, n.Y*32, 32, 32);
+										graphics.fillRect(n.X * 32, n.Y * 32, 32, 32);
 										graphics.setColor(Color.BLACK);
-										graphics.drawString("dest", n.X*32+4, n.Y*32+16);
+										graphics.drawString("dest", n.X * 32 + 4, n.Y * 32 + 16);
 									}
 								}
 							}
-							
+
 							try {
-								ImageIO.write(debugImage, "png", new File("debug_data/pathfinding_debug_image" + pair.typeID + "_" + pair.name+".png"));
+								ImageIO.write(debugImage, "png", new File(
+										"debug_data/pathfinding_debug_image" + pair.typeID + "_" + pair.name + ".png"));
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -626,14 +631,15 @@ public class World {
 				}
 			}
 		}
-		
+
 		{
 			long delta = System.currentTimeMillis() - constructorStart;
 			System.setOut(oldStream);
-			System.out.println("World was created in " + (double)delta/1000 + " seconds");
+			System.out.println("World was created in " + (double) delta / 1000 + " seconds");
 		}
 
 	}
+
 	public String setRealTimeToSimTime(double realTimeToSimTime) {
 		if (realTimeToSimTime < 0)
 			return "sim time can't be lower than 0";
@@ -778,6 +784,10 @@ public class World {
 		return buildingMap.get(building);
 	}
 
+	protected int getSizeBuildingID() {
+		return buildingMap.size();
+	}
+
 	protected float getWorldTime() {
 		return worldTime;
 	}
@@ -810,6 +820,35 @@ public class World {
 
 	protected ArrayList<Building> getBuildings() {
 		return buildings;
+	}
+
+	protected ArrayList<String> getActualPerformances(Time time) {
+		ArrayList<String> podia = new ArrayList<>();
+		ArrayList<Stage> stages = new ArrayList<>();
+		stages.addAll(World.instance.getStages());
+		for (Stage s : stages) {
+			if (s.getPerformance() != null) {
+				if (Time.contains(s.getPerformance().getStartTime(), s.getPerformance().getEndTime(), time)) {
+					podia.add(s.name);
+				}
+			}
+		}
+
+		return podia;
+
+	}
+
+	public ArrayList<Stage> getStages() {
+		ArrayList<Stage> stages = new ArrayList<>();
+		Iterator<Building> itr = buildings.iterator();
+		while (itr.hasNext()) {
+			Building b = itr.next();
+			if (b instanceof Stage) {
+				stages.add((Stage) b);
+			}
+
+		}
+		return stages;
 	}
 
 }

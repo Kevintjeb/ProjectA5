@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import agenda.Artist;
 import agenda.Performance;
 
 /* 
@@ -42,24 +43,24 @@ public class Visitor extends Agent {
 
 	static int i = 0;
 	static int i2 = 0;
-	private static final int MOD = 7;
+	private int mod = 0;
 	private int aantalDrankjes, aantalSnacks;
 
 	private String genreVoorkeur;
 
-	private double blaasInhoud = randomWaardeDouble(70, 100);
-	private double drankHandling = randomWaardeDouble(10, 20);
-	private double blaasToleratie = randomWaardeDouble(20, 50);
+	private double blaasInhoud = randomWaardeDouble(7000, 10000);
+	private double drankHandling = randomWaardeDouble(0.5, 1.5);
+	private double blaasToleratie = randomWaardeDouble(200, 500);
 
-	private double maagInhoud = randomWaardeDouble(70, 100);
-	private double snackHandling = randomWaardeDouble(10, 20);
-	private double maagToleratie = randomWaardeDouble(20, 50);
+	private double maagInhoud = randomWaardeDouble(7000, 10000);
+	private double snackHandling = randomWaardeDouble(0.5, 1.5);
+	private double maagToleratie = randomWaardeDouble(200, 500);
 
-	private double dorst = randomWaardeDouble(700, 1000);
+	private double dorst = randomWaardeDouble(7000, 10000);
 	private double verloopDorst = randomWaardeDouble(0.5, 1.5);
 	private double dorstToleratie = randomWaardeDouble(200, 400);
 
-	private double honger = randomWaardeDouble(700, 1000);
+	private double honger = randomWaardeDouble(7000, 10000);
 	private double verloopHonger = randomWaardeDouble(0.5, 1.5);
 	private double hongerToleratie = randomWaardeDouble(200, 400);
 
@@ -74,16 +75,20 @@ public class Visitor extends Agent {
 	private Point2D currentDancePosition;
 	private float remainingDanceDistance;
 	private boolean toDance = false;
-
+	private int voorkeur = 0;
 	private boolean reached = false;
-
+	private boolean voorkeurchecked = false;
+	private int podiumsize = 0;
 	private static ArrayList<Image> images = new ArrayList<>();
 
 	public Visitor(Tile tile, float speed) {
 		super(getImage(), tile, new Point2D.Double(tile.X, -tile.Y), speed);
-		int dest = i++ % MOD;
+		mod = World.instance.getSizeBuildingID();
+		int dest = i++ % mod;
+
 		setDestination(dest);
 		destination = dest;
+		// System.out.println(World.instance.getBuildings().get(dest).toString());
 		setGenreVoorkeur();
 	}
 
@@ -133,12 +138,13 @@ public class Visitor extends Agent {
 	void destenationReached() {
 
 		// setDestination(i2++ % MOD);
+
 		if (World.instance.getBuildings().get(this.getDestinationOld()).toString().toLowerCase().endsWith("stage")) {
 			toDance = true;
 		} else {
-			System.out.println(World.instance.getBuildings().get(this.getDestinationOld()).toString());
+			// System.out.println(World.instance.getBuildings().get(this.getDestinationOld()).toString());
 			toDance = false;
-			int dest = i2++ % MOD;
+			int dest = i2++ % mod;
 			destination = dest;
 			setDestination(dest);
 			if (!reached)
@@ -152,48 +158,32 @@ public class Visitor extends Agent {
 		// + " --- building : " +
 		// World.instance.getBuildings().get(this.getDestinationOld()).toString()
 		// + " --- dancing : " + toDance);
-		
+
 	}
 
 	public void danceMethod() {
 
 		if (toDance) {
 			if (teller < 100) {
-				//STAAT STIL ATM.
-//				int tellertje = 0;
-//				Tile[] tiles = dance(World.instance.getBuildings().get(this.getDestinationOld()).toString());
-//				remainingDanceDistance = 0;
-//				if (nextDancePosition.distance(getCurrentPosition()) <= remainingDanceDistance) {
-//					remainingDanceDistance -= nextDancePosition.distance(getCurrentPosition());
-//					setCurrentPosition(nextDancePosition); 
-//					nextDancePosition = new Point2D.Double(tiles[tellertje].X, -tiles[tellertje].Y);
-//					tellertje++;
-//				} else {
-//
-//					float tempX = (float) (nextDancePosition.getX() - getCurrentPosition().getX()),
-//							tempY = (float) (nextDancePosition.getY() - getCurrentPosition().getY());
-//
-//					float magnitude = (float) Math.sqrt(tempX * tempX + tempY * tempY);
-//					tempX /= magnitude;
-//					tempY /= magnitude;
-//
-//					// now we have a unit vector
-//
-//					tempX *= remainingDanceDistance;
-//					tempY *= remainingDanceDistance;
-//
-//					remainingDanceDistance = 0;
-//
-//					setCurrentPosition(new Point2D.Double(getCurrentPosition().getX() + tempX , getCurrentPosition().getY() + tempY));
-//				}
-				
-				
-				// currentDancePosition = this.getCurrentPosition();
-				// nextDancePosition = currentDancePosition;
+				// STAAT STIL ATM.
+				// int tellertje = 0;
+				// Tile[] tiles =
+				// dance(World.instance.getBuildings().get(this.getDestinationOld()).toString());
+				// remainingDanceDistance = 0;
+				// if (nextDancePosition.distance(getCurrentPosition()) <=
+				// remainingDanceDistance) {
+				// remainingDanceDistance -=
+				// nextDancePosition.distance(getCurrentPosition());
+				// setCurrentPosition(nextDancePosition);
+				// nextDancePosition = new Point2D.Double(tiles[tellertje].X,
+				// -tiles[tellertje].Y);
+				// tellertje++;
+				// } else {
+				//
 				// float tempX = (float) (nextDancePosition.getX() -
-				// currentDancePosition.getX()),
+				// getCurrentPosition().getX()),
 				// tempY = (float) (nextDancePosition.getY() -
-				// currentDancePosition.getY());
+				// getCurrentPosition().getY());
 				//
 				// float magnitude = (float) Math.sqrt(tempX * tempX + tempY *
 				// tempY);
@@ -201,27 +191,22 @@ public class Visitor extends Agent {
 				// tempY /= magnitude;
 				//
 				// // now we have a unit vector
+				//
 				// tempX *= remainingDanceDistance;
 				// tempY *= remainingDanceDistance;
 				//
 				// remainingDanceDistance = 0;
 				//
-				// currentDancePosition.setLocation(currentDancePosition.getX()
-				// +
-				// tempX, currentDancePosition.getY() + tempY);
-				//
-				// System.out.println(World.instance.getBuildings().get(destination).name);
-				// Tile[] tiles =
-				// dance(World.instance.getBuildings().get(destination).name);
-				// int teller = 0;
-
-				// System.out.println("dancing");
+				// setCurrentPosition(new
+				// Point2D.Double(getCurrentPosition().getX() + tempX ,
+				// getCurrentPosition().getY() + tempY));
+				// }
 
 			} else {
 				toDance = false;
 				if (!toDance) {// System.out.println("dance voorbij");
 					teller = 0;
-					int dest = i++ % MOD;
+					int dest = i++ % mod;
 					setDestination(dest);
 					// System.out.println("dest set " + dest);
 					destination = dest;
@@ -246,19 +231,39 @@ public class Visitor extends Agent {
 		int getal = (int) (1 + Math.random() * 16);
 		return images.get(getal);
 	}
+
 	
-	// TODO: afmaken
 	public void bezoekPerformance() {
-		ArrayList<String> genres = new ArrayList<String>();
-		//genres.add(World.instance.agenda.getPerformances().get(0).getArtists().get(0).getGenre().(genreVoorkeur));
-		if (World.instance.agenda.getPerformances().get(0).getArtists().get(0).getGenre().contains(genreVoorkeur)) {
-			setDestination(
-					World.instance.getPathID(World.instance.agenda.getPerformances().get(0).getStage().getName()));
+		
+		ArrayList<String> podias = new ArrayList<>();
+		if (World.instance.getActualPerformances(World.instance.getTime()) != null) {
+			podias.addAll(World.instance.getActualPerformances(World.instance.getTime()));
+			if (!podias.isEmpty()) {
+				System.out.println("nu zijn er performances op stage :\n " + podias.toString());
+				//TODO CHECK WELKE HEEFT VOORKEUR.
+				if(podiumsize != podias.size())
+				{
+					voorkeurchecked = false;
+				}
+				if(podias.size() > 0 && !voorkeurchecked)
+				{
+					voorkeur = (int) (Math.random()*podias.size());
+					voorkeurchecked = true;
+					podiumsize = podias.size();
+				}
+				
+				
+				setDestination(World.instance.getPathID(podias.get(voorkeur)));
+			}
+			else
+			{
+				setDestination(404);
+			}
+
 		}
-		else {
-		//TODO	setDestination(World.instance.agenda.getPerformances());
-		}
+		
 	}
+
 
 	public void bezoekFaciliteit() {
 		if (toiletBezoek == true || grootToiletBezoek == true) {
@@ -266,7 +271,7 @@ public class Visitor extends Agent {
 				setDestination(World.instance.getPathID("Toilet"));
 				if (reached) {
 					aantalDrankjes = 0;
-					blaasInhoud = 100;
+					blaasInhoud = 5000;
 					toiletBezoek = false;
 				}
 			}
@@ -275,8 +280,8 @@ public class Visitor extends Agent {
 				if (reached) {
 					aantalSnacks = 0;
 					aantalDrankjes = 0;
-					maagInhoud = 100;
-					blaasInhoud = 100;
+					maagInhoud = 5000;
+					blaasInhoud = 5000;
 					grootToiletBezoek = false;
 				}
 			}
@@ -285,7 +290,7 @@ public class Visitor extends Agent {
 				setDestination(World.instance.getPathID("Cafetaria"));
 				if (reached) {
 					aantalDrankjes++;
-					dorst = 1000;
+					dorst = 5000;
 					drankBezoek = false;
 				}
 			}
@@ -294,7 +299,7 @@ public class Visitor extends Agent {
 				setDestination(World.instance.getPathID("Cafetaria"));
 				if (reached) {
 					aantalSnacks++;
-					honger = 1000;
+					honger = 5000;
 					eetBezoek = false;
 				}
 
@@ -320,7 +325,7 @@ public class Visitor extends Agent {
 	}
 
 	public void setBlaasCapaciteit() {
-		blaasInhoud = 100 - drankHandling * aantalDrankjes;
+		blaasInhoud = blaasInhoud - drankHandling * aantalDrankjes;
 	}
 
 	/*
@@ -341,7 +346,7 @@ public class Visitor extends Agent {
 	}
 
 	public void setMaagCapaciteit() {
-		maagInhoud = 100 - snackHandling * aantalSnacks;
+		maagInhoud = maagInhoud - snackHandling * aantalSnacks;
 	}
 
 	/*
@@ -426,4 +431,3 @@ public class Visitor extends Agent {
 	}
 
 }
-
