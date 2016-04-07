@@ -48,6 +48,7 @@ public class Visitor extends Agent {
 	private boolean drankBezoek = false;
 	private boolean eetBezoek = false;
 
+	private boolean goingtoexit = false;
 	private int destination;
 	private int teller = 0;
 	private Point2D nextDancePosition;
@@ -73,19 +74,28 @@ public class Visitor extends Agent {
 
 	@Override
 	public void update() {
-		bezoekPerformance();
-		bezoekFaciliteit();
-		danceMethod();
-		toiletBehoefte();
-		groteBehoefte();
-		drankBehoefte();
-		setDorstPercentage();
-		snackBehoefte();
-		setHongerPercentage();
-		if (toDance) {
-			teller++;
+		
+		if (World.instance.getWorldTime() >= (24 * 60 * 60) && !goingtoexit) {
+			goingtoexit = true;
+			setDestination(World.instance.getPathID("exit"));
+			
+		}
+		if (!goingtoexit) {
+			bezoekPerformance();
+			bezoekFaciliteit();
+			danceMethod();
+			toiletBehoefte();
+			groteBehoefte();
+			drankBehoefte();
+			setDorstPercentage();
+			snackBehoefte();
+			setHongerPercentage();
+			if (toDance) {
+				teller++;
+			}
 		}
 		move();
+
 	}
 
 	public Tile[] dance(String destenation) {
@@ -115,7 +125,6 @@ public class Visitor extends Agent {
 	void destenationReached() {
 
 		// setDestination(i2++ % MOD);
-
 		if (World.instance.getBuildings().get(this.getDestinationOld()).toString().toLowerCase().endsWith("stage")) {
 			toDance = true;
 		} else {
@@ -209,36 +218,29 @@ public class Visitor extends Agent {
 		return images.get(getal);
 	}
 
-	
 	public void bezoekPerformance() {
-		
+
 		ArrayList<String> podias = new ArrayList<>();
 		if (World.instance.getActualPerformances(World.instance.getTime()) != null) {
 			podias.addAll(World.instance.getActualPerformances(World.instance.getTime()));
 			if (!podias.isEmpty()) {
-				if(podiumsize != podias.size())
-				{
+				if (podiumsize != podias.size()) {
 					voorkeurchecked = false;
 				}
-				if(podias.size() > 0 && !voorkeurchecked)
-				{
-					voorkeur = (int) (Math.random()*podias.size());
+				if (podias.size() > 0 && !voorkeurchecked) {
+					voorkeur = (int) (Math.random() * podias.size());
 					voorkeurchecked = true;
 					podiumsize = podias.size();
 				}
-				
-				
+
 				setDestination(World.instance.getPathID(podias.get(voorkeur)));
-			}
-			else
-			{
-				//TODO exit location
+			} else {
+				// TODO exit location
 			}
 
 		}
-		
-	}
 
+	}
 
 	public void bezoekFaciliteit() {
 		if (toiletBezoek == true || grootToiletBezoek == true) {

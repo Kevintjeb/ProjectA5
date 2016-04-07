@@ -145,7 +145,7 @@ class Stage extends Building implements Updateable, Drawable{
 		
 
 		
-		/*final int NO_PERFORMANCE = -1;
+		/*final int NO_PERFORMANCE =t -1;
 		int lastPerformance = NO_PERFORMANCE, currentPerformance = NO_PERFORMANCE;
 		
 		System.out.println(new agenda.Time(World.instance.getWorldTime()/60));

@@ -170,7 +170,7 @@ public class World {
 			final int collidableTrue = 90;
 			final int collidableFalse = 86;
 			final int danceFloorTrue = 63;
-
+			
 			JSONParser parser = new JSONParser();
 			int height;
 			int width;
@@ -221,6 +221,11 @@ public class World {
 							case collidableTrue:
 								collisionInfo[k % width][k / width] = true;
 								break;
+							case mainEntrance:
+								ArrayList<Tile> tileslijst = new ArrayList<>();
+								tileslijst.add(tiles[k % width][k / width]);
+								collisionInfo[k % width][k / width] = false;
+								buildings.add(new Exit(tileslijst));
 							}
 
 						}
