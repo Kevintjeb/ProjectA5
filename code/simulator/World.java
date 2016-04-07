@@ -86,8 +86,8 @@ public class World {
 	}
 
 	public void close() {
-		System.out.println("active agents : " + updateables.size());
-		System.out.println("last deltaTime : " + deltaTime);
+		//System.out.println("active agents : " + updateables.size());
+		//System.out.println("last deltaTime : " + deltaTime);
 
 		ListIterator<Updateable> iterator = updateables.listIterator();
 
@@ -150,10 +150,10 @@ public class World {
 			try {
 				debugTxt = new PrintStream(new File("debug_data/log.txt"));
 			} catch (FileNotFoundException e) {
-				System.out.println("log could not be created");
+				//System.out.println("log could not be created");
 				return;
 			}
-			System.out.println("starting world creation");
+			//System.out.println("starting world creation");
 			oldStream = System.out;
 			System.setOut(debugTxt);
 		}
@@ -299,7 +299,7 @@ public class World {
 					TileLayer layerItem = new TileLayer((JSONArray) layernow.get("data"), map, height, width, true);
 					layerslist.add(layerItem);
 					if (layernow.get("properties") != null) {
-						System.out.println(layernow.get("properties"));
+						//System.out.println(layernow.get("properties"));
 						JSONObject properties = (JSONObject) layernow.get("properties");
 						String drawProperties = (String) properties.get("drawwith");
 						String[] bundel = drawProperties.split(",");
@@ -308,7 +308,7 @@ public class World {
 							JSONObject layertemp = (JSONObject) layers.get(Integer.parseInt(bundel[j]));
 
 							if (layertemp.get("visible").equals(true)) {
-								System.out.println("hier hoor jij niet in te gaan!!!");
+								//System.out.println("hier hoor jij niet in te gaan!!!");
 								TileLayer temp = new TileLayer((JSONArray) layernow.get("data"), map, height, width,
 										true);
 								layerslist.add(temp);
@@ -454,12 +454,12 @@ public class World {
 					}
 
 				} ////////////// End of graph generation ///////////
-				System.out.println("positionToNodeMap size " + positionToNodeMap.size());
+				//System.out.println("positionToNodeMap size " + positionToNodeMap.size());
 				{ ////////////// Graph test using depth first search /////////
 					Stack<Node> nodeStack = new Stack<>();
 					HashSet<Node> visitedNodes = new HashSet<>(graph.size());
 
-					System.out.println("gaph size " + graph.size());
+					//System.out.println("gaph size " + graph.size());
 					nodeStack.push(graph.get(0));
 					visitedNodes.add(nodeStack.peek());
 
@@ -509,7 +509,7 @@ public class World {
 					}
 
 					if (visitedNodes.size() != graph.size()) {
-						System.out.println("not all nodes are conected"); // TODO
+						//System.out.println("not all nodes are conected"); // TODO
 																			// exception
 						return;
 					}
@@ -553,8 +553,8 @@ public class World {
 					}
 
 					for (TypeIdTilePair pair : pairs) {
-						System.out
-								.println("pair<" + pair.typeID + ", " + pair.name + ", " + pair.entances.size() + ">");
+						//System.out
+						//		.println("pair<" + pair.typeID + ", " + pair.name + ", " + pair.entances.size() + ">");
 
 						Queue<Node> queue = new LinkedList<>();
 						HashSet<Node> visited = new HashSet<Node>();
@@ -603,7 +603,7 @@ public class World {
 										tiles[node.X][node.Y]);
 							}
 						}
-						System.out.println("direction generation visitedNodeCount : " + visitedNodeCount);
+						//System.out.println("direction generation visitedNodeCount : " + visitedNodeCount);
 						if (debug) {/// Creating a debug image
 							BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(),
 									BufferedImage.TYPE_INT_ARGB);
@@ -658,7 +658,7 @@ public class World {
 		{
 			long delta = System.currentTimeMillis() - constructorStart;
 			System.setOut(oldStream);
-			System.out.println("World was created in " + (double) delta / 1000 + " seconds");
+			//System.out.println("World was created in " + (double) delta / 1000 + " seconds");
 		}
 		p = new Spawner(bezoekers, World.instance);
 	}

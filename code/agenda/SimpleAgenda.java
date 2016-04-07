@@ -65,8 +65,8 @@ public class SimpleAgenda extends JPanel {
 					sortType = PerformaceComparator.SortTypes.STAGE;
 					break;
 				default:
-					System.out.println("MouseAdapter::mouseClicked : ERROR: \"" + name + 
-							"\" is not a supported collum name");
+					//System.out.println("MouseAdapter::mouseClicked : ERROR: \"" + name + 
+					//		"\" is not a supported collum name");
 					return;
 				}
 				

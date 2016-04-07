@@ -57,7 +57,7 @@ class StageLinker extends JFrame
 				int key = (int)(selectLayers.getSelectedItem());
 				Stage value = (Stage)(selectStage.getSelectedItem());
 				map.put(key, value);
-				System.out.println(map.entrySet());
+				//System.out.println(map.entrySet());
 				selectStage.removeItem(selectStage.getSelectedItem());
 				selectLayers.removeItem(selectLayers.getSelectedItem());
 

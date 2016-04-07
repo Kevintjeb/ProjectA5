@@ -40,7 +40,7 @@ public class Agenda implements Serializable {
 			}
 			// otherwise construct an empty Agenda and display a warning
 			else {
-				System.out.println("Agenda::Agenda(filePath) : WARNING: agenda could not be loaded");
+				//System.out.println("Agenda::Agenda(filePath) : WARNING: agenda could not be loaded");
 				construct();
 			}
 		}
@@ -162,7 +162,7 @@ public class Agenda implements Serializable {
 
 			objOut.close();
 		} catch (IOException e) {
-			System.out.println("Agenda::safe(agenda, filePath) : ERROR: an exeption ocured while saving the file");
+			//System.out.println("Agenda::safe(agenda, filePath) : ERROR: an exeption ocured while saving the file");
 		}
 	}
 
@@ -176,10 +176,10 @@ public class Agenda implements Serializable {
 			objIn.close();
 			return agenda;
 		} catch (IOException e) {
-			System.out.println("Agenda::load(filePath) : ERROR: an exception ocured when loading the file");
+			//System.out.println("Agenda::load(filePath) : ERROR: an exception ocured when loading the file");
 			return null;
 		} catch (ClassNotFoundException e) {
-			System.out.println("Agenda::load(filePath) : ERROR: Agenda wasn't in the safe file");
+			//System.out.println("Agenda::load(filePath) : ERROR: Agenda wasn't in the safe file");
 			return null;
 		}
 	}

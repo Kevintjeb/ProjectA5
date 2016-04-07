@@ -118,7 +118,7 @@ public class SimulatieGUI extends JPanel
 			}
 			else
 			{
-				System.out.println("Map bestaat niet");
+				//System.out.println("Map bestaat niet");
 			}
 		}
 		
@@ -140,7 +140,7 @@ public class SimulatieGUI extends JPanel
 			}
 			else
 			{
-				System.out.println("Map bestaat niet");
+				//System.out.println("Map bestaat niet");
 			}
 		}
 		

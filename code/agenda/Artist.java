@@ -81,7 +81,7 @@ public class Artist implements Serializable
 		// if it isn't valid it displays an error
 		else if(new File(imagePath).exists() == false)
 		{
-			System.out.println("Artist::setImagePath(imagePath) : ERROR: imagePath \"" + imagePath + "\" is not a valid path to a file");
+			//System.out.println("Artist::setImagePath(imagePath) : ERROR: imagePath \"" + imagePath + "\" is not a valid path to a file");
 		}
 		// if it is valid it sets it
 		else
