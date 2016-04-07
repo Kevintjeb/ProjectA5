@@ -31,11 +31,11 @@ public class Visitor extends Agent {
 	private double drankHandling = randomWaardeDouble(0.5, 1.5);
 	private double blaasToleratie = randomWaardeDouble(20, 50);
 
-	private double maagInhoud = randomWaardeDouble(70, 100);
+	private double maagInhoud = randomWaardeDouble(700, 1000);
 	private double snackHandling = randomWaardeDouble(0.5, 1.5);
-	private double maagToleratie = randomWaardeDouble(20, 50);
+	private double maagToleratie = randomWaardeDouble(200, 500);
 
-	private double dorst = randomWaardeDouble(7000, 10000);
+	private double dorst = randomWaardeDouble(700, 1000);
 	private double verloopDorst = randomWaardeDouble(0.5, 1.5);
 	private double dorstToleratie = randomWaardeDouble(200, 400);
 
