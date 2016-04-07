@@ -216,8 +216,6 @@ public class Visitor extends Agent {
 		if (World.instance.getActualPerformances(World.instance.getTime()) != null) {
 			podias.addAll(World.instance.getActualPerformances(World.instance.getTime()));
 			if (!podias.isEmpty()) {
-				System.out.println("nu zijn er performances op stage :\n " + podias.toString());
-				//TODO CHECK WELKE HEEFT VOORKEUR.
 				if(podiumsize != podias.size())
 				{
 					voorkeurchecked = false;

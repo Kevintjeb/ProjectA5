@@ -28,8 +28,7 @@ import org.json.simple.parser.JSONParser;
 
 import agenda.Time;
 
-public class World
-{
+public class World {
 	private final int UNINITIALIZED = -1;
 
 	private Tile[][] tiles;
@@ -61,16 +60,13 @@ public class World
 	Spawner p = null;
 	private int bezoekers;
 
-	private void drawBoolArray(boolean[][] info)
-	{
+	private void drawBoolArray(boolean[][] info) {
 		final int size = 1;
 		BufferedImage img = new BufferedImage(info.length * size, info[0].length * size, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = (Graphics2D) img.getGraphics();
 
-		for (int x = 0; x < info.length; x++)
-		{
-			for (int y = 0; y < info[0].length; y++)
-			{
+		for (int x = 0; x < info.length; x++) {
+			for (int y = 0; y < info[0].length; y++) {
 				if (info[x][y])
 					g.setColor(Color.BLACK);
 				else
@@ -80,33 +76,43 @@ public class World
 			}
 		}
 
-		try
-		{
+		try {
 			ImageIO.write(img, "png", new File("runtime_data/debug_data/boolean_print" + index++ + ".png"));
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void close()
-	{
+	public void close() {
 		System.out.println("active agents : " + updateables.size());
 		System.out.println("last deltaTime : " + deltaTime);
+
+		ListIterator<Updateable> iterator = updateables.listIterator();
+
+		while (iterator.hasNext()) {
+			toRemove.add(iterator.next());
+		}
+
+		ListIterator<Drawable> iteratorDraw = drawables.listIterator();
+		{
+
+			while (iteratorDraw.hasNext()) {
+				toRemove.add(iteratorDraw.next());
+			}
+
+		}
+		cleanUp();
+
 	}
 
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath,
-			int bezoekers)
-	{
+			int bezoekers) {
 		this(agenda, stageMap, jsonPath, tileMapPath, false, false, bezoekers);
 	}
 
-	private void clearDirectory(File file)
-	{
-		if (file.isDirectory())
-		{
-			for (File subFile : file.listFiles())
-			{
+	private void clearDirectory(File file) {
+		if (file.isDirectory()) {
+			for (File subFile : file.listFiles()) {
 				if (subFile.isDirectory())
 					clearDirectory(subFile);
 				else
@@ -117,8 +123,7 @@ public class World
 	}
 
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath,
-			final boolean debug, final boolean numberOrText, int bezoekers)
-	{
+			final boolean debug, final boolean numberOrText, int bezoekers) {
 		long constructorStart = System.currentTimeMillis();
 		instance = this;
 		this.agenda = agenda;
@@ -140,11 +145,9 @@ public class World
 			for (File file : debugInfo.listFiles())
 				file.delete();
 
-			try
-			{
+			try {
 				debugTxt = new PrintStream(new File("debug_data/log.txt"));
-			} catch (FileNotFoundException e)
-			{
+			} catch (FileNotFoundException e) {
 				System.out.println("log could not be created");
 				return;
 			}
@@ -172,8 +175,7 @@ public class World
 
 			ArrayList<TileLayer> layerslist = new ArrayList<>();
 
-			try
-			{
+			try {
 				// tilemap maken door een tilemap object aan te maken.
 				map = new TileMap(tileMapPath, 32, 32);
 				// jsonfile parsen
@@ -203,22 +205,17 @@ public class World
 				// JSON.
 				// eerste 4 layers tekenen -> standaard layers.
 
-				for (int i = 0; i < 5; i++)
-				{
+				for (int i = 0; i < 5; i++) {
 
 					JSONObject currentlayer = (JSONObject) layers.get(i);
-					if (currentlayer.get("visible").equals(true))
-					{
+					if (currentlayer.get("visible").equals(true)) {
 						TileLayer temp = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
 						layerslist.add(temp);
-					} else
-					{
+					} else {
 						JSONArray data = (JSONArray) currentlayer.get("data");
-						for (int k = 0; k < data.size(); k++)
-						{
+						for (int k = 0; k < data.size(); k++) {
 							int tileType = ((Long) data.get(k)).intValue();
-							switch (tileType)
-							{
+							switch (tileType) {
 							case collidableTrue:
 								collisionInfo[k % width][k / width] = true;
 								break;
@@ -231,8 +228,7 @@ public class World
 				if (debug)
 					drawBoolArray(collisionInfo);
 
-				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet())
-				{
+				for (Map.Entry<agenda.Stage, Integer> entry : stageMap.entrySet()) {
 
 					agenda.Stage stage = entry.getKey();
 					int stageIndex = entry.getValue();
@@ -243,8 +239,7 @@ public class World
 
 					TileLayer e = new TileLayer((JSONArray) currentlayer.get("data"), map, height, width, true);
 					layerslist.add(e);
-					if (currentlayer.get("properties") != null)
-					{
+					if (currentlayer.get("properties") != null) {
 
 						JSONObject properties = (JSONObject) currentlayer.get("properties");
 						int maxAgents = Integer.parseInt((String) properties.get("maxAgents"));
@@ -252,23 +247,18 @@ public class World
 						String drawProperties = (String) properties.get("drawwith");
 						String[] bundel = drawProperties.split(",");
 
-						for (int j = 0; j < bundel.length; j++)
-						{
+						for (int j = 0; j < bundel.length; j++) {
 							JSONObject layer = (JSONObject) layers.get(Integer.parseInt(bundel[j]));
 
-							if (layer.get("visible").equals(true))
-							{
+							if (layer.get("visible").equals(true)) {
 								TileLayer temp = new TileLayer((JSONArray) layer.get("data"), map, height, width, true);
 								layerslist.add(temp);
 
-							} else
-							{
+							} else {
 								JSONArray data = (JSONArray) layer.get("data");
-								for (int i = 0; i < data.size(); i++)
-								{
+								for (int i = 0; i < data.size(); i++) {
 									int tileType = ((Long) data.get(i)).intValue();
-									switch (tileType)
-									{
+									switch (tileType) {
 									// collision info false wanneer er geen
 									// collision is dus je mag wel lopen.
 									// collision info true wanneer er WEL
@@ -306,33 +296,27 @@ public class World
 					JSONObject layernow = (JSONObject) layers.get(29);
 					TileLayer layerItem = new TileLayer((JSONArray) layernow.get("data"), map, height, width, true);
 					layerslist.add(layerItem);
-					if (layernow.get("properties") != null)
-					{
+					if (layernow.get("properties") != null) {
 						System.out.println(layernow.get("properties"));
 						JSONObject properties = (JSONObject) layernow.get("properties");
 						String drawProperties = (String) properties.get("drawwith");
 						String[] bundel = drawProperties.split(",");
 
-						for (int j = 0; j < bundel.length; j++)
-						{
+						for (int j = 0; j < bundel.length; j++) {
 							JSONObject layertemp = (JSONObject) layers.get(Integer.parseInt(bundel[j]));
 
-							if (layertemp.get("visible").equals(true))
-							{
+							if (layertemp.get("visible").equals(true)) {
 								System.out.println("hier hoor jij niet in te gaan!!!");
 								TileLayer temp = new TileLayer((JSONArray) layernow.get("data"), map, height, width,
 										true);
 								layerslist.add(temp);
-							} else
-							{
+							} else {
 								JSONArray data = (JSONArray) layertemp.get("data");
-								for (int k = 0; k < data.size(); k++)
-								{
+								for (int k = 0; k < data.size(); k++) {
 									ArrayList<Tile> entrancelijst = new ArrayList<>();
 									int tileType = ((Long) data.get(k)).intValue();
 
-									switch (tileType)
-									{
+									switch (tileType) {
 									case collidableFalse:
 										collisionInfo[k % width][k / width] = false;
 										break;
@@ -360,8 +344,7 @@ public class World
 				// van
 				// de map en tilewidth is puur de tilewidth (32 bij ons..)
 
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				e.printStackTrace();
 
 			}
@@ -370,18 +353,15 @@ public class World
 			// dus
 			// niet meer veranderd maar wel gebruikt kan worden zonder veel
 			// geheugen.
-			try
-			{
+			try {
 				Graphics2D g = (Graphics2D) mapImage.getGraphics();
 
-				for (TileLayer layer : layerslist)
-				{
+				for (TileLayer layer : layerslist) {
 					g.drawImage(layer.getLayerImage(), 0, 0, null);
 				}
 				layerslist.clear();
 				// saved de file naar het systeem.
-				if (debug)
-				{
+				if (debug) {
 					File outputfile = new File("debug_data/mapImage.png");
 					ImageIO.write(mapImage, "png", outputfile);
 				}
@@ -390,16 +370,14 @@ public class World
 				// te ruimen >> 1500MB.
 				// TODO FIX JAVA.
 				System.gc();
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
 		{
 			HashSet<Integer> typeContructed = new HashSet<>();
-			for (Building b : buildings)
-			{
+			for (Building b : buildings) {
 				if (typeContructed.contains(b.typeID))
 					continue;
 				typeContructed.add(b.typeID);
@@ -435,8 +413,7 @@ public class World
 
 					for (int y = 0; y < collisionInfo.length; y++)
 						for (int x = 0; x < collisionInfo[0].length; x++)
-							if (collisionInfo[x][y] == false)
-							{
+							if (collisionInfo[x][y] == false) {
 								Node n = new Node(x, y);
 								graph.add(n);
 								positionToNodeMap.put(new Position(x, y), n);
@@ -445,34 +422,29 @@ public class World
 								// reovered" : "node could be recovereded");
 							}
 
-					for (Node n : graph)
-					{ // adding the edges to the node TODO
-						// diagonal?
+					for (Node n : graph) { // adding the edges to the node TODO
+											// diagonal?
 						int index = 0;
 						Position position = new Position(n.X - 1, n.Y);
-						if (positionToNodeMap.containsKey(position))
-						{
+						if (positionToNodeMap.containsKey(position)) {
 							n.straitEdges[index] = positionToNodeMap.get(position);
 							index++;
 						}
 
 						position.set(n.X + 1, n.Y);
-						if (positionToNodeMap.containsKey(position))
-						{
+						if (positionToNodeMap.containsKey(position)) {
 							n.straitEdges[index] = positionToNodeMap.get(position);
 							index++;
 						}
 
 						position.set(n.X, n.Y - 1);
-						if (positionToNodeMap.containsKey(position))
-						{
+						if (positionToNodeMap.containsKey(position)) {
 							n.straitEdges[index] = positionToNodeMap.get(position);
 							index++;
 						}
 
 						position.set(n.X, n.Y + 1);
-						if (positionToNodeMap.containsKey(position))
-						{
+						if (positionToNodeMap.containsKey(position)) {
 							n.straitEdges[index] = positionToNodeMap.get(position);
 							index++;
 						}
@@ -489,14 +461,12 @@ public class World
 					nodeStack.push(graph.get(0));
 					visitedNodes.add(nodeStack.peek());
 
-					while (nodeStack.empty() == false)
-					{
+					while (nodeStack.empty() == false) {
 						Node n = nodeStack.peek();
 						visitedNodes.add(n);
 						boolean pushed = false;
 
-						for (int i = 0; i < n.straitEdges.length; i++)
-						{
+						for (int i = 0; i < n.straitEdges.length; i++) {
 							if (n.straitEdges[i] == null || visitedNodes.contains(n.straitEdges[i]))
 								continue;
 							nodeStack.push(n.straitEdges[i]);
@@ -508,9 +478,8 @@ public class World
 							nodeStack.pop();
 					}
 
-					if (debug)
-					{////////// Create a debug image
-						////////// /////////////////
+					if (debug) {////////// Create a debug image
+								////////// /////////////////
 						Color inGraph = new Color(0, 255, 0, 128);
 						Color outGraph = new Color(255, 0, 0, 128);
 
@@ -519,8 +488,7 @@ public class World
 						Graphics2D graphics = (Graphics2D) debugImage.getGraphics();
 						graphics.drawImage(mapImage, 0, 0, null);
 
-						for (Node n : graph)
-						{
+						for (Node n : graph) {
 							Color c = inGraph;
 
 							if (visitedNodes.contains(n) == false)
@@ -530,18 +498,15 @@ public class World
 							graphics.fillRect(n.X * 32, n.Y * 32, 32, 32);
 						}
 
-						try
-						{
+						try {
 							ImageIO.write(debugImage, "png", new File("debug_data/pathfinding_debug_image.png"));
-						} catch (IOException e)
-						{
+						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
 
-					if (visitedNodes.size() != graph.size())
-					{
+					if (visitedNodes.size() != graph.size()) {
 						System.out.println("not all nodes are conected"); // TODO
 																			// exception
 						return;
@@ -551,37 +516,31 @@ public class World
 				{ ////////// generating directions /////////////////////
 					// ingang/uitgang
 
-					class TypeIdTilePair
-					{
+					class TypeIdTilePair {
 						int typeID;
 						String name;
 						ArrayList<Tile> entances;
 						ArrayList<Tile> exits;
 
-						public TypeIdTilePair()
-						{
+						public TypeIdTilePair() {
 							entances = new ArrayList<Tile>();
 							exits = new ArrayList<Tile>();
 						}
 					}
 
 					ArrayList<TypeIdTilePair> pairs = new ArrayList<TypeIdTilePair>();
-					for (Building b : buildings)
-					{
+					for (Building b : buildings) {
 						boolean found = false;
 
-						for (TypeIdTilePair pair : pairs)
-						{
-							if (pair.typeID == b.typeID)
-							{
+						for (TypeIdTilePair pair : pairs) {
+							if (pair.typeID == b.typeID) {
 								pair.entances.addAll(b.entrances);
 								pair.exits.addAll(b.exits);
 								found = true;
 							}
 						}
 
-						if (found == false)
-						{
+						if (found == false) {
 							TypeIdTilePair pair = new TypeIdTilePair();
 							pair.typeID = b.typeID;
 							pair.name = b.name;
@@ -591,8 +550,7 @@ public class World
 						}
 					}
 
-					for (TypeIdTilePair pair : pairs)
-					{
+					for (TypeIdTilePair pair : pairs) {
 						System.out
 								.println("pair<" + pair.typeID + ", " + pair.name + ", " + pair.entances.size() + ">");
 
@@ -602,8 +560,7 @@ public class World
 						if (debug)
 							nodeToDistanceMap = new HashMap<>(graph.size());
 
-						for (Tile tile : pair.entances)
-						{
+						for (Tile tile : pair.entances) {
 							Node n = positionToNodeMap.get(new Position(tile.X, tile.Y));
 							queue.add(n);
 							tiles[n.X][n.Y].directions.put(pair.typeID, tiles[n.X][n.Y]);
@@ -618,8 +575,7 @@ public class World
 
 						int visitedNodeCount = 0;
 						int highestDistance = 0;
-						while (queue.isEmpty() == false)
-						{
+						while (queue.isEmpty() == false) {
 							Node node = queue.poll();
 							visitedNodeCount++;
 							int newNodeDistance = 0;
@@ -631,8 +587,7 @@ public class World
 							// null" : "node was found"));
 							if (node == null)
 								continue;
-							for (int i = 0; i < node.straitEdges.length; i++)
-							{
+							for (int i = 0; i < node.straitEdges.length; i++) {
 								if (node.straitEdges[i] == null)
 									continue;
 								if (visited.contains(node.straitEdges[i]) == true)
@@ -647,15 +602,13 @@ public class World
 							}
 						}
 						System.out.println("direction generation visitedNodeCount : " + visitedNodeCount);
-						if (debug)
-						{/// Creating a debug image
+						if (debug) {/// Creating a debug image
 							BufferedImage debugImage = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(),
 									BufferedImage.TYPE_INT_ARGB);
 							Graphics2D graphics = (Graphics2D) debugImage.getGraphics();
 							graphics.drawImage(mapImage, 0, 0, null);
 
-							for (Node n : graph)
-							{
+							for (Node n : graph) {
 								int color = 255 - (int) (255 / (double) highestDistance
 										* nodeToDistanceMap.get(new Position(n.X, n.Y)));
 								// System.out.println("("+n.X+", " + n.Y +") " +
@@ -665,27 +618,20 @@ public class World
 								graphics.setColor(new Color(color, color, color, 180));
 								graphics.fillRect(n.X * 32, n.Y * 32, 32, 32);
 								graphics.setColor(Color.BLACK);
-								if (numberOrText)
-								{
+								if (numberOrText) {
 									graphics.drawString(nodeToDistanceMap.get(new Position(n.X, n.Y)).toString(),
 											n.X * 32 + 16, n.Y * 32 + 16);
-								} else
-								{
+								} else {
 									Tile direction = tiles[n.X][n.Y].getDirection(pair.typeID);
-									if (direction.X < n.X)
-									{
+									if (direction.X < n.X) {
 										graphics.drawString("left", n.X * 32 + 16, n.Y * 32 + 16);
-									} else if (direction.X > n.X)
-									{
+									} else if (direction.X > n.X) {
 										graphics.drawString("right", n.X * 32 + 16, n.Y * 32 + 16);
-									} else if (direction.Y < n.Y)
-									{
+									} else if (direction.Y < n.Y) {
 										graphics.drawString("up", n.X * 32 + 16, n.Y * 32 + 16);
-									} else if (direction.Y > n.Y)
-									{
+									} else if (direction.Y > n.Y) {
 										graphics.drawString("down", n.X * 32 + 16, n.Y * 32 + 16);
-									} else
-									{
+									} else {
 										graphics.setColor(Color.ORANGE);
 										graphics.fillRect(n.X * 32, n.Y * 32, 32, 32);
 										graphics.setColor(Color.BLACK);
@@ -694,12 +640,10 @@ public class World
 								}
 							}
 
-							try
-							{
+							try {
 								ImageIO.write(debugImage, "png", new File(
 										"debug_data/pathfinding_debug_image" + pair.typeID + "_" + pair.name + ".png"));
-							} catch (IOException e)
-							{
+							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
@@ -717,39 +661,33 @@ public class World
 		p = new Spawner(bezoekers, World.instance);
 	}
 
-	public String setRealTimeToSimTime(double realTimeToSimTime)
-	{
+	public String setRealTimeToSimTime(double realTimeToSimTime) {
 		if (realTimeToSimTime < 0)
 			return "sim time can't be lower than 0";
 		this.realTimeToSimTime = realTimeToSimTime;
 		return null;
 	}
 
-	protected Tile getTileAt(int x, int y)
-	{
+	protected Tile getTileAt(int x, int y) {
 		if (x < 0 || y < 0 || x >= tiles.length || y >= tiles[0].length)
 			return null;
 		return tiles[x][y];
 	}
 
-	private class Node
-	{
+	private class Node {
 		final int X, Y;
 		Node[] straitEdges;
 
-		public Node(int x, int y)
-		{
+		public Node(int x, int y) {
 			X = x;
 			Y = y;
 			straitEdges = new Node[4];
 		}
 
 		@Override
-		public int hashCode()
-		{
+		public int hashCode() {
 			int hash = 89 * X + 7 * Y;
-			for (int i = 0; i < straitEdges.length; i++)
-			{
+			for (int i = 0; i < straitEdges.length; i++) {
 				if (straitEdges[i] != null)
 					hash = hash * 89 + straitEdges[i].X + 7 * straitEdges[i].Y * 7;
 				else
@@ -759,8 +697,7 @@ public class World
 		}
 
 		@Override
-		public boolean equals(Object o)
-		{
+		public boolean equals(Object o) {
 			if (o instanceof Node == false)
 				return false;
 			Node n = (Node) o;
@@ -768,31 +705,26 @@ public class World
 		}
 	}
 
-	private class Position
-	{
+	private class Position {
 		int x, y;
 
-		public Position(int x, int y)
-		{
+		public Position(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}
 
-		public void set(int x, int y)
-		{
+		public void set(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}
 
 		@Override
-		public int hashCode()
-		{
+		public int hashCode() {
 			return 111 * x + 7 * y;
 		}
 
 		@Override
-		public boolean equals(Object e)
-		{
+		public boolean equals(Object e) {
 			if (e instanceof Position == false)
 				return false;
 			Position p = (Position) e;
@@ -800,16 +732,14 @@ public class World
 		}
 	}
 
-	public void inclusiveUpdate(Graphics2D g2, AffineTransform t, AffineTransform oldtransform)
-	{
+	public void inclusiveUpdate(Graphics2D g2, AffineTransform t, AffineTransform oldtransform) {
 		update();
 		draw(g2, t, oldtransform);
 		cleanUp();
 	}
 
 	// this method has been checked and it works correctly 14/3/2016
-	public void update()
-	{
+	public void update() {
 		{// update everything related to time
 			long realTime = System.currentTimeMillis();
 			if (lastRealTime == UNINITIALIZED)
@@ -826,16 +756,12 @@ public class World
 		}
 
 		{// update visitors spawner
-			if (getRealTimeToSimTime() > 0.0)
-			{
-				if (!p.getTimer().isRunning())
-				{
+			if (getRealTimeToSimTime() > 0.0) {
+				if (!p.getTimer().isRunning()) {
 					p.continueTimer();
 				}
-			} else
-			{
-				if (p != null)
-				{
+			} else {
+				if (p != null) {
 					p.stopTimer();
 				}
 			}
@@ -843,15 +769,13 @@ public class World
 
 		{// update all updatables
 			ListIterator<Updateable> iterator = updateables.listIterator();
-			while (iterator.hasNext())
-			{
+			while (iterator.hasNext()) {
 				iterator.next().update();
 			}
 		}
 	}
 
-	public void cleanUp()
-	{
+	public void cleanUp() {
 		ListIterator<Closable> iterator = toRemove.listIterator();
 		while (iterator.hasNext())
 			iterator.next().close();
@@ -859,81 +783,66 @@ public class World
 		toRemove.clear();
 	}
 
-	public void draw(Graphics2D graphics, AffineTransform t, AffineTransform oldtransform)
-	{
+	public void draw(Graphics2D graphics, AffineTransform t, AffineTransform oldtransform) {
 
 		graphics.drawImage(mapImage, t, null);
 
 		ListIterator<Drawable> iterator = drawables.listIterator();
-		while (iterator.hasNext())
-		{
+		while (iterator.hasNext()) {
 			iterator.next().draw(graphics, t);
 		}
 
 		graphics.setTransform(oldtransform);
 	}
 
-	protected void regesterUpdateable(Updateable u)
-	{
+	protected void regesterUpdateable(Updateable u) {
 		updateables.add(u);
 	}
 
-	protected void unregesterUpdatable(Updateable u)
-	{
+	protected void unregesterUpdatable(Updateable u) {
 		updateables.remove(u);
 	}
 
-	protected void regesterDrawable(Drawable d)
-	{
+	protected void regesterDrawable(Drawable d) {
 		drawables.add(d);
 	}
 
-	protected void unregesterDrawable(Drawable d)
-	{
+	protected void unregesterDrawable(Drawable d) {
 		drawables.remove(d);
 	}
 
-	protected int getPathID(String building)
-	{
+	protected int getPathID(String building) {
 		if (buildingMap.containsKey(building) == false)
 			return -1;
 		return buildingMap.get(building);
 	}
 
-	protected int getSizeBuildingID()
-	{
+	protected int getSizeBuildingID() {
 		return buildingMap.size();
 	}
 
-	protected float getWorldTime()
-	{
+	protected float getWorldTime() {
 		return worldTime;
 	}
 
-	protected float getDeltaTime()
-	{
+	protected float getDeltaTime() {
 		return deltaTime;
 	}
 
-	public agenda.Time getTime()
-	{
+	public agenda.Time getTime() {
 		return new agenda.Time((int) (worldTime / 60));
 	}
 
-	public void setTime(int hours, int minuten)
-	{
+	public void setTime(int hours, int minuten) {
 		worldTime = (hours * 3600) + (minuten * 60);
 	}
 
-	protected ArrayList<Agent> getVisitors()
-	{
+	protected ArrayList<Agent> getVisitors() {
 		ArrayList<Agent> visitors = new ArrayList<>();
 		Iterator<Updateable> itr = updateables.iterator();
-		while (itr.hasNext())
-		{
+		while (itr.hasNext()) {
 			Updateable b = itr.next();
-			if (b instanceof Agent)
-			{
+			if (b instanceof Agent) {
 				visitors.add((Visitor) b);
 			}
 
@@ -942,37 +851,29 @@ public class World
 
 	}
 
-	protected ArrayList<Building> getBuildings()
-	{
+	protected ArrayList<Building> getBuildings() {
 		return buildings;
 	}
 
-	public boolean noVisitors()
-	{
-		if (getVisitors().size() > 0)
-		{
+	public boolean noVisitors() {
+		if (getVisitors().size() > 0) {
 			return false;
 		}
 
 		return true;
 	}
 
-	public double getRealTimeToSimTime()
-	{
+	public double getRealTimeToSimTime() {
 		return realTimeToSimTime;
 	}
 
-	protected ArrayList<String> getActualPerformances(Time time)
-	{
+	protected ArrayList<String> getActualPerformances(Time time) {
 		ArrayList<String> podia = new ArrayList<>();
 		ArrayList<Stage> stages = new ArrayList<>();
 		stages.addAll(World.instance.getStages());
-		for (Stage s : stages)
-		{
-			if (s.getPerformance() != null)
-			{
-				if (Time.contains(s.getPerformance().getStartTime(), s.getPerformance().getEndTime(), time))
-				{
+		for (Stage s : stages) {
+			if (s.getPerformance() != null) {
+				if (Time.contains(s.getPerformance().getStartTime(), s.getPerformance().getEndTime(), time)) {
 					podia.add(s.name);
 				}
 			}
@@ -982,15 +883,12 @@ public class World
 
 	}
 
-	public ArrayList<Stage> getStages()
-	{
+	public ArrayList<Stage> getStages() {
 		ArrayList<Stage> stages = new ArrayList<>();
 		Iterator<Building> itr = buildings.iterator();
-		while (itr.hasNext())
-		{
+		while (itr.hasNext()) {
 			Building b = itr.next();
-			if (b instanceof Stage)
-			{
+			if (b instanceof Stage) {
 				stages.add((Stage) b);
 			}
 

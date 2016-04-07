@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -243,6 +244,9 @@ public class Linking extends JPanel
 						
 						planner.repaint();
 						planner.revalidate();
+					}else
+					{
+						JOptionPane.showMessageDialog(null, "Verkeerde waarde ingevoerd!");
 					}
 				}
 			}

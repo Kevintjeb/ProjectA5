@@ -1,27 +1,32 @@
  tilemap laden gelukt!
 {"drawwith":"30"}
-
-positionToNodeMap size 1182
-gaph size 1182
-pair<0, Toilet, 12>
-tile(19, 15) node was found, there should be a node
-
+positionToNodeMap size 1472
+gaph size 1472
+pair<5, Dick stage, 3>
+tile(35, 67) node was found, there should be a node
+tile(35, 68) node was found, there should be a node
+tile(35, 69) node was found, there should be a node
+direction generation visitedNodeCount : 1472
+pair<6, derde stage, 3>
+tile(21, 34) node was found, there should be a node
+tile(22, 34) node was found, there should be a node
+tile(23, 34) node was found, there should be a node
+direction generation visitedNodeCount : 1472
+pair<7, Kevin stage, 3>
+tile(8, 16) node was found, there should be a node
+tile(8, 17) node was found, there should be a node
+tile(8, 18) node was found, there should be a node
+direction generation visitedNodeCount : 1472
+pair<3, Toilet, 4>
 tile(20, 15) node was found, there should be a node
 tile(61, 26) node was found, there should be a node
 tile(71, 62) node was found, there should be a node
 tile(35, 74) node was found, there should be a node
-
-tile(36, 74) node was found, there should be a node
-direction generation visitedNodeCount : 1182
-pair<1, Cafetaria, 15>
-tile(45, 35) node was found, there should be a node
-
+direction generation visitedNodeCount : 1472
+pair<4, Cafetaria, 5>
 tile(46, 35) node was found, there should be a node
 tile(50, 35) node was found, there should be a node
 tile(15, 38) node was found, there should be a node
 tile(16, 71) node was found, there should be a node
 tile(63, 85) node was found, there should be a node
-
-tile(64, 85) node was found, there should be a node
-direction generation visitedNodeCount : 1182
-
+direction generation visitedNodeCount : 1472
