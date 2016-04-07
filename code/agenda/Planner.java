@@ -181,7 +181,7 @@ public class Planner extends JFrame {
 		
 		setVisible(true);
 		setMinimumSize(new Dimension(600, 600));
-		setSize(1200, 700);
+		setSize(1350, 700);
 		setLocationRelativeTo(null);
 	}
 }

@@ -107,12 +107,16 @@ public class Simulator extends JPanel
 		double oldSpeed = 0.0;
 		int oldVisitors = 0;
 		
+		int breedte = 1200;
+		
+		SpringLayout layout;
+		
 		public ButtonPanel(Planner planner)
 		{
 			super(null);
-			setPreferredSize(new Dimension(1200, 80));
+			setPreferredSize(new Dimension(1350, 80));
 			setBackground(Color.WHITE);
-			SpringLayout layout = new SpringLayout();
+			layout = new SpringLayout();
 			setLayout(layout);
 			
 			this.planner = planner;
@@ -133,7 +137,7 @@ public class Simulator extends JPanel
 			visitors.setFont(font);
 			visitors2.setFont(font);
 			
-			layout.putConstraint(SpringLayout.WEST, visitors, 90, SpringLayout.WEST, this);
+			layout.putConstraint(SpringLayout.WEST, visitors, 180 , SpringLayout.WEST, this);
 			layout.putConstraint(SpringLayout.NORTH, visitors, 25, SpringLayout.NORTH, this);
 			
 			layout.putConstraint(SpringLayout.WEST, visitorsField, 75, SpringLayout.WEST, visitors);
@@ -151,7 +155,7 @@ public class Simulator extends JPanel
 			layout.putConstraint(SpringLayout.WEST, speed2, 30, SpringLayout.WEST, speedInvoer);
 			layout.putConstraint(SpringLayout.NORTH, speed2, 25, SpringLayout.NORTH, this);
 			
-			layout.putConstraint(SpringLayout.WEST, time, 900, SpringLayout.WEST, this);
+			layout.putConstraint(SpringLayout.WEST, time, 1050, SpringLayout.WEST, this);
 			layout.putConstraint(SpringLayout.NORTH, time, 15, SpringLayout.NORTH, this);
 			
 			File mapmap = new File("static_data/simulator_GUI/");
@@ -204,11 +208,11 @@ public class Simulator extends JPanel
 		public void fillPlaatjes()
 		{
 			Rectangle2D refresh2D = new Rectangle2D.Double(25 , 10, 50, 50);
-			Rectangle2D back2D = new Rectangle2D.Double(400 , 10, 50, 50);
-			Rectangle2D play2D = new Rectangle2D.Double(500 , 10, 50, 50);
-			Rectangle2D pause2D = new Rectangle2D.Double(600 , 10, 50, 50);
-			Rectangle2D forward2D = new Rectangle2D.Double(700 , 10, 50, 50);
-			Rectangle2D music2D = new Rectangle2D.Double(1100 , 10, 50, 50);
+			Rectangle2D back2D = new Rectangle2D.Double(550 , 10, 50, 50);
+			Rectangle2D play2D = new Rectangle2D.Double(650 , 10, 50, 50);
+			Rectangle2D pause2D = new Rectangle2D.Double(750 , 10, 50, 50);
+			Rectangle2D forward2D = new Rectangle2D.Double(850 , 10, 50, 50);
+			Rectangle2D music2D = new Rectangle2D.Double(1250 , 10, 50, 50);
 			
 			Area refresh = new Area(refresh2D);
 			Area back = new Area(back2D);
@@ -444,7 +448,7 @@ public class Simulator extends JPanel
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
 			
-			Rectangle2D balk = new Rectangle2D.Double(0 , 0, 1175, 75);
+			Rectangle2D balk = new Rectangle2D.Double(0 , 0, 1328, 75);
 			
 			g2.draw(balk);
 			
@@ -511,7 +515,7 @@ public class Simulator extends JPanel
 		public SimulatiePanel(Planner planner)
 		{
 			super(null);
-			setPreferredSize(new Dimension(1200, 500));
+			setPreferredSize(new Dimension(1350, 500));
 			setBackground(Color.WHITE);
 			this.planner = planner;
 			setForeground(Color.BLACK);
@@ -606,17 +610,20 @@ public class Simulator extends JPanel
 		
 		int oldTime;
 		
+		JSlider slider;
+		SpringLayout layout;
+		
 		public TimePanel(Planner planner)
 		{
 			super(null);
-			SpringLayout layout = new SpringLayout();
+			layout = new SpringLayout();
 			setLayout(layout);
 			
-			setPreferredSize(new Dimension(1200, 80));
+			setPreferredSize(new Dimension(1350, 80));
 			setBackground(Color.WHITE);
 			this.planner = planner;
 			
-			JSlider slider = new JSlider(JSlider.HORIZONTAL, 9, 24, 9);
+			slider = new JSlider(JSlider.HORIZONTAL, 9, 24, 9);
 			
 			slider.setBackground(Color.WHITE);
 		    slider.setMinorTickSpacing(1);
@@ -662,8 +669,8 @@ public class Simulator extends JPanel
 			
 			Timer updateTime = new Timer(50, update);
 			updateTime.start();
-		    
-		    layout.putConstraint(SpringLayout.WEST, slider, 25, SpringLayout.WEST, this);
+			
+			layout.putConstraint(SpringLayout.WEST, slider, 125 , SpringLayout.WEST, this);
 			layout.putConstraint(SpringLayout.NORTH, slider, 25, SpringLayout.NORTH, this);
 		}
 		
@@ -672,8 +679,8 @@ public class Simulator extends JPanel
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
 			
-			Rectangle2D balk = new Rectangle2D.Double(0 , 0, 1175, 80);
-			
+			Rectangle2D balk = new Rectangle2D.Double(0 , 0, 1328, 80);
+
 			g2.draw(balk);
 		}
 	}
