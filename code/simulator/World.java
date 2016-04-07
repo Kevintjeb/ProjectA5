@@ -56,6 +56,9 @@ public class World {
 	protected static World instance;
 
 	static int index = 0;
+	
+	Spawner p = null;
+	private int bezoekers;
 
 	private void drawBoolArray(boolean[][] info) {
 		final int size = 1;
@@ -85,8 +88,8 @@ public class World {
 		System.out.println("last deltaTime : " + deltaTime);
 	}
 
-	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath) {
-		this(agenda, stageMap, jsonPath, tileMapPath, false, false);
+	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath, int bezoekers) {
+		this(agenda, stageMap, jsonPath, tileMapPath, false, false, bezoekers);
 	}
 
 	private void clearDirectory(File file) {
@@ -102,7 +105,7 @@ public class World {
 	}
 
 	public World(agenda.Agenda agenda, Map<agenda.Stage, Integer> stageMap, File jsonPath, String tileMapPath,
-			final boolean debug, final boolean numberOrText) {
+			final boolean debug, final boolean numberOrText, int bezoekers) {
 		long constructorStart = System.currentTimeMillis();
 		instance = this;
 		this.agenda = agenda;
@@ -112,6 +115,7 @@ public class World {
 		toRemove = new LinkedList<>();
 		buildingMap = new HashMap<>();
 		this.stageMap = (HashMap<agenda.Stage, Integer>) stageMap;
+		this.bezoekers = bezoekers;
 		NightView night = new NightView();
 		PrintStream oldStream;
 		{
@@ -637,7 +641,7 @@ public class World {
 			System.setOut(oldStream);
 			System.out.println("World was created in " + (double) delta / 1000 + " seconds");
 		}
-
+		p = new Spawner(bezoekers, instance);
 	}
 
 	public String setRealTimeToSimTime(double realTimeToSimTime) {
@@ -732,6 +736,20 @@ public class World {
 
 			worldTime += deltaTime;
 			lastRealTime = realTime;
+		}
+		
+		{//update visitors spawner
+			if(getRealTimeToSimTime() > 0.0)
+			{
+				p.continueTimer();
+			}
+			else
+			{
+				if(p != null)
+				{
+					p.stopTimer();
+				}
+			}
 		}
 
 		{// update all updatables

@@ -49,7 +49,7 @@ public class Simulator extends JPanel
 	Planner planner;
 	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
 	Font timeFont = new Font("SANS_SERIF", Font.BOLD, 36);
-	Spawner p;
+	
 	Map<agenda.Stage, Integer> stageMap = new HashMap<>();
 	
 	World world;
@@ -58,13 +58,14 @@ public class Simulator extends JPanel
 	
 	int uren;
 	int minuten;
-	private int bezoekers;
 	int updatetijd = 1000/30;
 	
 	ActionListener updateTime;
 	
 	Timer updateT;
 	private AdvancedPlayer player;
+	
+	private int bezoekers;
 	
 	public Simulator(File json, Planner planner, Map<agenda.Stage, Integer> stageMap, int bezoekers)
 	{
@@ -74,7 +75,7 @@ public class Simulator extends JPanel
 		this.planner = planner;
 		this.stageMap = stageMap;
 		this.bezoekers = bezoekers;
-		world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false);
+		world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false, bezoekers);
 		
 		ButtonPanel buttonPanel = new ButtonPanel(planner);
 		
@@ -259,21 +260,9 @@ public class Simulator extends JPanel
 								break;
 							case 2:
 								playSim();
-								if(p == null)
-								{
-									p = new Spawner(bezoekers, world);
-								}else if(!p.getTimer().isRunning())
-								{
-									p.continueTimer();
-								}
-								
 								break;
 							case 3:
 								pauseSim();
-								if(p != null)
-								{
-									p.stopTimer();
-								}
 								break;
 							case 4:
 								forwardSim();
@@ -367,7 +356,7 @@ public class Simulator extends JPanel
 					if(uren > 26) // wanneer alle bezoekers wegzijn stopt de simulatie of wanneer 3 uur nachts is bereikt
 					{
 						pauseSim();
-						world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false);
+						world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false, bezoekers);
 						tijd = world.getTime();
 						minuten = tijd.getMinutes();
 						uren = tijd.getHours();
