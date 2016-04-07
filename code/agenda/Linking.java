@@ -84,7 +84,7 @@ public class Linking extends JPanel
 			if (stage == clickedStage)
 			{
 				g2d.setColor(new Color(25, 160, 95, 255));
-				System.out.println(stage);
+				//System.out.println(stage);
 			} else
 				g2d.setColor(new Color(25, 160, 95, 128));
 
@@ -114,7 +114,7 @@ public class Linking extends JPanel
 			if (count == clickedNumber)
 			{
 				g2d.setColor(new Color(225, 230, 150, 255));
-				System.out.println(i);
+				//System.out.println(i);
 			} else
 				g2d.setColor(new Color(225, 230, 150, 128));
 			count++;
@@ -188,7 +188,7 @@ public class Linking extends JPanel
 				{
 					if (stages.get(i).contains(e.getPoint()))
 					{
-						System.out.println("selected stage " + i);
+						//System.out.println("selected stage " + i);
 						selectedStage = planner.agenda.getStages().get(i);
 						rectSelected = stages.get(i);
 						clickedStage = i;
@@ -208,7 +208,7 @@ public class Linking extends JPanel
 						{
 							for (int y = lines.size() - 1; y > 0; y--)
 							{
-								System.out.println(lines.size());
+								//System.out.println(lines.size());
 								if (lines.get(y).get(0).equals(rectSelected))
 									lines.remove(lines.get(y));
 							}
@@ -219,7 +219,7 @@ public class Linking extends JPanel
 						lines.add(line);
 
 						map.put(selectedStage, selectedNumber);
-						System.out.println(map.entrySet());
+						//System.out.println(map.entrySet());
 						repaint();
 					}
 
@@ -238,10 +238,10 @@ public class Linking extends JPanel
 					if ((Pattern.matches("[a-zA-Z]+", input.getText()) == false && input.getText().length() > 0))
 					{
 						planner.tabbedPane.removeTabAt(2);
-						System.out.println(Integer.parseInt(input.getText()));
+						//System.out.println(Integer.parseInt(input.getText()));
 						planner.tabbedPane.addTab("Simulatie",
 								new Simulator(json, planner, map, Integer.parseInt(input.getText())));
-						planner.tabbedPane.setSelectedIndex(2);
+						
 						planner.repaint();
 						planner.revalidate();
 					}else

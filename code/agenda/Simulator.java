@@ -191,7 +191,7 @@ public class Simulator extends JPanel
 			}
 			else
 			{
-				System.out.println("Map bestaat niet");
+				//System.out.println("Map bestaat niet");
 			}
 		}
 		
@@ -357,7 +357,7 @@ public class Simulator extends JPanel
 					
 					if(uren > 26) // wanneer alle bezoekers wegzijn stopt de simulatie of wanneer 3 uur nachts is bereikt
 					{
-						System.out.println("World : " + world + "bezoekers : " + bezoekers);
+						//System.out.println("World : " + world + "bezoekers : " + bezoekers);
 						pauseSim();
 						world.close();
 						world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false, bezoekers);
@@ -473,16 +473,16 @@ public class Simulator extends JPanel
 					InputStream is = new BufferedInputStream(new FileInputStream(filename));
 					player = new AdvancedPlayer(is, FactoryRegistry.systemRegistry().createAudioDevice());
 				} catch (IOException e) {
-					System.out.println("ERROR - Play music");
+					//System.out.println("ERROR - Play music");
 				} catch (JavaLayerException e) {
-					System.out.println("ERROR - Play music");
+					//System.out.println("ERROR - Play music");
 				}
 				Thread playerThread = new Thread() {
 					public void run() {
 						try {
 							player.play(5000);
 						} catch (JavaLayerException e) {
-							System.out.println("ERROR - Play music");
+							//System.out.println("ERROR - Play music");
 						} finally {
 							if(musicOn)
 								playMusic("static_data\\music\\music.mp3");
@@ -491,7 +491,7 @@ public class Simulator extends JPanel
 				};
 				playerThread.start();
 			} catch (Exception ex) {
-				System.out.println("ERROR - Play music");
+				//System.out.println("ERROR - Play music");
 			}
 
 		}

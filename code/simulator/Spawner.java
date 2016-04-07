@@ -41,7 +41,7 @@ public class Spawner {
 			timeLeft -= World.instance.getDeltaTime();
 			while (timeLeft <= 0) {
 				numberVisitors++;
-				new Visitor(tiles[(int) (Math.random()*3)], 0.01f);
+				new Visitor(tiles[(int) (Math.random()*3)], 0.1f);
 				timeLeft = 0;
 				timeLeft += spawnTime;
 			}

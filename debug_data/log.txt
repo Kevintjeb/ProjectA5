@@ -1,17 +1,57 @@
  tilemap laden gelukt!
 {"drawwith":"30"}
-positionToNodeMap size 1164
-gaph size 1164
-pair<0, Toilet, 4>
+positionToNodeMap size 1936
+gaph size 1936
+pair<0, 3FM Stage, 3>
+tile(48, 14) node was found, there should be a node
+tile(49, 14) node was found, there should be a node
+tile(50, 14) node was found, there should be a node
+direction generation visitedNodeCount : 1936
+pair<1, Alternative Stage, 3>
+tile(84, 62) node was found, there should be a node
+tile(85, 62) node was found, there should be a node
+tile(86, 62) node was found, there should be a node
+direction generation visitedNodeCount : 1936
+pair<2, Main Stage, 3>
+tile(77, 21) node was found, there should be a node
+tile(78, 21) node was found, there should be a node
+tile(79, 21) node was found, there should be a node
+direction generation visitedNodeCount : 1936
+pair<3, Dance Stage, 3>
+tile(8, 16) node was found, there should be a node
+tile(8, 17) node was found, there should be a node
+tile(8, 18) node was found, there should be a node
+direction generation visitedNodeCount : 1936
+pair<4, Oldies Stage, 3>
+tile(35, 67) node was found, there should be a node
+tile(35, 68) node was found, there should be a node
+tile(35, 69) node was found, there should be a node
+direction generation visitedNodeCount : 1936
+pair<5, Tent Stage, 3>
+tile(73, 91) node was found, there should be a node
+tile(73, 92) node was found, there should be a node
+tile(73, 93) node was found, there should be a node
+direction generation visitedNodeCount : 1936
+pair<6, Beach Stage, 3>
+tile(21, 34) node was found, there should be a node
+tile(22, 34) node was found, there should be a node
+tile(23, 34) node was found, there should be a node
+direction generation visitedNodeCount : 1936
+pair<7, Silence Stage, 3>
+tile(39, 93) node was found, there should be a node
+tile(39, 94) node was found, there should be a node
+tile(39, 95) node was found, there should be a node
+direction generation visitedNodeCount : 1936
+pair<8, Toilet, 4>
 tile(20, 15) node was found, there should be a node
 tile(61, 26) node was found, there should be a node
 tile(71, 62) node was found, there should be a node
 tile(35, 74) node was found, there should be a node
-direction generation visitedNodeCount : 1164
-pair<1, Cafetaria, 5>
+direction generation visitedNodeCount : 1936
+pair<9, Cafetaria, 5>
 tile(46, 35) node was found, there should be a node
 tile(50, 35) node was found, there should be a node
 tile(15, 38) node was found, there should be a node
 tile(16, 71) node was found, there should be a node
 tile(63, 85) node was found, there should be a node
-direction generation visitedNodeCount : 1164
+direction generation visitedNodeCount : 1936
