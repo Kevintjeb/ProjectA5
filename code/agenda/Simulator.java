@@ -354,7 +354,7 @@ public class Simulator extends JPanel
 					minuten = tijd.getMinutes();
 					uren = tijd.getHours();
 					
-					if(uren > 26) // wanneer alle bezoekers wegzijn stopt de simulatie of wanneer 3 uur nachts is bereikt
+					if(uren > 26 || world.noVisitors()) // wanneer alle bezoekers wegzijn stopt de simulatie of wanneer 3 uur nachts is bereikt
 					{
 						//System.out.println("World : " + world + "bezoekers : " + bezoekers);
 						pauseSim();

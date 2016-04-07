@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -911,6 +912,14 @@ public class World {
 	public void setVisPerMin(int v)
 	{
 		visPerMin = v;
+	}
+	
+	protected void remove(Closable c)
+	{
+		if(toRemove.contains(c) == false)
+		{
+			toRemove.add(c);
+		}
 	}
 
 }

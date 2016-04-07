@@ -78,7 +78,7 @@ public class Visitor extends Agent {
 		if (World.instance.getWorldTime() >= (24 * 60 * 60) && !goingtoexit) {
 			goingtoexit = true;
 			setDestination(World.instance.getPathID("exit"));
-			
+			World.instance.p.stopTimer();
 		}
 		if (!goingtoexit) {
 			bezoekPerformance();
@@ -120,10 +120,18 @@ public class Visitor extends Agent {
 			return null;
 		}
 	}
-
+	boolean closed = false;
 	@Override
 	void destenationReached() {
-
+		
+		if(goingtoexit)
+		{
+			if(closed == false)
+			{
+				World.instance.remove(this);
+				closed = true;
+			}
+		}
 		// setDestination(i2++ % MOD);
 		if (World.instance.getBuildings().get(this.getDestinationOld()).toString().toLowerCase().endsWith("stage")) {
 			toDance = true;
