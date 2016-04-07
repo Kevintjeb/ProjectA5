@@ -241,7 +241,7 @@ public class Linking extends JPanel
 						//System.out.println(Integer.parseInt(input.getText()));
 						planner.tabbedPane.addTab("Simulatie",
 								new Simulator(json, planner, map, Integer.parseInt(input.getText())));
-						
+						planner.tabbedPane.setSelectedIndex(2);
 						planner.repaint();
 						planner.revalidate();
 					}else
