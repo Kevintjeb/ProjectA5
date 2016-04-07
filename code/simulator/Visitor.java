@@ -234,7 +234,7 @@ public class Visitor extends Agent {
 			}
 			else
 			{
-				setDestination(404);
+				//TODO exit location
 			}
 
 		}
