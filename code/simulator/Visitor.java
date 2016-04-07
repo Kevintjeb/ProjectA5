@@ -12,32 +12,11 @@ import javax.imageio.ImageIO;
 import agenda.Artist;
 import agenda.Performance;
 
-/* 
- * Deze klasse kan later toegevoegd worden aan de Visitor klasse
+/*
  * Alle waarden betreffende verloop zijn per seconde
- * 
- * TODO: Genre voorkeuren nader bepalen
- * 			>> Wanneer voorkeur voor genre speelt, daar naartoe
- * 			>> Wanneer voorkeur niet speelt, naar optreden met de hoogste populariteit
- * 			>> Wanneer populairste vol, volgende in de lijst
- * TODO: Waarden voor gedrag natuurlijker maken
  * 
  * -- Thijs
  */
-
-/* 
-  * Deze klasse kan later toegevoegd worden aan de Visitor klasse
-  * Alle waarden betreffende verloop zijn per seconde
-  * 
-  * TODO: Random genrevoorkeur meegeven, kan door middel 
-  * 	  van performances uit te lezen
-  * TODO: Implementeren, kan wanneer Pathfinding werkt
-  * TODO: Zakgeld toevoegen
-  * TODO: Static array maken met agent images erin, geheugen friendly alles
-  * Optional TODO: Omdraainen waarden van oplopend naar aflopend
-  * 
-  * -- Thijs
-  */
 
 public class Visitor extends Agent {
 
@@ -48,13 +27,13 @@ public class Visitor extends Agent {
 
 	private String genreVoorkeur;
 
-	private double blaasInhoud = randomWaardeDouble(7000, 10000);
+	private double blaasInhoud = randomWaardeDouble(70, 100);
 	private double drankHandling = randomWaardeDouble(0.5, 1.5);
-	private double blaasToleratie = randomWaardeDouble(200, 500);
+	private double blaasToleratie = randomWaardeDouble(20, 50);
 
-	private double maagInhoud = randomWaardeDouble(7000, 10000);
+	private double maagInhoud = randomWaardeDouble(70, 100);
 	private double snackHandling = randomWaardeDouble(0.5, 1.5);
-	private double maagToleratie = randomWaardeDouble(200, 500);
+	private double maagToleratie = randomWaardeDouble(20, 50);
 
 	private double dorst = randomWaardeDouble(7000, 10000);
 	private double verloopDorst = randomWaardeDouble(0.5, 1.5);
@@ -98,9 +77,7 @@ public class Visitor extends Agent {
 		bezoekFaciliteit();
 		danceMethod();
 		toiletBehoefte();
-		setBlaasCapaciteit();
 		groteBehoefte();
-		setMaagCapaciteit();
 		drankBehoefte();
 		setDorstPercentage();
 		snackBehoefte();
@@ -271,7 +248,7 @@ public class Visitor extends Agent {
 				setDestination(World.instance.getPathID("Toilet"));
 				if (reached) {
 					aantalDrankjes = 0;
-					blaasInhoud = 5000;
+					blaasInhoud = 10000;
 					toiletBezoek = false;
 				}
 			}
@@ -280,8 +257,8 @@ public class Visitor extends Agent {
 				if (reached) {
 					aantalSnacks = 0;
 					aantalDrankjes = 0;
-					maagInhoud = 5000;
-					blaasInhoud = 5000;
+					maagInhoud = 10000;
+					blaasInhoud = 10000;
 					grootToiletBezoek = false;
 				}
 			}
@@ -290,7 +267,8 @@ public class Visitor extends Agent {
 				setDestination(World.instance.getPathID("Cafetaria"));
 				if (reached) {
 					aantalDrankjes++;
-					dorst = 5000;
+					dorst = 10000;
+					setBlaasCapaciteit();
 					drankBezoek = false;
 				}
 			}
@@ -299,7 +277,8 @@ public class Visitor extends Agent {
 				setDestination(World.instance.getPathID("Cafetaria"));
 				if (reached) {
 					aantalSnacks++;
-					honger = 5000;
+					honger = 10000;
+					setMaagCapaciteit();
 					eetBezoek = false;
 				}
 
