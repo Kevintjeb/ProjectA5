@@ -14,13 +14,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class Linking extends JPanel {
+public class Linking extends JPanel
+{
 	Planner planner;
 	BufferedImage image;
 	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
@@ -31,7 +33,7 @@ public class Linking extends JPanel {
 
 	Rectangle2D rectSelected;
 	Rectangle2D rectNumSelected;
-	
+
 	ArrayList<ArrayList<Rectangle2D>> lines = new ArrayList<ArrayList<Rectangle2D>>();
 
 	Stage selectedStage;
@@ -39,12 +41,13 @@ public class Linking extends JPanel {
 
 	int clickedStage = -1;
 	int clickedNumber = -1;
-	
+
 	Rectangle2D runButton;
 	JTextField input;
 	File json;
 
-	public Linking(Planner planner, File json) {
+	public Linking(Planner planner, File json)
+	{
 		super(null);
 		this.planner = planner;
 		this.json = json;
@@ -53,27 +56,32 @@ public class Linking extends JPanel {
 		input = new JTextField();
 		input.setBounds(220, 560, 30, 20);
 		this.add(input);
-		
+
 		JLabel label = new JLabel("Aantal bezoekers :");
 		label.setBounds(130, 560, 100, 20);
 		this.add(label);
 	}
 
-	public void paintComponent(Graphics g) {
+	public void paintComponent(Graphics g)
+	{
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		int y = 10;
 		int y2 = 10;
-		if (!stages.isEmpty()) {
+		if (!stages.isEmpty())
+		{
 			stages.clear();
 		}
-		if (!numbers.isEmpty()) {
+		if (!numbers.isEmpty())
+		{
 			numbers.clear();
 		}
 
-		for (int stage = 0; stage < planner.agenda.getStages().size(); stage++) {
+		for (int stage = 0; stage < planner.agenda.getStages().size(); stage++)
+		{
 
-			if (stage == clickedStage) {
+			if (stage == clickedStage)
+			{
 				g2d.setColor(new Color(25, 160, 95, 255));
 				System.out.println(stage);
 			} else
@@ -100,8 +108,10 @@ public class Linking extends JPanel {
 		}
 
 		int count = 0;
-		for (int i = 5; i <= 28; i = i + 3) {
-			if (count == clickedNumber) {
+		for (int i = 5; i <= 28; i = i + 3)
+		{
+			if (count == clickedNumber)
+			{
 				g2d.setColor(new Color(225, 230, 150, 255));
 				System.out.println(i);
 			} else
@@ -140,35 +150,43 @@ public class Linking extends JPanel {
 		g2d.setColor(Color.WHITE);
 		g2d.drawString("Run", xPosPotty + 162, (yPosPotty + 500));
 
-		//if (drawLine) {
-		if(!lines.isEmpty()){
-		for(ArrayList<Rectangle2D> line: lines)
+		// if (drawLine) {
+		if (!lines.isEmpty())
 		{
-			int lx = (int) line.get(0).getX() + 100;
-			int ly = (int) line.get(0).getY() + 25;
-			int rx = (int) line.get(1).getX();
-			int ry = (int) line.get(1).getY() + 25;
+			for (ArrayList<Rectangle2D> line : lines)
+			{
+				int lx = (int) line.get(0).getX() + 100;
+				int ly = (int) line.get(0).getY() + 25;
+				int rx = (int) line.get(1).getX();
+				int ry = (int) line.get(1).getY() + 25;
 
-			g2d.setColor(Color.BLACK);
-			g2d.setStroke(new BasicStroke(5));
-			g2d.drawLine(lx, ly, rx, ry);
+				g2d.setColor(Color.BLACK);
+				g2d.setStroke(new BasicStroke(5));
+				g2d.drawLine(lx, ly, rx, ry);
+			}
 		}
-		}
-		try {
+		try
+		{
 			image = ImageIO.read(new File("maps\\MapImage.jpg"));
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		g2d.drawImage(image, null, 500, 0);
-		//}
+		// }
 	}
 
-	public void clicked() {
-		addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				for (int i = 0; i < stages.size(); i++) {
-					if (stages.get(i).contains(e.getPoint())) {
+	public void clicked()
+	{
+		addMouseListener(new MouseAdapter()
+		{
+			public void mousePressed(MouseEvent e)
+			{
+				for (int i = 0; i < stages.size(); i++)
+				{
+					if (stages.get(i).contains(e.getPoint()))
+					{
 						System.out.println("selected stage " + i);
 						selectedStage = planner.agenda.getStages().get(i);
 						rectSelected = stages.get(i);
@@ -178,24 +196,26 @@ public class Linking extends JPanel {
 
 				}
 
-				for (int i = 0; i < numbers.size(); i++) {
-					if (numbers.get(i).contains(e.getPoint())) {
+				for (int i = 0; i < numbers.size(); i++)
+				{
+					if (numbers.get(i).contains(e.getPoint()))
+					{
 						selectedNumber = 5 + (i * 3);
 						rectNumSelected = numbers.get(i);
 						clickedNumber = i;
-						if(!lines.isEmpty()){
-							for(int y = lines.size()-1; y > 0; y--)
+						if (!lines.isEmpty())
+						{
+							for (int y = lines.size() - 1; y > 0; y--)
 							{
 								System.out.println(lines.size());
-							if(lines.get(y).get(0).equals(rectSelected))
-								lines.remove(lines.get(y));							
+								if (lines.get(y).get(0).equals(rectSelected))
+									lines.remove(lines.get(y));
 							}
 						}
 						ArrayList<Rectangle2D> line = new ArrayList<Rectangle2D>();
 						line.add(rectSelected);
 						line.add(rectNumSelected);
 						lines.add(line);
-						
 
 						map.put(selectedStage, selectedNumber);
 						System.out.println(map.entrySet());
@@ -206,21 +226,31 @@ public class Linking extends JPanel {
 			}
 		});
 
-		addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (runButton.contains(e.getPoint())) {
-					planner.tabbedPane.removeTabAt(2);
-					//TODO PARSE TO INT
-					planner.tabbedPane.addTab("Simulatie", new Simulator(json, planner, map,Integer.parseInt(input.getText())));
+		addMouseListener(new MouseAdapter()
+		{
+			public void mousePressed(MouseEvent e)
+			{
+				//
+				if (runButton.contains(e.getPoint()))
+				{
 
-					planner.repaint();
-					planner.revalidate();
+					if ((Pattern.matches("[a-zA-Z]+", input.getText()) == false && input.getText().length() > 0))
+					{
+						planner.tabbedPane.removeTabAt(2);
+						System.out.println(Integer.parseInt(input.getText()));
+						planner.tabbedPane.addTab("Simulatie",
+								new Simulator(json, planner, map, Integer.parseInt(input.getText())));
+						
+						planner.repaint();
+						planner.revalidate();
+					}
 				}
 			}
 		});
 	}
 
-	public HashMap<Stage, Integer> getLinkMap() {
+	public HashMap<Stage, Integer> getLinkMap()
+	{
 		return map;
 	}
 }
