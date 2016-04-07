@@ -36,8 +36,6 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.Timer;
 
-import simulator.Spawner;
-
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.FactoryRegistry;
 import javazoom.jl.player.advanced.AdvancedPlayer;
@@ -357,6 +355,7 @@ public class Simulator extends JPanel
 					{
 						System.out.println("World : " + world + "bezoekers : " + bezoekers);
 						pauseSim();
+						world.close();
 						world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false, bezoekers);
 						tijd = world.getTime();
 						minuten = tijd.getMinutes();
