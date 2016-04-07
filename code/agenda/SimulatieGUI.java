@@ -164,7 +164,6 @@ public class SimulatieGUI extends JPanel
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			
 			planner.tabbedPane.removeTabAt(2);
 			linking = new Linking(planner, maps.get(number)); //linking of stages in the agenda to stages in the simulator
 			planner.tabbedPane.addTab("Simulatie", linking);

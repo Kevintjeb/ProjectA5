@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Linking extends JPanel {
 	Planner planner;
@@ -39,7 +41,7 @@ public class Linking extends JPanel {
 	int clickedNumber = -1;
 	
 	Rectangle2D runButton;
-
+	JTextField input;
 	File json;
 
 	public Linking(Planner planner, File json) {
@@ -48,6 +50,13 @@ public class Linking extends JPanel {
 		this.json = json;
 		setPreferredSize(new Dimension(400, 550));
 		clicked();
+		input = new JTextField();
+		input.setBounds(220, 560, 30, 20);
+		this.add(input);
+		
+		JLabel label = new JLabel("Aantal bezoekers :");
+		label.setBounds(130, 560, 100, 20);
+		this.add(label);
 	}
 
 	public void paintComponent(Graphics g) {
@@ -201,7 +210,9 @@ public class Linking extends JPanel {
 			public void mousePressed(MouseEvent e) {
 				if (runButton.contains(e.getPoint())) {
 					planner.tabbedPane.removeTabAt(2);
-					planner.tabbedPane.addTab("Simulatie", new Simulator(json, planner, map));
+					//TODO PARSE TO INT
+					planner.tabbedPane.addTab("Simulatie", new Simulator(json, planner, map,(input.getText())));
+
 					planner.repaint();
 					planner.revalidate();
 				}
