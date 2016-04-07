@@ -19,6 +19,7 @@ abstract class Agent implements Updateable, Drawable {
 	static int generateNewTypeID() {
 		return currentTypeID++;
 	}
+
 	public Agent(Image image, Tile tile, Point2D point, float speed) {
 		this.image = image;
 		this.currentTile = tile;
@@ -123,71 +124,92 @@ abstract class Agent implements Updateable, Drawable {
 				remainingMoveDistance = 0;
 
 				currentPosition.setLocation(currentPosition.getX() + tempX, currentPosition.getY() + tempY);
+
+			}
+			//collision
+			{
+				for (Agent v : World.instance.getVisitors()) {
+					for (Agent v2 : World.instance.getVisitors()) {
+						if (v == v2) {
+							continue;
+						}
+						if (v.currentPosition.distance(v2.currentPosition) < 1) {
+
+							v.nextPosition = new Point2D.Double(v.currentPosition.getX() - .25, v.currentPosition.getY() + .25);
+							v2.nextPosition = new Point2D.Double(v2.currentPosition.getX() + .25,
+									v2.currentPosition.getY() - .25);
+
+						}
+					}
+				}
 			}
 		}
 
 		// collision : TODO collision! RIP?
-//		boolean isCollision = false;
-//		Agent v = this;
-//		for (Agent v2 : World.instance.getVisitors()) {
-//			if (v == v2) {
-//				continue;
-//			}
-//			Vec2f A = new Vec2f((float)v.currentPosition.getX(), (float)v.currentPosition.getY());
-//			Vec2f B = new Vec2f((float)v2.currentPosition.getX(), (float)v2.currentPosition.getY());
-//			Vec2f C = new Vec2f(B.x-A.x, B.y-A.y);
-//			final float r = 0.5f;
-//			final float cm = C.distance(new Vec2f()); // manitude of c
-//			if (cm > r*2)
-//				continue;
-//			float mod = ((r*2-cm)/2);
-//			Vec2f M = new Vec2f(C.x/cm*mod, C.y/cm*mod);
-//			Vec2f A2 = new Vec2f((float)(A.x-M.x-M.y*0.5),(float)( A.y-M.y-M.x*0.5));
-//			Vec2f B2 = new Vec2f((float)(A.x+M.x+M.y*0.5),(float)( A.y+M.y+M.x*0.5));
-//			
-//			v.currentPosition = new Point2D.Double(A2.x, A2.y);
-//			if (A.distance(A2) > 1)
-//			{
-//				Tile tile = World.instance.getTileAt((int)A2.x, (int)A2.y);
-//				if (tile.getDirection(v.destination) != null) // it is a tile with pathfinding
-//				{
-//					v.currentTile = tile;
-//					v.nextTile = null; // v's move will fix this
-//				}
-//			}
-//
-//			v2.currentPosition = new Point2D.Double(B2.x, B2.y);
-//			if (B.distance(B2) > 1) {
-//				Tile tile = World.instance.getTileAt((int) B2.x, (int) B2.y);
-//				if (tile.getDirection(v2.destination) != null) // it is a tile
-//																// with
-//																// pathfinding
+		// boolean isCollision = false;
+		// Agent v = this;
+		// for (Agent v2 : World.instance.getVisitors()) {
+		// if (v == v2) {
+		// continue;
+		// }
+		// Vec2f A = new Vec2f((float)v.currentPosition.getX(),
+		// (float)v.currentPosition.getY());
+		// Vec2f B = new Vec2f((float)v2.currentPosition.getX(),
+		// (float)v2.currentPosition.getY());
+		// Vec2f C = new Vec2f(B.x-A.x, B.y-A.y);
+		// final float r = 0.5f;
+		// final float cm = C.distance(new Vec2f()); // manitude of c
+		// if (cm > r*2)
+		// continue;
+		// float mod = ((r*2-cm)/2);
+		// Vec2f M = new Vec2f(C.x/cm*mod, C.y/cm*mod);
+		// Vec2f A2 = new Vec2f((float)(A.x-M.x-M.y*0.5),(float)(
+		// A.y-M.y-M.x*0.5));
+		// Vec2f B2 = new Vec2f((float)(A.x+M.x+M.y*0.5),(float)(
+		// A.y+M.y+M.x*0.5));
+		//
+		// v.currentPosition = new Point2D.Double(A2.x, A2.y);
+		// if (A.distance(A2) > 1)
+		// {
+		// Tile tile = World.instance.getTileAt((int)A2.x, (int)A2.y);
+		// if (tile.getDirection(v.destination) != null) // it is a tile with
+		// pathfinding
+		// {
+		// v.currentTile = tile;
+		// v.nextTile = null; // v's move will fix this
+		// }
+		// }
+		//
+		// v2.currentPosition = new Point2D.Double(B2.x, B2.y);
+		// if (B.distance(B2) > 1) {
+		// Tile tile = World.instance.getTileAt((int) B2.x, (int) B2.y);
+		// if (tile.getDirection(v2.destination) != null) // it is a tile
+		// // with
+		// // pathfinding
 	}
 
-	public void setCurrentPosition(Point2D destination)
-	{
-		this.currentPosition = destination; 
+	public void setCurrentPosition(Point2D destination) {
+		this.currentPosition = destination;
 	}
-	
-	public Point2D getCurrentPosition()
-	{
+
+	public Point2D getCurrentPosition() {
 		return this.currentPosition;
 	}
-	
-	public int getDestinationOld()
-	{
+
+	public int getDestinationOld() {
 		return this.destinationOld;
 	}
-//	public void destenationReached(String destination) {
-//		int teller = 0;
-//		Tile[] tileArray = dance(destination);
-//		while (teller < 200) {
-//			nextPosition = new Point2D.Double(tileArray[teller % 3].X, tileArray[teller % 3].Y);
-//			teller++;
-//		}
-//		// setDestination(i2++ % MOD);
-//		// System.out.println("VISITOR destination reached");
-//	}
+	// public void destenationReached(String destination) {
+	// int teller = 0;
+	// Tile[] tileArray = dance(destination);
+	// while (teller < 200) {
+	// nextPosition = new Point2D.Double(tileArray[teller % 3].X,
+	// tileArray[teller % 3].Y);
+	// teller++;
+	// }
+	// // setDestination(i2++ % MOD);
+	// // System.out.println("VISITOR destination reached");
+	// }
 
 	@Override
 	public void draw(Graphics2D graphics, AffineTransform t) {
