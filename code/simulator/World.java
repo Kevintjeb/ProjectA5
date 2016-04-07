@@ -45,7 +45,7 @@ public class World {
 	// with this number,
 	// and the ceiling of the product is taken is will give the time in
 	// simulation time in seconds
-	private float worldTime; // the current time in the simulation world
+	private float worldTime = 32400; // the current time in the simulation world
 	private float deltaTime; // the delta between the second to last update()
 	private long lastRealTime = UNINITIALIZED; // the last time update was
 												// called is used to calculate
@@ -820,6 +820,21 @@ public class World {
 
 	protected ArrayList<Building> getBuildings() {
 		return buildings;
+	}
+	
+	public boolean noVisitors()
+	{
+		if(getVisitors().size() > 0)
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public double getRealTimeToSimTime()
+	{
+		return realTimeToSimTime;
 	}
 
 	protected ArrayList<String> getActualPerformances(Time time) {

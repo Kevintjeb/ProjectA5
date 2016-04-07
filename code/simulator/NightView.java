@@ -15,7 +15,6 @@ public class NightView implements Updateable, Drawable
 	{
 		World.instance.regesterUpdateable(this);
 		World.instance.regesterDrawable(this);
-		System.out.println("nightview");
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class NightView implements Updateable, Drawable
 		
 		if(nightView && overlayAlpha < 190)
 		{
-			overlayAlpha++;
+			overlayAlpha += World.instance.getRealTimeToSimTime();
 		}
 	}
 

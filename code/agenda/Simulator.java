@@ -19,8 +19,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +37,14 @@ import javax.swing.SpringLayout;
 import javax.swing.Timer;
 
 import simulator.Spawner;
+
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.FactoryRegistry;
+import javazoom.jl.player.advanced.AdvancedPlayer;
 import simulator.World;
 
 public class Simulator extends JPanel
-{
+{	
 	File json;
 	Planner planner;
 	Font font = new Font("SANS_SERIF", Font.PLAIN, 14);
@@ -57,6 +64,7 @@ public class Simulator extends JPanel
 	ActionListener updateTime;
 	
 	Timer updateT;
+	private AdvancedPlayer player;
 	
 	public Simulator(File json, Planner planner, Map<agenda.Stage, Integer> stageMap, int bezoekers)
 	{
@@ -68,13 +76,14 @@ public class Simulator extends JPanel
 		this.bezoekers = bezoekers;
 		world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false);
 		
+		ButtonPanel buttonPanel = new ButtonPanel(planner);
 		
-		add(new ButtonPanel(planner), BorderLayout.NORTH);
+		add(buttonPanel, BorderLayout.NORTH);
 		add(new SimulatiePanel(planner), BorderLayout.CENTER);
 		add(new TimePanel(planner), BorderLayout.SOUTH);
+		
+		buttonPanel.playMusic("static_data\\music\\music.mp3");
 	}
-	
-	
 	
 	class ButtonPanel extends JPanel
 	{
@@ -92,6 +101,7 @@ public class Simulator extends JPanel
 		JLabel visitors2 = new JLabel(" aantal/min");
 		
 		boolean plays = false;
+		boolean musicOn = true;
 		
 		double oldSpeed = 0.0;
 		int oldVisitors = 0;
@@ -100,6 +110,7 @@ public class Simulator extends JPanel
 		{
 			super(null);
 			setPreferredSize(new Dimension(1200, 80));
+			setBackground(Color.WHITE);
 			SpringLayout layout = new SpringLayout();
 			setLayout(layout);
 			
@@ -196,28 +207,28 @@ public class Simulator extends JPanel
 			Rectangle2D play2D = new Rectangle2D.Double(500 , 10, 50, 50);
 			Rectangle2D pause2D = new Rectangle2D.Double(600 , 10, 50, 50);
 			Rectangle2D forward2D = new Rectangle2D.Double(700 , 10, 50, 50);
-			Rectangle2D power2D = new Rectangle2D.Double(1100 , 10, 50, 50);
+			Rectangle2D music2D = new Rectangle2D.Double(1100 , 10, 50, 50);
 			
 			Area refresh = new Area(refresh2D);
 			Area back = new Area(back2D);
 			Area play = new Area(play2D);
 			Area pause = new Area(pause2D);
 			Area forward = new Area(forward2D);
-			Area power = new Area(power2D);
+			Area music = new Area(music2D);
 			
 			rechthoek.add(refresh2D);
 			rechthoek.add(back2D);
 			rechthoek.add(play2D);
 			rechthoek.add(pause2D);
 			rechthoek.add(forward2D);
-			rechthoek.add(power2D);
+			rechthoek.add(music2D);
 			
 			plaatjes.add(refresh);
 			plaatjes.add(back);
 			plaatjes.add(play);
 			plaatjes.add(pause);
 			plaatjes.add(forward);
-			plaatjes.add(power);
+			plaatjes.add(music);
 			
 		}
 		
@@ -234,6 +245,13 @@ public class Simulator extends JPanel
 							switch (i)
 							{
 							case 0:
+								musicOn = false;
+								synchronized(this) {
+						            if(player != null) {
+						                player.stop();
+						                player = null;
+						            }
+						        }
 								refreshSim();
 								break;
 							case 1:
@@ -261,7 +279,20 @@ public class Simulator extends JPanel
 								forwardSim();
 								break;
 							case 5:
-								System.exit(0);
+								if(musicOn){
+									musicOn = false;
+								synchronized(this) {
+						            if(player != null) {
+						                player.stop();
+						                player = null;
+						            }
+						        }								
+								}
+								else{
+									playMusic("static_data\\music\\music.mp3");
+									musicOn = true;
+								}
+								repaint();
 								break;
 							default:
 								break;
@@ -304,7 +335,11 @@ public class Simulator extends JPanel
 					}
 					if(newVisitors != oldVisitors)
 					{
-						System.out.println("wijzig bezoekers");
+						int aantalBezoekers = (int) (newVisitors * speed); //aantal bezoeker per minuut die erbij komen. nodig is het aantal bezoeker per update dus moet gekeken worden hoeveel minuten er in een seconde om gaan
+						if(plays)
+						{
+							//TODO doorgeven aantal bezoeker per minuut
+						}
 					}
 					
 					oldSpeed = speed;
@@ -329,11 +364,19 @@ public class Simulator extends JPanel
 					minuten = tijd.getMinutes();
 					uren = tijd.getHours();
 					
-					if(uren == 23 && minuten >= 45)
+					if(uren > 26) // wanneer alle bezoekers wegzijn stopt de simulatie of wanneer 3 uur nachts is bereikt
 					{
-						updateT.stop();
-						tijd.setHours(0);
-						tijd.setMinutes(0);
+						pauseSim();
+						world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false);
+						tijd = world.getTime();
+						minuten = tijd.getMinutes();
+						uren = tijd.getHours();
+					}
+						
+					if(uren > 23)
+					{
+						minuten = tijd.getMinutes();
+						uren = (tijd.getHours() - 24);
 					}
 					
 					String urenS;								
@@ -374,14 +417,22 @@ public class Simulator extends JPanel
 		
 		public void backSim()
 		{
+			tijd = world.getTime();
+			int h = 9;
+			int m = tijd.getMinutes();
 			
+			if(tijd.getHours() != 9)
+			{
+				h = tijd.getHours() - 1;
+			}
+			world.setTime(h, m);
 		}
 		
 		public void playSim()
 		{
 			world.setRealTimeToSimTime((Double.parseDouble(speedInvoer.getText())*60)/1000);
 			
-			//An explanation given for the used formula is found in this class in line 269
+			//An explanation given for the used formule can be found in this class at line 269
 			updateT.start();
 			plays = true;
 		}
@@ -395,7 +446,7 @@ public class Simulator extends JPanel
 		
 		public void forwardSim()
 		{
-			
+			world.setRealTimeToSimTime((90*60)/1000);
 		}
 		
 		public void paintComponent(Graphics g)
@@ -410,11 +461,45 @@ public class Simulator extends JPanel
 			int teller = 0;
 			for(Rectangle2D image : rechthoek)
 			{
-				TexturePaint tp = new TexturePaint(images.get(teller), image);
+				TexturePaint tp;
+				if(teller == 5 && musicOn)
+					tp = new TexturePaint(images.get(teller+1), image);
+				else
+					tp = new TexturePaint(images.get(teller), image);
+
 				g2.setPaint(tp);
 				g2.fill(plaatjes.get(teller));
 				teller++;
 			}
+		}
+		
+		public void playMusic(String filename) {
+			try {
+				try {
+					InputStream is = new BufferedInputStream(new FileInputStream(filename));
+					player = new AdvancedPlayer(is, FactoryRegistry.systemRegistry().createAudioDevice());
+				} catch (IOException e) {
+					System.out.println("ERROR - Play music");
+				} catch (JavaLayerException e) {
+					System.out.println("ERROR - Play music");
+				}
+				Thread playerThread = new Thread() {
+					public void run() {
+						try {
+							player.play(5000);
+						} catch (JavaLayerException e) {
+							System.out.println("ERROR - Play music");
+						} finally {
+							if(musicOn)
+								playMusic("static_data\\music\\music.mp3");
+						}
+					}
+				};
+				playerThread.start();
+			} catch (Exception ex) {
+				System.out.println("ERROR - Play music");
+			}
+
 		}
 	}
 	
@@ -437,6 +522,7 @@ public class Simulator extends JPanel
 		{
 			super(null);
 			setPreferredSize(new Dimension(1200, 500));
+			setBackground(Color.WHITE);
 			this.planner = planner;
 			setForeground(Color.BLACK);
 			addMouseMotionListener(this);
@@ -537,10 +623,12 @@ public class Simulator extends JPanel
 			setLayout(layout);
 			
 			setPreferredSize(new Dimension(1200, 80));
+			setBackground(Color.WHITE);
 			this.planner = planner;
 			
 			JSlider slider = new JSlider(JSlider.HORIZONTAL, 9, 24, 9);
-
+			
+			slider.setBackground(Color.WHITE);
 		    slider.setMinorTickSpacing(1);
 		    slider.setMajorTickSpacing(1);
 		    slider.setPaintTicks(true);
@@ -564,12 +652,20 @@ public class Simulator extends JPanel
 						
 						uren = oldTime;
 						minuten = 0;
-						world.setTime(uren, minuten);
-						
-					
+						if(uren != 24)
+						{
+							world.setTime(uren, minuten);
+						}
 					}
 					
-					slider.setValue(uren);
+					if(uren < 9)
+					{
+						slider.setValue(24);
+					}
+					else
+					{
+						slider.setValue(uren);
+					}
 				}
 				
 			};
