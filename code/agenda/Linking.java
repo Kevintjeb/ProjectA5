@@ -211,7 +211,7 @@ public class Linking extends JPanel {
 				if (runButton.contains(e.getPoint())) {
 					planner.tabbedPane.removeTabAt(2);
 					//TODO PARSE TO INT
-					planner.tabbedPane.addTab("Simulatie", new Simulator(json, planner, map,(input.getText())));
+					planner.tabbedPane.addTab("Simulatie", new Simulator(json, planner, map,Integer.parseInt(input.getText())));
 
 					planner.repaint();
 					planner.revalidate();

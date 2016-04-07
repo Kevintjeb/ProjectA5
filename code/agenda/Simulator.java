@@ -261,7 +261,7 @@ public class Simulator extends JPanel
 								playSim();
 								if(p == null)
 								{
-								p = new Spawner(bezoekers, world);
+									p = new Spawner(bezoekers, world);
 								}else if(!p.getTimer().isRunning())
 								{
 									p.continueTimer();
