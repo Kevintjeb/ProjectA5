@@ -53,7 +53,7 @@ public class PerformaceComparator implements Comparator<Performance>
 			result = arg0.getPopularity() - arg1.getPopularity();
 			break;
 		default:
-			System.out.println("PerformaceComparator::compare : ERROR: default state should never be reached");
+			//System.out.println("PerformaceComparator::compare : ERROR: default state should never be reached");
 			result = 0;
 		}
 		 return result*modifier;

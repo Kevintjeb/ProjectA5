@@ -23,13 +23,13 @@ public class TileMap {
 			tilemap = ImageIO.read(new File(filepath));
 
 			if (tilemap == null) {
-				System.out.println("BAD FILE");
+				//System.out.println("BAD FILE");
 			}
 
 			mapheight = tilemap.getHeight();
 			mapwidth = tilemap.getWidth();
 
-			System.out.println(" tilemap laden gelukt!");
+			//System.out.println(" tilemap laden gelukt!");
 
 		} catch (IOException e) {
 			e.printStackTrace();

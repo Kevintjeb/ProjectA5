@@ -12,13 +12,14 @@ public class Spawner {
 	private float timeLeft = 0f;
 	private int numberVisitors = 0;
 	private World world;
+	private int visPerMin = 1000;
 	private Timer t;
 	private Tile[] tiles = {World.instance.getTileAt(8, 99), World.instance.getTileAt(9, 99), World.instance.getTileAt(10, 99)};
 
 	public Spawner(int visitors, World w) {
 		this.visitors = visitors;
 		this.world = w;
-		t = new Timer(500, new ActionListener() {
+		t = new Timer(1 , new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -41,7 +42,10 @@ public class Spawner {
 			timeLeft -= World.instance.getDeltaTime();
 			while (timeLeft <= 0) {
 				numberVisitors++;
-				new Visitor(tiles[(int) (Math.random()*3)], 0.01f);
+				for(int i = 0; i < World.instance.visPerMin(); i++)
+				{
+					new Visitor(tiles[(int) (Math.random()*3)], (float)(Math.random() * 0.1f) + 0.05f);
+				}
 				timeLeft = 0;
 				timeLeft += spawnTime;
 			}

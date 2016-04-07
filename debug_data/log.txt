@@ -1,27 +1,16 @@
- tilemap laden gelukt!
-{"drawwith":"30"}
-
-positionToNodeMap size 1182
-gaph size 1182
-pair<0, Toilet, 12>
-tile(19, 15) node was found, there should be a node
-
+tile(10, 99) node was found, there should be a node
+tile(4, 12) node was found, there should be a node
+tile(5, 12) node was found, there should be a node
+tile(4, 13) node was found, there should be a node
+tile(42, 63) node was found, there should be a node
+tile(43, 63) node was found, there should be a node
+tile(42, 64) node was found, there should be a node
 tile(20, 15) node was found, there should be a node
 tile(61, 26) node was found, there should be a node
 tile(71, 62) node was found, there should be a node
 tile(35, 74) node was found, there should be a node
-
-tile(36, 74) node was found, there should be a node
-direction generation visitedNodeCount : 1182
-pair<1, Cafetaria, 15>
-tile(45, 35) node was found, there should be a node
-
 tile(46, 35) node was found, there should be a node
 tile(50, 35) node was found, there should be a node
 tile(15, 38) node was found, there should be a node
 tile(16, 71) node was found, there should be a node
 tile(63, 85) node was found, there should be a node
-
-tile(64, 85) node was found, there should be a node
-direction generation visitedNodeCount : 1182
-

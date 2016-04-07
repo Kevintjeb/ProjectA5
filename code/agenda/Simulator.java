@@ -36,8 +36,6 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.Timer;
 
-import simulator.Spawner;
-
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.FactoryRegistry;
 import javazoom.jl.player.advanced.AdvancedPlayer;
@@ -98,7 +96,7 @@ public class Simulator extends JPanel
 		JLabel time = new JLabel("09:00");
 		JTextField speedInvoer = new JTextField("0.0", 3);
 		JLabel visitors = new JLabel("Bezoekers:");
-		JTextField visitorsField = new JTextField("0", 2);
+		JTextField visitorsField = new JTextField("1", 2);
 		JLabel visitors2 = new JLabel(" aantal/min");
 		
 		boolean plays = false;
@@ -107,12 +105,16 @@ public class Simulator extends JPanel
 		double oldSpeed = 0.0;
 		int oldVisitors = 0;
 		
+		int breedte = 1200;
+		
+		SpringLayout layout;
+		
 		public ButtonPanel(Planner planner)
 		{
 			super(null);
-			setPreferredSize(new Dimension(1200, 80));
+			setPreferredSize(new Dimension(1350, 80));
 			setBackground(Color.WHITE);
-			SpringLayout layout = new SpringLayout();
+			layout = new SpringLayout();
 			setLayout(layout);
 			
 			this.planner = planner;
@@ -133,7 +135,7 @@ public class Simulator extends JPanel
 			visitors.setFont(font);
 			visitors2.setFont(font);
 			
-			layout.putConstraint(SpringLayout.WEST, visitors, 90, SpringLayout.WEST, this);
+			layout.putConstraint(SpringLayout.WEST, visitors, 180 , SpringLayout.WEST, this);
 			layout.putConstraint(SpringLayout.NORTH, visitors, 25, SpringLayout.NORTH, this);
 			
 			layout.putConstraint(SpringLayout.WEST, visitorsField, 75, SpringLayout.WEST, visitors);
@@ -151,7 +153,7 @@ public class Simulator extends JPanel
 			layout.putConstraint(SpringLayout.WEST, speed2, 30, SpringLayout.WEST, speedInvoer);
 			layout.putConstraint(SpringLayout.NORTH, speed2, 25, SpringLayout.NORTH, this);
 			
-			layout.putConstraint(SpringLayout.WEST, time, 900, SpringLayout.WEST, this);
+			layout.putConstraint(SpringLayout.WEST, time, 1050, SpringLayout.WEST, this);
 			layout.putConstraint(SpringLayout.NORTH, time, 15, SpringLayout.NORTH, this);
 			
 			File mapmap = new File("static_data/simulator_GUI/");
@@ -189,7 +191,7 @@ public class Simulator extends JPanel
 			}
 			else
 			{
-				System.out.println("Map bestaat niet");
+				//System.out.println("Map bestaat niet");
 			}
 		}
 		
@@ -204,11 +206,11 @@ public class Simulator extends JPanel
 		public void fillPlaatjes()
 		{
 			Rectangle2D refresh2D = new Rectangle2D.Double(25 , 10, 50, 50);
-			Rectangle2D back2D = new Rectangle2D.Double(400 , 10, 50, 50);
-			Rectangle2D play2D = new Rectangle2D.Double(500 , 10, 50, 50);
-			Rectangle2D pause2D = new Rectangle2D.Double(600 , 10, 50, 50);
-			Rectangle2D forward2D = new Rectangle2D.Double(700 , 10, 50, 50);
-			Rectangle2D music2D = new Rectangle2D.Double(1100 , 10, 50, 50);
+			Rectangle2D back2D = new Rectangle2D.Double(550 , 10, 50, 50);
+			Rectangle2D play2D = new Rectangle2D.Double(650 , 10, 50, 50);
+			Rectangle2D pause2D = new Rectangle2D.Double(750 , 10, 50, 50);
+			Rectangle2D forward2D = new Rectangle2D.Double(850 , 10, 50, 50);
+			Rectangle2D music2D = new Rectangle2D.Double(1250 , 10, 50, 50);
 			
 			Area refresh = new Area(refresh2D);
 			Area back = new Area(back2D);
@@ -324,10 +326,9 @@ public class Simulator extends JPanel
 					}
 					if(newVisitors != oldVisitors)
 					{
-						int aantalBezoekers = (int) (newVisitors * speed); //aantal bezoeker per minuut die erbij komen. nodig is het aantal bezoeker per update dus moet gekeken worden hoeveel minuten er in een seconde om gaan
 						if(plays)
 						{
-							//TODO doorgeven aantal bezoeker per minuut
+							world.setVisPerMin(newVisitors);
 						}
 					}
 					
@@ -355,8 +356,9 @@ public class Simulator extends JPanel
 					
 					if(uren > 26) // wanneer alle bezoekers wegzijn stopt de simulatie of wanneer 3 uur nachts is bereikt
 					{
-						System.out.println("World : " + world + "bezoekers : " + bezoekers);
+						//System.out.println("World : " + world + "bezoekers : " + bezoekers);
 						pauseSim();
+						world.close();
 						world = new World(planner.agenda, stageMap, json, "tileSet\\Tiled2.png", false, false, bezoekers);
 						tijd = world.getTime();
 						minuten = tijd.getMinutes();
@@ -401,6 +403,7 @@ public class Simulator extends JPanel
 			pauseSim();
 			planner.tabbedPane.removeTabAt(2);
 			planner.tabbedPane.addTab("Simulatie", new SimulatieGUI(planner));
+			planner.tabbedPane.setSelectedIndex(2);
 			planner.repaint();
 			planner.revalidate();
 		}
@@ -444,7 +447,7 @@ public class Simulator extends JPanel
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
 			
-			Rectangle2D balk = new Rectangle2D.Double(0 , 0, 1175, 75);
+			Rectangle2D balk = new Rectangle2D.Double(0 , 0, 1328, 75);
 			
 			g2.draw(balk);
 			
@@ -469,16 +472,16 @@ public class Simulator extends JPanel
 					InputStream is = new BufferedInputStream(new FileInputStream(filename));
 					player = new AdvancedPlayer(is, FactoryRegistry.systemRegistry().createAudioDevice());
 				} catch (IOException e) {
-					System.out.println("ERROR - Play music");
+					//System.out.println("ERROR - Play music");
 				} catch (JavaLayerException e) {
-					System.out.println("ERROR - Play music");
+					//System.out.println("ERROR - Play music");
 				}
 				Thread playerThread = new Thread() {
 					public void run() {
 						try {
 							player.play(5000);
 						} catch (JavaLayerException e) {
-							System.out.println("ERROR - Play music");
+							//System.out.println("ERROR - Play music");
 						} finally {
 							if(musicOn)
 								playMusic("static_data\\music\\music.mp3");
@@ -487,7 +490,7 @@ public class Simulator extends JPanel
 				};
 				playerThread.start();
 			} catch (Exception ex) {
-				System.out.println("ERROR - Play music");
+				//System.out.println("ERROR - Play music");
 			}
 
 		}
@@ -511,7 +514,7 @@ public class Simulator extends JPanel
 		public SimulatiePanel(Planner planner)
 		{
 			super(null);
-			setPreferredSize(new Dimension(1200, 500));
+			setPreferredSize(new Dimension(1350, 500));
 			setBackground(Color.WHITE);
 			this.planner = planner;
 			setForeground(Color.BLACK);
@@ -606,17 +609,20 @@ public class Simulator extends JPanel
 		
 		int oldTime;
 		
+		JSlider slider;
+		SpringLayout layout;
+		
 		public TimePanel(Planner planner)
 		{
 			super(null);
-			SpringLayout layout = new SpringLayout();
+			layout = new SpringLayout();
 			setLayout(layout);
 			
-			setPreferredSize(new Dimension(1200, 80));
+			setPreferredSize(new Dimension(1350, 80));
 			setBackground(Color.WHITE);
 			this.planner = planner;
 			
-			JSlider slider = new JSlider(JSlider.HORIZONTAL, 9, 24, 9);
+			slider = new JSlider(JSlider.HORIZONTAL, 9, 24, 9);
 			
 			slider.setBackground(Color.WHITE);
 		    slider.setMinorTickSpacing(1);
@@ -662,18 +668,18 @@ public class Simulator extends JPanel
 			
 			Timer updateTime = new Timer(50, update);
 			updateTime.start();
-		    
-		    layout.putConstraint(SpringLayout.WEST, slider, 25, SpringLayout.WEST, this);
+			
+			layout.putConstraint(SpringLayout.WEST, slider, 125 , SpringLayout.WEST, this);
 			layout.putConstraint(SpringLayout.NORTH, slider, 25, SpringLayout.NORTH, this);
 		}
 		
-		public void paintComponent(Graphics g)
+		public void paintComponent(Graphics g) 
 		{
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
 			
-			Rectangle2D balk = new Rectangle2D.Double(0 , 0, 1175, 80);
-			
+			Rectangle2D balk = new Rectangle2D.Double(0 , 0, 1328, 80);
+
 			g2.draw(balk);
 		}
 	}

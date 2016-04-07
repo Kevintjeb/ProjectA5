@@ -63,7 +63,7 @@ public class AddGUI extends JPanel
 						p.init(true);
 					break;
 				default:
-					System.out.println("case is not supported");
+					//System.out.println("case is not supported");
 				}
 			}
 			
