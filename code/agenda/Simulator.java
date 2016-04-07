@@ -400,6 +400,7 @@ public class Simulator extends JPanel
 			pauseSim();
 			planner.tabbedPane.removeTabAt(2);
 			planner.tabbedPane.addTab("Simulatie", new SimulatieGUI(planner));
+			planner.tabbedPane.setSelectedIndex(2);
 			planner.repaint();
 			planner.revalidate();
 		}

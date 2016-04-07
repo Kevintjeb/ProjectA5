@@ -167,6 +167,7 @@ public class SimulatieGUI extends JPanel
 			planner.tabbedPane.removeTabAt(2);
 			linking = new Linking(planner, maps.get(number)); //linking of stages in the agenda to stages in the simulator
 			planner.tabbedPane.addTab("Simulatie", linking);
+			planner.tabbedPane.setSelectedIndex(2);
 			planner.repaint();
 	        planner.revalidate();
 		}
